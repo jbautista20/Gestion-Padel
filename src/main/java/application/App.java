@@ -26,7 +26,7 @@ public class App extends Application {
         System.out.println("EL PATA");
 
         System.out.println("Cambiando print, probar fetch");
-        //no deberia haber conflicto
+
         System.out.println("que onda?");
     }
 
