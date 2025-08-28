@@ -23,11 +23,6 @@ public class App extends Application {
         Scene scene = new Scene(load);
         stage.setScene(scene);
         stage.show();
-        System.out.println("EL PATA");
-
-        System.out.println("Cambiando print, probar fetch");
-
-        System.out.println("que onda?");
     }
 
 }
