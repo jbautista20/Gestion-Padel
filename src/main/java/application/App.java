@@ -25,7 +25,6 @@ public class App extends Application {
         stage.show();
         System.out.println("EL PATA");
 
-        //crackk
     }
 
 }
