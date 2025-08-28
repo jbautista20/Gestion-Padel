@@ -7,6 +7,8 @@ import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 import utilities.Paths;
 
+import java.sql.SQLOutput;
+
 public class App extends Application {
 
 
@@ -22,6 +24,7 @@ public class App extends Application {
         stage.setScene(scene);
         stage.show();
     /// //PUTOOOOOOOO
+        System.out.println("EL PROFE");
     }
 
 }
