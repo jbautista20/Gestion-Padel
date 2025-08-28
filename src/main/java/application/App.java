@@ -23,8 +23,9 @@ public class App extends Application {
         Scene scene = new Scene(load);
         stage.setScene(scene);
         stage.show();
-    /// //PUTOOOOOOOO
-        System.out.println("EL PROFE");
+        System.out.println("EL PATA");
+
+        //crackk
     }
 
 }
