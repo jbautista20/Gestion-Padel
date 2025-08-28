@@ -2,5 +2,5 @@ package utilities;
 
 public class Paths {
 
-    public static final String pantallaUno = "/holaMundo.fxml";
+    public static final String pantallaUno = "/inicio.fxml";
 }
