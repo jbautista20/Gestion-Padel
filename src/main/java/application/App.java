@@ -25,9 +25,7 @@ public class App extends Application {
         stage.show();
         System.out.println("EL PATA");
         System.out.println("ESTE PRINT DEBERIA GENERAR CONFLICTO");
-
         System.out.println("probando");
-
         //Comentario nuevo para verificar que git ande bien
     }
 
