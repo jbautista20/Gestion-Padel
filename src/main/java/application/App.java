@@ -24,6 +24,7 @@ public class App extends Application {
         stage.setScene(scene);
         stage.show();
         System.out.println("EL PATA");
+        System.out.println("ESTE PRINT DEBERIA GENERAR CONFLICTO");
 
     }
 
