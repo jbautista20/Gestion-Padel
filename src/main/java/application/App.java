@@ -5,6 +5,7 @@ import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
 import utilities.Paths;
 
@@ -21,7 +22,7 @@ public class App extends Application {
     public void start(Stage stage) throws Exception {
         Conexion.getConexion();
 
-        AnchorPane load = FXMLLoader.load(getClass().getResource(Paths.pantallaUno));
+        StackPane load = FXMLLoader.load(getClass().getResource(Paths.pantallaUno));
         Scene scene = new Scene(load);
         stage.setScene(scene);
         stage.show();
