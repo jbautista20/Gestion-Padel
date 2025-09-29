@@ -1,5 +1,5 @@
 package models;
 
-enum E {
+enum Es {
     Libre, Ocupado
 }

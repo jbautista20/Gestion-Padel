@@ -20,26 +20,59 @@ public class Torneo {
         this.Estados = Estados;
     }
 
-    public String getTipo() { return Tipo; }
-    public void setTipo( String Tipo) { this.Tipo = Tipo; }
+    public T getTipo() {
+        return Tipo;
+    }
 
-    public int getCategoria() { return Categoria; }
-    public void setCategoria(int Categoria) { this.Categoria = Categoria; }
+    public void setTipo(T tipo) {
+        Tipo = tipo;
+    }
 
-    public LocalDate getFecha() { return Fecha; }
-    public void setFecha(LocalDate Fecha) { this.Fecha = Fecha; }
+    public int getCategoria() {
+        return Categoria;
+    }
 
-    public String getPremio1() { return Premio1; }
-    public void setPremio1(String Premio1) { this.Premio1 = Premio1; }
+    public void setCategoria(int categoria) {
+        Categoria = categoria;
+    }
 
-    public String getPremio2() { return Premio2; }
-    public void setPremio2(String Premio2) { this.Premio2 = Premio2; }
+    public LocalDate getFecha() {
+        return Fecha;
+    }
 
-    public int getValor_Inscripcion() { return Valor_Inscripcion; }
-    public void setValor_Inscripcion(int Valor_Inscripcion) { this.Valor_Inscripcion = Valor_Inscripcion; }
+    public void setFecha(LocalDate fecha) {
+        Fecha = fecha;
+    }
 
-    public String getEstados() { return Estados; }
-    public void setEstados(String Estados) { this.Estados = Estados; }
+    public String getPremio1() {
+        return Premio1;
+    }
 
+    public void setPremio1(String premio1) {
+        Premio1 = premio1;
+    }
 
+    public String getPremio2() {
+        return Premio2;
+    }
+
+    public void setPremio2(String premio2) {
+        Premio2 = premio2;
+    }
+
+    public int getValor_Inscripcion() {
+        return Valor_Inscripcion;
+    }
+
+    public void setValor_Inscripcion(int valor_Inscripcion) {
+        Valor_Inscripcion = valor_Inscripcion;
+    }
+
+    public Es getEstados() {
+        return Estados;
+    }
+
+    public void setEstados(Es estados) {
+        Estados = estados;
+    }
 }
