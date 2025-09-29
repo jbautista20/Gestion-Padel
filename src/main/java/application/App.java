@@ -7,6 +7,7 @@ import javafx.scene.Scene;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
+import utilities.NavigationHelper;
 import utilities.Paths;
 
 import java.sql.SQLOutput;
@@ -19,15 +20,10 @@ public class App extends Application {
     }
 
     @Override
-    public void start(Stage stage) throws Exception {
+    public void start(Stage stage) {
         Conexion.getConexion();
-
-        StackPane load = FXMLLoader.load(getClass().getResource(Paths.pantallaUno));
-        Scene scene = new Scene(load);
-        stage.setScene(scene);
+        // Pantalla inicial
+        NavigationHelper.cambiarVista(stage, Paths.pantallaUno, "INICIO");
         stage.show();
-
-
     }
-
 }
