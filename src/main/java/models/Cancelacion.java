@@ -16,5 +16,4 @@ public class Cancelacion {
     public int getReintegro() { return Reintegro; }
     public void setReintegro(int Reintegro) { this.Reintegro = Reintegro; }
 
-
 }
