@@ -1,5 +1,5 @@
 package models;
 
 enum Es {
-    Libre, Ocupado
+    Abierto, En_Curso, Finalizado
 }
