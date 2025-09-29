@@ -2,7 +2,7 @@ package models;
 import java.time.LocalDate;
 
 public class Torneo {
-
+    private T Tipo;
     private int Categoria;
     private LocalDate Fecha;
     private String Premio1;
@@ -10,8 +10,8 @@ public class Torneo {
     private int Valor_Inscripcion;
     private Es Estados;
 
-    public Torneo( int Categoria,  LocalDate Fecha,  String Premio1,  String Premio2, int Valor_Inscripcion, Es Estados) {
-
+    public Torneo(T Tipo, int Categoria,  LocalDate Fecha,  String Premio1,  String Premio2, int Valor_Inscripcion, Es Estados) {
+        this.Tipo = Tipo;
         this.Categoria = Categoria;
         this.Fecha = Fecha;
         this.Premio1 = Premio1;

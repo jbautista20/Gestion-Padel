@@ -17,21 +17,6 @@ public class Turno {
         this.Fecha_Pago = Fecha_Pago;
     }
 
-    public LocalDate getFecha() { return Fecha; }
-    public void setFecha(LocalDate Fecha) { this.Fecha = Fecha; }
-
-    public LocalTime getHora() { return Hora; }
-    public void setHora(LocalTime Hora) { this.Hora = Hora; }
-
-    public Es getEstado() { return Estado; }
-    public void setEstado(Es Estado) { this.Estado = Estado; }
-
-    public int getPago() { return Pago; }
-    public void setPago(int Pago) { this.Pago = Pago; }
-
-    public LocalDate getFecha_Pago() { return Fecha_Pago; }
-    public void setFecha_Pago(LocalDate Fecha_Pago) { this.Fecha_Pago = Fecha_Pago; }
-
 }
 
 

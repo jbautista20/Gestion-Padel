@@ -1,5 +1,6 @@
 package application;
 
+import db.Conexion;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
@@ -18,11 +19,14 @@ public class App extends Application {
 
     @Override
     public void start(Stage stage) throws Exception {
+        Conexion.getConexion();
 
         AnchorPane load = FXMLLoader.load(getClass().getResource(Paths.pantallaUno));
         Scene scene = new Scene(load);
         stage.setScene(scene);
         stage.show();
+
+
     }
 
 }
