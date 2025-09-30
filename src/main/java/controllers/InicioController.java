@@ -1,14 +1,12 @@
 package controllers;
 
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.image.ImageView;
 import javafx.stage.Stage;
 import utilities.NavigationHelper;
 import utilities.Paths;
-import javafx.scene.input.MouseEvent;
-public class inicioController {
+
+public class InicioController {
 
     @FXML
     private ImageView botonIngresar;
