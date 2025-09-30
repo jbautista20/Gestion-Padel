@@ -21,8 +21,6 @@ public class App extends Application {
 
     @Override
     public void start(Stage stage) {
-        Conexion.getConexion();
-        // Pantalla inicial
         NavigationHelper.cambiarVista(stage, Paths.pantallaUno, "INICIO");
         stage.show();
     }
