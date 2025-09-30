@@ -14,100 +14,81 @@
          <children>
             <ImageView fitHeight="720.0" fitWidth="1280.0" pickOnBounds="true">
                <image>
-                  <Image url="@../Imagenes/menuPrincipaFondo.png" />
+                  <Image url="@../Imagenes/menu.png" />
                </image>
             </ImageView>
             <BorderPane opacity="0.8" prefHeight="720.0" prefWidth="1280.0">
                <right>
                   <Pane prefHeight="720.0" prefWidth="450.0" BorderPane.alignment="CENTER">
                      <children>
-                        <Pane layoutX="6.0" layoutY="134.0" prefHeight="79.0" prefWidth="360.0">
+                        <Pane layoutX="6.0" layoutY="134.0" prefHeight="79.0" prefWidth="355.0">
                            <children>
-                              <Pane layoutX="30.0" layoutY="14.0" prefHeight="50.0" prefWidth="300.0">
+                              <Pane layoutX="115.0" layoutY="47.0" prefHeight="56.0" prefWidth="306.0">
                                  <children>
-                                    <Pane layoutX="5.0" layoutY="5.0" prefHeight="45.0" prefWidth="290.0" style="-fx-background-color: #2a2a2a; -fx-border-radius: 5; -fx-border-color: #2a2a2a; -fx-border-width: 2; -fx-background-radius: 6;" />
-                                    <Pane fx:id="listarTorneosView" onMouseClicked="#abrirListarTorneos" prefHeight="45.0" prefWidth="290.0" style="-fx-background-color: #fbfbfb; -fx-border-radius: 5; -fx-border-color: #2a2a2a; -fx-border-width: 2; -fx-background-radius: 6;">
+                                    <Pane layoutX="5.0" layoutY="5.0" prefHeight="51.0" prefWidth="296.0" style="-fx-background-color: #2a2a2a; -fx-border-radius: 5; -fx-border-color: #2a2a2a; -fx-border-width: 2; -fx-background-radius: 6;" />
+                                    <Pane fx:id="listarTorneosView" onMouseClicked="#abrirListarTorneos" prefHeight="51.0" prefWidth="296.0" style="-fx-background-color: #256c26; -fx-border-radius: 5; -fx-border-color: #2a2a2a; -fx-border-width: 2; -fx-background-radius: 6;">
                                        <children>
-                                          <Label alignment="CENTER" prefHeight="45.0" prefWidth="290.0" text="Listar Torneos">
+                                          <Label alignment="CENTER" prefHeight="45.0" prefWidth="300.0" text="LISTAR TORNEOS" textFill="#fcf3f3">
                                              <font>
-                                                <Font name="Yu Gothic UI Semibold" size="20.0" />
+                                                <Font name="Arial Black" size="20.0" />
                                              </font>
                                           </Label>
-                                          <ImageView fitHeight="39.0" fitWidth="35.0" layoutX="15.0" layoutY="3.0" pickOnBounds="true" preserveRatio="true">
-                                             <image>
-                                                <Image url="@../Imagenes/IconoTorneos.png" />
-                                             </image>
-                                          </ImageView>
                                        </children>
                                     </Pane>
                                  </children>
                               </Pane>
                            </children></Pane>
-                        <Pane layoutX="36.0" layoutY="260.0" prefHeight="50.0" prefWidth="300.0">
+                        <Pane layoutX="122.0" layoutY="271.0" prefHeight="56.0" prefWidth="306.0">
                            <children>
-                              <Pane layoutX="5.0" layoutY="5.0" prefHeight="45.0" prefWidth="290.0" style="-fx-background-color: #2a2a2a; -fx-border-radius: 5; -fx-border-color: #2a2a2a; -fx-border-width: 2; -fx-background-radius: 6;" />
-                              <Pane fx:id="listarJugadoresView" prefHeight="45.0" prefWidth="290.0" style="-fx-background-color: #fbfbfb; -fx-border-radius: 5; -fx-border-color: #2a2a2a; -fx-border-width: 2; -fx-background-radius: 6;">
+                              <Pane layoutX="5.0" layoutY="5.0" prefHeight="51.0" prefWidth="296.0" style="-fx-background-color: #2a2a2a; -fx-border-radius: 5; -fx-border-color: #2a2a2a; -fx-border-width: 2; -fx-background-radius: 6;" />
+                              <Pane fx:id="listarJugadoresView" prefHeight="51.0" prefWidth="296.0" style="-fx-background-color: #256c26; -fx-border-radius: 5; -fx-border-color: #2a2a2a; -fx-border-width: 2; -fx-background-radius: 6;">
                                  <children>
-                                    <Label alignment="CENTER" prefHeight="45.0" prefWidth="290.0" text="Listar Jugadores">
+                                    <Label alignment="CENTER" prefHeight="45.0" prefWidth="300.0" text="LISTAR JUGADORES" textFill="#fcf3f3">
                                        <font>
-                                          <Font name="Yu Gothic UI Semibold" size="20.0" />
+                                          <Font name="Arial Black" size="20.0" />
                                        </font>
                                     </Label>
-                                    <ImageView fitHeight="44.0" fitWidth="57.0" layoutX="15.0" layoutY="3.0" pickOnBounds="true" preserveRatio="true">
-                                       <image>
-                                          <Image url="@../Imagenes/IconoJugador.png" />
-                                       </image>
-                                    </ImageView>
                                  </children>
                               </Pane>
                            </children>
                         </Pane>
-                        <Pane layoutX="36.0" layoutY="379.0" prefHeight="50.0" prefWidth="300.0">
+                        <Pane layoutX="122.0" layoutY="360.0" prefHeight="56.0" prefWidth="306.0">
                            <children>
-                              <Pane layoutX="5.0" layoutY="5.0" prefHeight="45.0" prefWidth="290.0" style="-fx-background-color: #2a2a2a; -fx-border-radius: 5; -fx-border-color: #2a2a2a; -fx-border-width: 2; -fx-background-radius: 6;" />
-                              <Pane prefHeight="45.0" prefWidth="290.0" style="-fx-background-color: #fbfbfb; -fx-border-radius: 5; -fx-border-color: #2a2a2a; -fx-border-width: 2; -fx-background-radius: 6;">
+                              <Pane layoutX="5.0" layoutY="5.0" prefHeight="51.0" prefWidth="296.0" style="-fx-background-color: #2a2a2a; -fx-border-radius: 5; -fx-border-color: #2a2a2a; -fx-border-width: 2; -fx-background-radius: 6;" />
+                              <Pane prefHeight="51.0" prefWidth="296.0" style="-fx-background-color: #256c26; -fx-border-radius: 5; -fx-border-color: #2a2a2a; -fx-border-width: 2; -fx-background-radius: 6;">
                                  <children>
-                                    <Label alignment="CENTER" layoutX="9.0" prefHeight="45.0" prefWidth="300.0" text="Listar turnos por cancha">
+                                    <Label alignment="CENTER" prefHeight="45.0" prefWidth="300.0" text="TURNOS POR RESERVA" textFill="#fcf3f3">
                                        <font>
-                                          <Font name="Yu Gothic UI Semibold" size="20.0" />
+                                          <Font name="Arial Black" size="20.0" />
                                        </font>
                                     </Label>
-                                    <ImageView fitHeight="44.0" fitWidth="57.0" layoutX="9.0" layoutY="1.0" pickOnBounds="true" preserveRatio="true">
-                                       <image>
-                                          <Image url="@../Imagenes/IconoJugador.png" />
-                                       </image>
-                                    </ImageView>
                                  </children>
                               </Pane>
                            </children>
                         </Pane>
-                        <Pane layoutX="36.0" layoutY="495.0" prefHeight="50.0" prefWidth="300.0">
+                        <Pane layoutX="122.0" layoutY="444.0" prefHeight="56.0" prefWidth="306.0">
                            <children>
-                              <Pane layoutX="5.0" layoutY="5.0" prefHeight="45.0" prefWidth="290.0" style="-fx-background-color: #2a2a2a; -fx-border-radius: 5; -fx-border-color: #2a2a2a; -fx-border-width: 2; -fx-background-radius: 6;" />
-                              <Pane prefHeight="45.0" prefWidth="290.0" style="-fx-background-color: #fbfbfb; -fx-border-radius: 5; -fx-border-color: #2a2a2a; -fx-border-width: 2; -fx-background-radius: 6;">
+                              <Pane layoutX="5.0" layoutY="5.0" prefHeight="51.0" prefWidth="296.0" style="-fx-background-color: #2a2a2a; -fx-border-radius: 5; -fx-border-color: #2a2a2a; -fx-border-width: 2; -fx-background-radius: 6;" />
+                              <Pane prefHeight="51.0" prefWidth="296.0" style="-fx-background-color: #256c26; -fx-border-radius: 5; -fx-border-color: #2a2a2a; -fx-border-width: 2; -fx-background-radius: 6;">
                                  <children>
-                                    <Label alignment="CENTER" layoutX="14.0" prefHeight="45.0" prefWidth="290.0" text="Ver historial de reserva">
+                                    <Label alignment="CENTER" prefHeight="45.0" prefWidth="300.0" text="HISTORIAL DE RESERVAS" textFill="#fcf3f3">
                                        <font>
-                                          <Font name="Yu Gothic UI Semibold" size="20.0" />
+                                          <Font name="Arial Black" size="20.0" />
                                        </font>
                                     </Label>
-                                    <ImageView fitHeight="44.0" fitWidth="57.0" layoutX="9.0" layoutY="1.0" pickOnBounds="true" preserveRatio="true">
-                                       <image>
-                                          <Image url="@../Imagenes/IconoJugador.png" />
-                                       </image>
-                                    </ImageView>
                                  </children>
                               </Pane>
                            </children>
                         </Pane>
-                        <Pane layoutX="115.0" layoutY="610.0" prefHeight="120.0" prefWidth="120.0">
+                        <Pane layoutX="215.0" layoutY="528.0" prefHeight="120.0" prefWidth="120.0">
                            <children>
                               <ImageView fitHeight="100.0" fitWidth="120.0" pickOnBounds="true" preserveRatio="true" x="10.0" y="10.0">
                                  <image>
                                     <Image url="@../Imagenes/fondoBotonBack.png" />
                                  </image>
                               </ImageView>
-                              <ImageView fitHeight="100.0" fitWidth="120.0" pickOnBounds="true" preserveRatio="true">
+                              <Pane layoutX="21.0" layoutY="19.0" prefHeight="63.0" prefWidth="65.0" style="-fx-background-color: #86a55f;" />
+                              <ImageView fx:id="botonBack" fitHeight="100.0" fitWidth="120.0" pickOnBounds="true" preserveRatio="true">
                                  <image>
                                     <Image url="@../Imagenes/Back.png" />
                                  </image>
@@ -117,6 +98,18 @@
                      </children>
                   </Pane>
                </right>
+               <center>
+                  <Pane prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER">
+                     <children>
+                        <Pane layoutX="22.0" layoutY="149.0" prefHeight="486.0" prefWidth="831.0">
+                           <children>
+                              <Pane layoutX="5.0" layoutY="5.0" prefHeight="495.0" prefWidth="838.0" style="-fx-background-color: #2a2a2a; -fx-border-radius: 5; -fx-border-color: #2a2a2a; -fx-border-width: 2; -fx-background-radius: 6;" />
+                              <Pane prefHeight="488.0" prefWidth="834.0" style="-fx-background-color: #a0b9c0; -fx-border-radius: 5; -fx-border-color: #2a2a2a; -fx-border-width: 2; -fx-background-radius: 6;" />
+                           </children>
+                        </Pane>
+                     </children>
+                  </Pane>
+               </center>
             </BorderPane>
          </children>
       </Pane>
