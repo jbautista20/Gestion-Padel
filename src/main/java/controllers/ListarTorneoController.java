@@ -12,7 +12,7 @@ public class ListarTorneoController {
     @FXML
     private void abrirGestionarTorneo(MouseEvent event) {
         Stage stage = (Stage) gestionarTorneo.getScene().getWindow();
-        NavigationHelper.cambiarVista(stage, Paths.pantallaTorneos, "GestionarTorneo");
+        NavigationHelper.cambiarVista(stage, Paths.pantallaGestionarTorneos, "GestionarTorneo");
         System.out.println("cambiando la ventana");
     }
 }
