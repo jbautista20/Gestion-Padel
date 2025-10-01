@@ -14,7 +14,7 @@ public class Torneo {
     private Partido[] partidos = new Partido[7];
 
     public Torneo(int Id, T tipo, int categoria, LocalDate fecha, String premio1, String premio2, int valor_Inscripcion, Es estados, Equipo[] equipos, Partido[] partidos) {
-        Id = Id;
+        this.Id = Id;
         Tipo = tipo;
         Categoria = categoria;
         Fecha = fecha;
@@ -43,7 +43,7 @@ public class Torneo {
     }
 
     public void setId(int Id) {
-        Id = Id;
+        this.Id = Id;
     }
 
     public int getCategoria() {
