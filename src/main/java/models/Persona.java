@@ -11,7 +11,7 @@ public class Persona {
     private List<Turno> turnos; // reservas
 
     public Persona(int Id, String nombre, String apellido, String telefono, String direccion, List<Turno> turnos) {
-        Id = Id;
+        this.Id = Id;
         Nombre = nombre;
         Apellido = apellido;
         Telefono = telefono;
@@ -24,7 +24,7 @@ public class Persona {
     }
 
     public void setId(int Id) {
-        Id = Id;
+        this.Id = Id;
     }
 
     public String getNombre() {

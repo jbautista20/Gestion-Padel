@@ -21,8 +21,8 @@ public class TorneoDAOImpl implements TorneoDAO {
 
     @Override
     public void create(Torneo torneo) {
-        String sql = "INSERT INTO Torneo (tipo, categoria, fecha, premio1, premio2, valor_insc, estado) VALUES (?, ?, ?, ?, ?, ?, ?)";
-        try (PreparedStatement stmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
+        String sql = "INSERT INTO Torneos (tipo, categoria, fecha, premio1, premio2, valor_insc, estado) VALUES (?, ?, ?, ?, ?, ?, ?)";
+        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setString(1, torneo.getTipo().name());        // Enum T
             stmt.setInt(2, torneo.getCategoria());
             stmt.setString(3, torneo.getFecha().toString());
@@ -31,21 +31,24 @@ public class TorneoDAOImpl implements TorneoDAO {
             stmt.setInt(6, torneo.getValor_Inscripcion());
             stmt.setString(7, torneo.getEstados().name());     // Enum Es
 
-            stmt.executeUpdate();
+            stmt.executeUpdate(); //consulta
 
-            ResultSet keys = stmt.getGeneratedKeys();
-            if (keys.next()) {
-                torneo.setId(keys.getInt(1));
+            // obtener el último ID insertado
+            try (Statement stmt2 = conn.createStatement();
+                 ResultSet rs = stmt2.executeQuery("SELECT last_insert_rowid()")) {
+                if (rs.next()) {
+                    torneo.setId(rs.getInt(1));
+                }
             }
+
         } catch (SQLException e) {
             e.printStackTrace();
         }
     }
 
-
     @Override
     public void update(Torneo torneo) {
-        String sql = "UPDATE Torneo SET tipo = ?, categoria = ?, fecha = ?, premio1 = ?, premio2 = ?, valor_insc = ?, estado = ? WHERE torneo_id = ?";
+        String sql = "UPDATE Torneos SET tipo = ?, categoria = ?, fecha = ?, premio1 = ?, premio2 = ?, valor_insc = ?, estado = ? WHERE torneo_id = ?";
         try (PreparedStatement stmt = conn.prepareStatement(sql)) {
 
             stmt.setString(1, torneo.getTipo().name()); // enum → String
@@ -66,7 +69,7 @@ public class TorneoDAOImpl implements TorneoDAO {
 
     @Override
     public void delete(int id) {
-        String sql = "DELETE FROM Torneo WHERE torneo_id = ?";
+        String sql = "DELETE FROM Torneos WHERE id_torneo = ?";
         try (Connection conn = Conexion.getConexion();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
 
@@ -80,7 +83,7 @@ public class TorneoDAOImpl implements TorneoDAO {
 
     @Override
     public Torneo findById(int id) {
-        String sql = "SELECT * FROM Torneo WHERE torneo_id = ?";
+        String sql = "SELECT * FROM Torneos WHERE id_torneo = ?";
         Torneo torneo = null;
 
         try (PreparedStatement stmt = conn.prepareStatement(sql)) {
@@ -90,7 +93,7 @@ public class TorneoDAOImpl implements TorneoDAO {
 
             if (rs.next()) {
                 torneo = new Torneo();
-                torneo.setId(rs.getInt("torneo_id"));
+                torneo.setId(rs.getInt("id_torneo"));
                 torneo.setTipo(T.valueOf(rs.getString("tipo")));
                 torneo.setCategoria(rs.getInt("categoria"));
                 torneo.setFecha(LocalDate.parse(rs.getString("fecha")));
@@ -105,17 +108,21 @@ public class TorneoDAOImpl implements TorneoDAO {
         return torneo;
     }
 
-    @Override
     public List<Torneo> findAll() {
-        String sql = "SELECT * FROM Torneo";
+        String sql = "SELECT id_torneo, tipo, categoria, fecha, premio1, premio2, valor_insc, estado FROM Torneos";
         List<Torneo> torneos = new ArrayList<>();
 
         try (Statement stmt = conn.createStatement();
              ResultSet rs = stmt.executeQuery(sql)) {
 
+            ResultSetMetaData meta = rs.getMetaData();
+            for (int i = 1; i <= meta.getColumnCount(); i++) {
+                System.out.println("Columna: " + meta.getColumnName(i));
+            }
+
             while (rs.next()) {
                 Torneo torneo = new Torneo();
-                torneo.setId(rs.getInt("torneo_id"));
+                torneo.setId(rs.getInt("id_torneo"));
                 torneo.setTipo(T.valueOf(rs.getString("tipo")));
                 torneo.setCategoria(rs.getInt("categoria"));
                 torneo.setFecha(LocalDate.parse(rs.getString("fecha")));
