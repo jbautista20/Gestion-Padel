@@ -3,6 +3,7 @@ import java.time.LocalDate;
 import  java.time.LocalTime;
 
 public class Turno {
+    private int Id;
     private LocalDate Fecha;
     private LocalTime Hora;
     private E Estado;
@@ -12,7 +13,8 @@ public class Turno {
     private Cancha cancha;          // 1 cancha asignada
     private Cancelacion cancelacion; // Puede tener 0 o 1 cancelación
 
-    public Turno(LocalDate fecha, LocalTime hora, E estado, int pago, LocalDate fecha_Pago, Persona persona, Cancha cancha) {
+    public Turno(int Id, LocalDate fecha, LocalTime hora, E estado, int pago, LocalDate fecha_Pago, Persona persona, Cancha cancha) {
+        Id = Id;
         Fecha = fecha;
         Hora = hora;
         Estado = estado;
@@ -20,6 +22,14 @@ public class Turno {
         Fecha_Pago = fecha_Pago;
         this.persona = persona;
         this.cancha = cancha;
+    }
+
+    public int getId() {
+        return Id;
+    }
+
+    public void setId(int Id) {
+        Id = Id;
     }
 
     public LocalDate getFecha() {

@@ -3,18 +3,28 @@ package models;
 import java.util.List;
 
 public class Persona {
+    private int Id;
     private String Nombre;
     private String Apellido;
     private String Telefono;
     private String Direccion;
     private List<Turno> turnos; // reservas
 
-    public Persona(String nombre, String apellido, String telefono, String direccion, List<Turno> turnos) {
+    public Persona(int Id, String nombre, String apellido, String telefono, String direccion, List<Turno> turnos) {
+        Id = Id;
         Nombre = nombre;
         Apellido = apellido;
         Telefono = telefono;
         Direccion = direccion;
         this.turnos = turnos;
+    }
+
+    public int getId() {
+        return Id;
+    }
+
+    public void setId(int Id) {
+        Id = Id;
     }
 
     public String getNombre() {

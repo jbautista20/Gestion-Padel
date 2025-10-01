@@ -2,6 +2,7 @@ package models;
 import java.time.LocalDate;
 
 public class Torneo {
+    private int Id;
     private T Tipo;
     private int Categoria;
     private LocalDate Fecha;
@@ -12,7 +13,8 @@ public class Torneo {
     private Equipo[] equipos = new Equipo[8];
     private Partido[] partidos = new Partido[7];
 
-    public Torneo(T tipo, int categoria, LocalDate fecha, String premio1, String premio2, int valor_Inscripcion, Es estados, Equipo[] equipos, Partido[] partidos) {
+    public Torneo(int Id, T tipo, int categoria, LocalDate fecha, String premio1, String premio2, int valor_Inscripcion, Es estados, Equipo[] equipos, Partido[] partidos) {
+        Id = Id;
         Tipo = tipo;
         Categoria = categoria;
         Fecha = fecha;
@@ -34,6 +36,14 @@ public class Torneo {
 
     public void setTipo(T tipo) {
         Tipo = tipo;
+    }
+
+    public int getId() {
+        return Id;
+    }
+
+    public void setId(int Id) {
+        Id = Id;
     }
 
     public int getCategoria() {
