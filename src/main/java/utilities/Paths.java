@@ -7,5 +7,6 @@ public class Paths {
     public static final String pantallaJugadores = "/Views/viewJugadores.fxml";
     public static final String pantallaTorneos = "/Views/viewTorneos.fxml";
     public static final String pantallaTurnos = "/Views/viewTurnos.fxml";
+    public static final String pantallaGestionarTorneos = "/Views/viewGestionarTorneo.fxml";
 
 }
