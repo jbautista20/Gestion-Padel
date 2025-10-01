@@ -9,7 +9,7 @@ public class Cancelacion {
 
 
     public Cancelacion(int Id, LocalDate fecha, int reintegro, Turno turno) {
-        Id = Id;
+        this.Id = Id;
         Fecha = fecha;
         Reintegro = reintegro;
         this.turno = turno;
@@ -20,7 +20,7 @@ public class Cancelacion {
     }
 
     public void setId(int Id) {
-        Id = Id;
+        this.Id = Id;
     }
 
     public LocalDate getFecha() {

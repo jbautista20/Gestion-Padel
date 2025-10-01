@@ -14,7 +14,7 @@ public class Equipo {
     private List<Partido> partidosJugados;
 
     public Equipo(int Id, String nombre, int ptos_T_Obt, LocalDate fecha_Insc, Jugador jugador1, Jugador jugador2, Torneo torneo, List<Partido> partidosGanados, List<Partido> partidosJugados) {
-        Id = Id;
+        this.Id = Id;
         Nombre = nombre;
         Ptos_T_Obt = ptos_T_Obt;
         Fecha_Insc = fecha_Insc;
@@ -30,7 +30,7 @@ public class Equipo {
     }
 
     public void setId(int Id) {
-        Id = Id;
+        this.Id = Id;
     }
 
     public String getNombre() {

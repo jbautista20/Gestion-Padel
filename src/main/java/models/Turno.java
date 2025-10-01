@@ -14,7 +14,7 @@ public class Turno {
     private Cancelacion cancelacion; // Puede tener 0 o 1 cancelación
 
     public Turno(int Id, LocalDate fecha, LocalTime hora, E estado, int pago, LocalDate fecha_Pago, Persona persona, Cancha cancha) {
-        Id = Id;
+        this.Id = Id;
         Fecha = fecha;
         Hora = hora;
         Estado = estado;
@@ -29,7 +29,7 @@ public class Turno {
     }
 
     public void setId(int Id) {
-        Id = Id;
+        this.Id = Id;
     }
 
     public LocalDate getFecha() {

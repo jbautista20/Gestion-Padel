@@ -31,7 +31,7 @@ public class TorneoDAOImpl implements TorneoDAO {
             stmt.setInt(6, torneo.getValor_Inscripcion());
             stmt.setString(7, torneo.getEstados().name());     // Enum Es
 
-            stmt.executeUpdate();
+            stmt.executeUpdate(); //consulta
 
             // obtener el último ID insertado
             try (Statement stmt2 = conn.createStatement();
