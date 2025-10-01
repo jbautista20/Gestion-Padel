@@ -2,7 +2,7 @@ package DAO;
 
 import models.Torneo;
 
-import java.time.LocalDate;
+
 import java.util.List;
 
 public interface TorneoDAO {
@@ -12,6 +12,4 @@ public interface TorneoDAO {
     Torneo findById(int id);
     List<Torneo> findAll();
 
-    List<Torneo> findByCategoria(int categoria);
-    List<Torneo> findByFecha(LocalDate fecha);
 }
