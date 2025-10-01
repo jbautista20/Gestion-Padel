@@ -19,6 +19,10 @@ public class Persona {
         this.turnos = turnos;
     }
 
+    public Persona() {
+        //defecto
+    }
+
     public int getId() {
         return Id;
     }

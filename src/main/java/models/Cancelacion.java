@@ -7,12 +7,15 @@ public class Cancelacion {
     private int Reintegro;
     private Turno turno;
 
-
     public Cancelacion(int Id, LocalDate fecha, int reintegro, Turno turno) {
         this.Id = Id;
         Fecha = fecha;
         Reintegro = reintegro;
         this.turno = turno;
+    }
+
+    public Cancelacion() {
+        //defecto
     }
 
     public int getId() {

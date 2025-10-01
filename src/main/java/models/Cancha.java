@@ -12,6 +12,10 @@ public class Cancha {
         this.partidos = partidos;
     }
 
+    public Cancha() {
+        //defecto
+    }
+
     public int getNumero() {
         return Numero;
     }

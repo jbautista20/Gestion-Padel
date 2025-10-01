@@ -24,6 +24,10 @@ public class Turno {
         this.cancha = cancha;
     }
 
+    public Turno() {
+        //defecto
+    }
+
     public int getId() {
         return Id;
     }
