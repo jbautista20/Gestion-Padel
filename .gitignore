@@ -1,16 +1,1 @@
-/target/classes/models/Cancelacion.class
-/target/classes/DAO/CancelacionDAO.class
-/target/classes/DAO/CanchaDAO.class
-/target/classes/models/Descalificado.class
-/target/classes/DAO/DescalificadoDAO.class
-/target/classes/DAO/EquipoDAO.class
-/target/classes/models/Jugador.class
-/target/classes/DAO/JugadorDAO.class
-/target/classes/DAO/PartidoDAO.class
-/target/classes/models/Persona.class
-/target/classes/DAO/ResultadoDAO.class
-/target/classes/DAO/TorneoDAO.class
-/target/classes/DAO/impl/TorneoDAOImpl.class
-/target/classes/DAO/TurnoDAO.class
 /target/
-/target/classes/application/

@@ -83,7 +83,7 @@
                            </image>
                         </ImageView>
                         <Pane layoutX="10.0" layoutY="13.0" prefHeight="65.0" prefWidth="70.0" style="-fx-background-color: #86a55f;" />
-                        <ImageView fx:id="botonBack" fitHeight="100.0" fitWidth="120.0" pickOnBounds="true" preserveRatio="true">
+                        <ImageView fx:id="botonBack" fitHeight="100.0" fitWidth="120.0" onMouseClicked="#handleBackButton" pickOnBounds="true" preserveRatio="true">
                            <image>
                               <Image url="@../Imagenes/Back.png" />
                            </image>
