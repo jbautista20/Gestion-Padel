@@ -1,5 +1,5 @@
 package models;
 
-enum T {
+public enum T {
     Damas, Caballeros, Mixto
 }
