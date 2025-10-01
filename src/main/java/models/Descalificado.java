@@ -2,14 +2,24 @@ package models;
 import java.time.LocalDate;
 
 public class Descalificado {
+    private int Id;
     private String Motivo;
     private LocalDate Fecha;
     private Equipo equipo;
 
-    public Descalificado(String motivo, LocalDate fecha, Equipo equipo) {
+    public Descalificado(int Id, String motivo, LocalDate fecha, Equipo equipo) {
+        Id = Id;
         Motivo = motivo;
         Fecha = fecha;
         this.equipo = equipo;
+    }
+
+    public int getId() {
+        return Id;
+    }
+
+    public void setId(int Id) {
+        Id = Id;
     }
 
     public String getMotivo() {

@@ -1,16 +1,26 @@
 package models;
 
 public class Resultado {
+    private int Id;
     private String Set1;
     private String Set2;
     private String Set3;
     private Partido partido;
 
-    public Resultado(String set1, String set2, String set3, Partido partido) {
+    public Resultado(int Id, String set1, String set2, String set3, Partido partido) {
+        Id = Id;
         Set1 = set1;
         Set2 = set2;
         Set3 = set3;
         this.partido = partido;
+    }
+
+    public int getId() {
+        return Id;
+    }
+
+    public void setId(int Id) {
+        Id = Id;
     }
 
     public String getSet1() {

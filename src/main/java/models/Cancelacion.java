@@ -2,14 +2,25 @@ package models;
 import java.time.LocalDate;
 
 public class Cancelacion {
+    private int Id;
     private LocalDate Fecha;
     private int Reintegro;
     private Turno turno;
 
-    public Cancelacion(LocalDate fecha, int reintegro, Turno turno) {
+
+    public Cancelacion(int Id, LocalDate fecha, int reintegro, Turno turno) {
+        Id = Id;
         Fecha = fecha;
         Reintegro = reintegro;
         this.turno = turno;
+    }
+
+    public int getId() {
+        return Id;
+    }
+
+    public void setId(int Id) {
+        Id = Id;
     }
 
     public LocalDate getFecha() {

@@ -1,5 +1,5 @@
 package models;
 
-enum Es {
+public enum Es {
     Abierto, En_Curso, Finalizado
 }

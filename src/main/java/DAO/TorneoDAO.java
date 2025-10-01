@@ -11,7 +11,4 @@ public interface TorneoDAO {
     void delete(int id);
     Torneo findById(int id);
     List<Torneo> findAll();
-
-    List<Torneo> findByCategoria(int categoria);
-    List<Torneo> findByFecha(LocalDate fecha);
 }

@@ -3,6 +3,7 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 
 public class Partido {
+    private int Id;
     private LocalTime Hora;
     private int Instancia;
     private int Puntos;
@@ -13,8 +14,9 @@ public class Partido {
     private Equipo ganador;
     private Torneo torneo;
 
-    public Partido(LocalTime hora, int instancia, int puntos, Resultado resultado, Cancha cancha, Equipo equipo1, Equipo equipo2, Equipo ganador, Torneo torneo) {
+    public Partido(int Id, LocalTime hora, int instancia, int puntos, Resultado resultado, Cancha cancha, Equipo equipo1, Equipo equipo2, Equipo ganador, Torneo torneo) {
         Hora = hora;
+        Id = Id;
         Instancia = instancia;
         Puntos = puntos;
         this.resultado = resultado;
@@ -23,6 +25,14 @@ public class Partido {
         this.equipo2 = equipo2;
         this.ganador = ganador;
         this.torneo = torneo;
+    }
+
+    public int getId() {
+        return Id;
+    }
+
+    public void setId(int Id) {
+        Id = Id;
     }
 
     public LocalTime getHora() {
