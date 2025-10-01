@@ -28,7 +28,7 @@ public class TorneoDAOImpl implements TorneoDAO {
             stmt.setInt(6, torneo.getValor_Inscripcion());
             stmt.setString(7, torneo.getEstados().name());     // Enum Es
 
-            stmt.executeUpdate();
+            stmt.executeUpdate(); //consulta
 
             //recuperar id de la bd
             ResultSet keys = stmt.getGeneratedKeys();
