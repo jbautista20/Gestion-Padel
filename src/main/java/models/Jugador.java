@@ -10,9 +10,9 @@ public class Jugador extends Persona {
     private LocalDate Anio_Nac;
     private List<Equipo> equipos;
 
-    public Jugador(int Id, String nombre, String apellido, String telefono, String direccion, List<Turno> turnos, int categoria, int sexo, int puntos, LocalDate anio_Nac, List<Equipo> equipos) {
-        super(nombre, apellido, telefono, direccion, turnos);
-        Id = Id;
+    public Jugador(int Idpersona, int Id, String nombre, String apellido, String telefono, String direccion, List<Turno> turnos, int id, int categoria, int sexo, int puntos, LocalDate anio_Nac, List<Equipo> equipos) {
+        super(Idpersona, nombre, apellido, telefono, direccion, turnos);
+        this.Id = id;
         Categoria = categoria;
         Sexo = sexo;
         Puntos = puntos;
