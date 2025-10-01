@@ -8,7 +8,7 @@ public class Descalificado {
     private Equipo equipo;
 
     public Descalificado(int Id, String motivo, LocalDate fecha, Equipo equipo) {
-        Id = Id;
+        this.Id = Id;
         Motivo = motivo;
         Fecha = fecha;
         this.equipo = equipo;
@@ -19,7 +19,7 @@ public class Descalificado {
     }
 
     public void setId(int Id) {
-        Id = Id;
+        this.Id = Id;
     }
 
     public String getMotivo() {

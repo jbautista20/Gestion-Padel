@@ -8,7 +8,7 @@ public class Resultado {
     private Partido partido;
 
     public Resultado(int Id, String set1, String set2, String set3, Partido partido) {
-        Id = Id;
+        this.Id = Id;
         Set1 = set1;
         Set2 = set2;
         Set3 = set3;
@@ -20,7 +20,7 @@ public class Resultado {
     }
 
     public void setId(int Id) {
-        Id = Id;
+        this.Id = Id;
     }
 
     public String getSet1() {

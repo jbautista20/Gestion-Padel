@@ -25,7 +25,7 @@ public class Jugador extends Persona {
     }
 
     public void setId(int Id) {
-        Id = Id;
+        this.Id = Id;
     }
 
     public int getCategoria() {
