@@ -2,6 +2,8 @@ package DAO.impl;
 
 import DAO.TorneoDAO;
 import db.Conexion;
+import models.Es;
+import models.T;
 import models.Torneo;
 
 import java.sql.*;
@@ -10,6 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class TorneoDAOImpl implements TorneoDAO {
+
     private Connection conn;
 
     public TorneoDAOImpl() {
@@ -30,7 +33,6 @@ public class TorneoDAOImpl implements TorneoDAO {
 
             stmt.executeUpdate();
 
-            //recuperar id de la bd
             ResultSet keys = stmt.getGeneratedKeys();
             if (keys.next()) {
                 torneo.setId(keys.getInt(1));
@@ -40,23 +42,93 @@ public class TorneoDAOImpl implements TorneoDAO {
         }
     }
 
+
     @Override
     public void update(Torneo torneo) {
+        String sql = "UPDATE Torneo SET tipo = ?, categoria = ?, fecha = ?, premio1 = ?, premio2 = ?, valor_insc = ?, estado = ? WHERE torneo_id = ?";
+        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
 
+            stmt.setString(1, torneo.getTipo().name()); // enum → String
+            stmt.setInt(2, torneo.getCategoria());
+            stmt.setString(3, torneo.getFecha().toString()); // LocalDate → String (YYYY-MM-DD)
+            stmt.setString(4, torneo.getPremio1());
+            stmt.setString(5, torneo.getPremio2());
+            stmt.setInt(6, torneo.getValor_Inscripcion());
+            stmt.setString(7, torneo.getEstados().name()); // enum → String
+            stmt.setInt(8, torneo.getId());
+
+            stmt.executeUpdate();
+            System.out.println("Torneo actualizado correctamente.");
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
     public void delete(int id) {
+        String sql = "DELETE FROM Torneo WHERE torneo_id = ?";
+        try (Connection conn = Conexion.getConexion();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
 
+            stmt.setInt(1, id);
+            stmt.executeUpdate();
+            System.out.println("Torneo eliminado correctamente.");
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
     public Torneo findById(int id) {
-        return null;
+        String sql = "SELECT * FROM Torneo WHERE torneo_id = ?";
+        Torneo torneo = null;
+
+        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+            stmt.setInt(1, id);
+            ResultSet rs = stmt.executeQuery();
+
+            if (rs.next()) {
+                torneo = new Torneo();
+                torneo.setId(rs.getInt("torneo_id"));
+                torneo.setTipo(T.valueOf(rs.getString("tipo")));
+                torneo.setCategoria(rs.getInt("categoria"));
+                torneo.setFecha(LocalDate.parse(rs.getString("fecha")));
+                torneo.setPremio1(rs.getString("premio1"));
+                torneo.setPremio2(rs.getString("premio2"));
+                torneo.setValor_Inscripcion(rs.getInt("valor_insc"));
+                torneo.setEstados(Es.valueOf(rs.getString("estado")));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return torneo;
     }
 
     @Override
     public List<Torneo> findAll() {
-        return List.of();
+        String sql = "SELECT * FROM Torneo";
+        List<Torneo> torneos = new ArrayList<>();
+
+        try (Statement stmt = conn.createStatement();
+             ResultSet rs = stmt.executeQuery(sql)) {
+
+            while (rs.next()) {
+                Torneo torneo = new Torneo();
+                torneo.setId(rs.getInt("torneo_id"));
+                torneo.setTipo(T.valueOf(rs.getString("tipo")));
+                torneo.setCategoria(rs.getInt("categoria"));
+                torneo.setFecha(LocalDate.parse(rs.getString("fecha")));
+                torneo.setPremio1(rs.getString("premio1"));
+                torneo.setPremio2(rs.getString("premio2"));
+                torneo.setValor_Inscripcion(rs.getInt("valor_insc"));
+                torneo.setEstados(Es.valueOf(rs.getString("estado")));
+
+                torneos.add(torneo);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return torneos;
     }
 }
