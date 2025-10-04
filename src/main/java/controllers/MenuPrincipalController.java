@@ -20,8 +20,14 @@ public class MenuPrincipalController {
         Stage stage = (Stage) listarTorneosView.getScene().getWindow();
         NavigationHelper.cambiarVista(stage, Paths.pantallaTorneos, "Listar Torneos");
     }
-    //----------------------------Abrir Scene Listar Torneo------------------------------//
 
+
+    //----------------------------Abrir Scene Historial de Reservas------------------------------//
+    @FXML
+    void abrirHistorialReservas(MouseEvent event) {
+        Stage stage = (Stage) listarTorneosView.getScene().getWindow();
+        NavigationHelper.cambiarVista(stage, Paths.pantallaHistorialReservas, "Historial de Reservas");
+    }
 
     //----------------------------Funcionalidad Boton Back-------------------------------//
     @FXML
