@@ -1,5 +1,6 @@
 package db;
 
+import java.io.File;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
@@ -19,6 +20,7 @@ public class Conexion {
                 String url = "jdbc:sqlite:basededatos.db"; // tu archivo de base de datos
                 conexion = DriverManager.getConnection(url);
                 System.out.println("Conexión establecida correctamente a SQLite.");
+
             } catch (SQLException e) {
                 System.out.println("Error al conectar a SQLite: " + e.getMessage());
             }
