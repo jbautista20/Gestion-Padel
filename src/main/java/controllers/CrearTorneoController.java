@@ -75,20 +75,22 @@ public class CrearTorneoController {
             return;
         }
         LocalDate fechaTorneo = fecha.getValue();
-        if (!validarCampos(categoria, tipoTorneo, premio1, premio2, fechaTorneo, inscripcion)) {
-            mostrarAlerta("Error", "Por favor complete todos los campos");
+        if (!validarCampos(categoria, tipoTorneo, premio1, premio2, fechaTorneo, inscripcion)) {//validamos que todo este bien cargado
+            mostrarAlerta("Error", "Por favor complete todos los campos");//en caso de algo mal cargado
             return;
         } else {
             Torneo torneo = crearTorneo(categoria, tipoDeTorneo, premio1, premio2, fechaTorneo, inscripcion);
-            torneoDAO.create(torneo);
+            torneoDAO.create(torneo);//enviamos el torneo a la bd
+            limpiarFormulario();//limpiamos para que el usuario entienda que se cargo o que hubo un error
         }
     }
+    //----------------------------Convierte el TextFiel de tipo de torneo a Enum------------------------------
     private T convertirTipoTorneo(String tipoTorneo) {
         if (tipoTorneo == null) {
             return null;
         }
 
-        switch (tipoTorneo.toLowerCase()) {
+        switch (tipoTorneo.toLowerCase()) {//
             case "damas":
                 return T.Damas;
             case "caballeros":
@@ -99,14 +101,15 @@ public class CrearTorneoController {
                 return null;
         }
     }
-
+    //-------------------------------La validamos que la inscripcion este bien----------------------------
     private int validarYConvertirPrecio(String precioTexto) {
         try {
-            return Integer.parseInt(precioTexto);
+            return Integer.parseInt(precioTexto);//castea a int
         } catch (NumberFormatException e) {
             throw new IllegalArgumentException("El precio debe ser un número válido");
         }
     }
+    //-------------------------------Validar que los campos no esten vacios-----------------------------------------
     private boolean validarCampos(Integer categoria, String tipoTorneo, String premio1,
                                   String premio2, LocalDate fechaInicio, int inscripcion) {
         if (categoria == null) {
@@ -139,6 +142,7 @@ public class CrearTorneoController {
         }
         return true;
     }
+    //----------------------Cargo todos los atriburos del torneo para luego subirlo a la BD---------------------
     private Torneo crearTorneo(int categoria, T tipoTorneo, String premio1, String premio2,LocalDate fechaI, int inscripcion){
         Torneo torneoNuevo = new Torneo();
         torneoNuevo.setCategoria(categoria);
@@ -150,6 +154,7 @@ public class CrearTorneoController {
         torneoNuevo.setValor_Inscripcion(inscripcion);
         return torneoNuevo;
     }
+    //--------------------------------------- Muestra carteles de errores----------------------------
     private void mostrarAlerta(String titulo, String mensaje) {
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
         alert.setTitle(titulo);
@@ -157,20 +162,29 @@ public class CrearTorneoController {
         alert.setContentText(mensaje);
         alert.showAndWait();
     }
-    // Método para convertir texto a número
+    //-------------------------------Convertir Texto a numero ------------------------------
     public Integer obtenerCategoriaNumerica() {
-        String textoSeleccionado = comboBoxCategoria.getValue();
-        if (textoSeleccionado != null && !textoSeleccionado.isEmpty()) {
+        String categoriaElegida = comboBoxCategoria.getValue();
+        if (categoriaElegida != null && !categoriaElegida.isEmpty()) {
             try {
-                // Remover el símbolo de grado y convertir a int
-                String numeroTexto = textoSeleccionado.replace("°", "");
-                return Integer.parseInt(numeroTexto);
+            // replace cambia el string ° a "" para que pueda almacenar el numero de la categoria
+                String numeroTexto = categoriaElegida.replace("°", "");
+                return Integer.parseInt(numeroTexto);//castea a int el string
             } catch (NumberFormatException e) {
-                System.err.println("Error al convertir categoría: " + textoSeleccionado);
+                System.err.println("Error al convertir categoría: " + categoriaElegida);
                 return null;
             }
         }
         return null;
+    }
+    //-----------------------------------------------Limpiar Todo una vez que lo cargo-------------------------------------
+    private void limpiarFormulario() {
+        comboBoxCategoria.setValue(null);
+        comboBoxTipoTorneo.setValue(null);
+        primerPremio.clear();
+        segundoPremio.clear();
+        valorDeInscripcion.clear(); // Limpiar el campo de inscripción
+        fecha.setValue(null);
     }
 }
 
