@@ -105,8 +105,14 @@
                            <children>
                               <TableView fx:id="tableTorneos" layoutX="2.0" layoutY="1.0" prefHeight="485.0" prefWidth="830.0">
                                 <columns>
-                                  <TableColumn prefWidth="75.0" text="C1" />
-                                  <TableColumn prefWidth="75.0" text="C2" />
+                                  <TableColumn prefWidth="103.0" fx:id="colEstado" text="Estado" />
+                                    <TableColumn prefWidth="103.0" fx:id="colFecha" text="Fecha" />
+                                    <TableColumn prefWidth="103.0" fx:id="colCategoria" text="Categoria" />
+                                    <TableColumn prefWidth="103.0" fx:id="colTipo" text="Tipo" />
+                                    <TableColumn prefWidth="103.0" fx:id="colValorInscripcion" text="Valor Inscripcion" />
+                                    <TableColumn prefWidth="113.0" fx:id="colPremioCampeon" text="Premio Campeon" />
+                                    <TableColumn prefWidth="123.0" fx:id="colPremioSubcampeon" text="Premio Subcampeon" />
+                                    <TableColumn prefWidth="73.0" fx:id="colInscriptos" text="Inscriptos" />
                                 </columns>
                               </TableView>
                            </children></Pane>
