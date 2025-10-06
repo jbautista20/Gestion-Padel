@@ -11,6 +11,9 @@ public class ListarTorneoController {
     private Pane gestionarTorneo;
     @FXML
     private ImageView botonBack;
+    @FXML
+    private Pane crearTorneoView;
+
     //----------------------------Abrir scene gestionar torneo------------------------------//
     @FXML
     private void abrirGestionarTorneo(MouseEvent event) {
@@ -20,6 +23,16 @@ public class ListarTorneoController {
     }
 
     //----------------------------Abrir scene gestionar torneo------------------------------//
+
+    //----------------------------Abrir scene crear torneo----------------------------------//
+    @FXML
+    private void abrirCrearTorneo(MouseEvent event) {
+        Stage stage = (Stage) crearTorneoView.getScene().getWindow();
+        NavigationHelper.cambiarVista(stage, Paths.pantellaCrearTorneo, "CrearTorneo");
+        System.out.println("cambiando la ventana");
+    }
+    //----------------------------Abrir scene crear torneo----------------------------------//
+
 
 
 

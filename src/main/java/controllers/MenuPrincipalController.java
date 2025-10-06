@@ -7,12 +7,15 @@ import javafx.stage.Stage;
 import utilities.NavigationHelper;
 import utilities.Paths;
 public class MenuPrincipalController {
+    //----------------------------Declarecion de variables------------------------------//
     @FXML
     private Pane listarJugadoresView;
     @FXML
     private Pane listarTorneosView;
     @FXML
     private ImageView botonBack;
+
+    //----------------------------Declarecion de variables------------------------------//
 
     //----------------------------Abrir Scene Listar Torneo------------------------------//
     @FXML
@@ -37,4 +40,11 @@ public class MenuPrincipalController {
         System.out.println("Volviendo al menú principal");
 
     }
+    //----------------------------Abrir Scene Listar Torneo------------------------------//
+    @FXML
+    private void abrirListarJugadores(MouseEvent event) {
+        Stage stage = (Stage) listarJugadoresView.getScene().getWindow();
+        NavigationHelper.cambiarVista(stage, Paths.pantallaJugadores, "Listar Torneos");
+    }
+    //----------------------------Abrir Scene Listar Torneo------------------------------//
 }

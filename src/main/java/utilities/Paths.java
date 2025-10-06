@@ -9,5 +9,5 @@ public class Paths {
     public static final String pantallaTurnos = "/Views/viewTurnos.fxml";
     public static final String pantallaGestionarTorneos = "/Views/viewGestionarTorneo.fxml";
     public static final String pantallaHistorialReservas = "/Views/viewHistorialReservas.fxml";
-
+    public static final String pantellaCrearTorneo = "/Views/viewCrearTorneo.fxml";
 }

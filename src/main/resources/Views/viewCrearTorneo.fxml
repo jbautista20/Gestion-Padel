@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.DatePicker?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.text.Font?>
+
+<StackPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="720.0" prefWidth="1280.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.CrearTorneoController">
+   <children>
+      <Pane prefHeight="200.0" prefWidth="200.0">
+         <children>
+            <ImageView fitHeight="720.0" fitWidth="1280.0" pickOnBounds="true">
+               <image>
+                  <Image url="@../Imagenes/CrearTorneo.png" />
+               </image>
+            </ImageView>
+            <BorderPane opacity="0.8" prefHeight="720.0" prefWidth="1280.0">
+               <right>
+                  <Pane prefHeight="720.0" prefWidth="450.0" BorderPane.alignment="CENTER">
+                     <children>
+                        <Pane layoutX="215.0" layoutY="528.0" prefHeight="120.0" prefWidth="120.0">
+                           <children>
+                              <ImageView fitHeight="100.0" fitWidth="120.0" pickOnBounds="true" preserveRatio="true" x="10.0" y="10.0">
+                                 <image>
+                                    <Image url="@../Imagenes/fondoBotonBack.png" />
+                                 </image>
+                              </ImageView>
+                              <Pane layoutX="21.0" layoutY="19.0" prefHeight="63.0" prefWidth="65.0" style="-fx-background-color: #86a55f;" />
+                              <ImageView fx:id="botonBack" fitHeight="100.0" fitWidth="120.0" onMouseClicked="#handleBackButton" pickOnBounds="true" preserveRatio="true">
+                                 <image>
+                                    <Image url="@../Imagenes/Back.png" />
+                                 </image>
+                              </ImageView>
+                           </children>
+                        </Pane>
+                     </children>
+                  </Pane>
+               </right>
+               <center>
+                  <Pane prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER">
+                     <children>
+                        <Pane layoutX="400.0" layoutY="580.0" prefHeight="56.0" prefWidth="306.0">
+                           <children>
+                              <Pane layoutX="5.0" layoutY="5.0" prefHeight="51.0" prefWidth="296.0" style="-fx-background-color: #2a2a2a; -fx-border-radius: 5; -fx-border-color: #2a2a2a; -fx-border-width: 2; -fx-background-radius: 6;" />
+                              <Pane onMouseClicked="#recibirDatosDeTorneo" prefHeight="51.0" prefWidth="296.0" style="-fx-background-color: #256c26; -fx-border-radius: 5; -fx-border-color: #2a2a2a; -fx-border-width: 2; -fx-background-radius: 6;">
+                                 <children>
+                                    <Label alignment="CENTER" prefHeight="45.0" prefWidth="300.0" text="Confirmar" textFill="#fcf3f3">
+                                       <font>
+                                          <Font name="Arial Black" size="20.0" />
+                                       </font>
+                                    </Label>
+                                 </children>
+                              </Pane>
+                           </children>
+                        </Pane>
+                        <ComboBox fx:id="comboBoxCategoria" layoutX="151.0" layoutY="218.0" prefHeight="34.0" prefWidth="163.0" promptText="Categoria" />
+                        <ComboBox fx:id="comboBoxTipoTorneo" layoutX="448.0" layoutY="218.0" prefHeight="34.0" prefWidth="163.0" promptText="Tipo" />
+                        <DatePicker fx:id="fecha" layoutX="147.0" layoutY="356.0" promptText="Fecha " />
+                        <TextField fx:id="primerPremio" layoutX="455.0" layoutY="356.0" promptText="Premio Campeon" />
+                        <TextField fx:id="segundoPremio" layoutX="151.0" layoutY="461.0" promptText="Premio subcampeon" />
+                        <TextField fx:id="valorDeInscripcion" layoutX="455.0" layoutY="455.0" promptText="Inscripción" />
+                     </children>
+                  </Pane>
+               </center>
+            </BorderPane>
+         </children>
+      </Pane>
+   </children>
+</StackPane>
