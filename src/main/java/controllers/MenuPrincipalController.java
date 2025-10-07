@@ -24,7 +24,6 @@ public class MenuPrincipalController {
         NavigationHelper.cambiarVista(stage, Paths.pantallaTorneos, "Listar Torneos");
     }
 
-
     //----------------------------Abrir Scene Historial de Reservas------------------------------//
     @FXML
     void abrirHistorialReservas(MouseEvent event) {
@@ -40,11 +39,10 @@ public class MenuPrincipalController {
         System.out.println("Volviendo al menú principal");
 
     }
-    //----------------------------Abrir Scene Listar Torneo------------------------------//
+    //----------------------------Abrir Scene Listar Jugadores------------------------------//
     @FXML
     private void abrirListarJugadores(MouseEvent event) {
         Stage stage = (Stage) listarJugadoresView.getScene().getWindow();
-        NavigationHelper.cambiarVista(stage, Paths.pantallaJugadores, "Listar Torneos");
+        NavigationHelper.cambiarVista(stage, Paths.pantallaJugadores, "Listar Jugadores");
     }
-    //----------------------------Abrir Scene Listar Torneo------------------------------//
 }
