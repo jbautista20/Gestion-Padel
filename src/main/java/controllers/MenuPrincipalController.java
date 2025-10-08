@@ -13,6 +13,8 @@ public class MenuPrincipalController {
     @FXML
     private Pane listarTorneosView;
     @FXML
+    private Pane gestionarTurnosView;
+    @FXML
     private ImageView botonBack;
 
     //----------------------------Declarecion de variables------------------------------//
@@ -45,4 +47,11 @@ public class MenuPrincipalController {
         Stage stage = (Stage) listarJugadoresView.getScene().getWindow();
         NavigationHelper.cambiarVista(stage, Paths.pantallaJugadores, "Listar Jugadores");
     }
+    //----------------------------Abrir Scene Gestionar Turnos------------------------------//
+    @FXML
+    private void abrirGestionarTurnos(MouseEvent event) {
+        Stage stage = (Stage) gestionarTurnosView.getScene().getWindow();
+        NavigationHelper.cambiarVista(stage, Paths.pantallaTurnos, "Gestionar Turnos");
+    }
+
 }
