@@ -1,4 +1,5 @@
 package controllers;
+import DAO.TorneoDAO;
 import DAO.impl.TorneoDAOImpl;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleObjectProperty;
@@ -6,6 +7,8 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
+import javafx.scene.control.Alert;
+import javafx.scene.control.ButtonType;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.control.TableView;
@@ -13,11 +16,13 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 import models.Equipo;
+import models.Es;
 import models.Torneo;
 import utilities.NavigationHelper;
 import utilities.Paths;
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 
 public class ListarTorneoController {
     @FXML
@@ -42,6 +47,7 @@ public class ListarTorneoController {
     @FXML private TableColumn<Torneo, String> colPremioCampeon;
     @FXML private TableColumn<Torneo, String> colPremioSubcampeon;
     @FXML private TableColumn<Torneo, String> colInscriptos;
+    private TorneoDAO torneoDAO = new TorneoDAOImpl();
 
     @FXML
     public void initialize() {
@@ -107,8 +113,44 @@ public class ListarTorneoController {
         System.out.println("cambiando la ventana");
     }
     //----------------------------Abrir scene crear torneo----------------------------------//
+    //----------------------------Abrir scene crear torneo----------------------------------//
+    @FXML
+    private void handleEliminarTorneo() {
+        Torneo torneoSeleccionado = tableTorneos.getSelectionModel().getSelectedItem();
 
+        if (torneoSeleccionado != null) {//verifica que haya pulsado algun torneo
+            Alert confirmacion = new Alert(Alert.AlertType.CONFIRMATION);
+            confirmacion.setTitle("Confirmar Eliminación");
+            confirmacion.setHeaderText("¿Está seguro de eliminar el torneo?");
+            confirmacion.setContentText("Torneo: " + "\nEsta acción no se puede deshacer.");
 
+            Es estadoTorneo = torneoSeleccionado.getEstados();
+
+            Optional<ButtonType> resultado = confirmacion.showAndWait();//esera la confimacion del boton del cartel de alerta
+            if(estadoTorneo == Es.Abierto) {
+                if (resultado.isPresent() && resultado.get() == ButtonType.OK) {//si presiono ok elimina el torneo
+                    try {
+                        torneoDAO.delete(torneoSeleccionado.getId());//elimina de la bd
+                        listaTorneos.remove(torneoSeleccionado);//elimina de la tableView
+                        tableTorneos.refresh();//refresca la tableView
+                        mostrarAlerta("Éxito", "Torneo eliminado correctamente");
+
+                    } catch (Exception e) {
+                        mostrarAlerta("Error", "No se pudo eliminar el torneo: " + e.getMessage());
+                    }
+                }
+            }
+        } else {
+            mostrarAlerta("Error", "Seleccione un torneo para eliminar");
+        }
+    }
+    private void mostrarAlerta(String titulo, String mensaje) {
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle(titulo);
+        alert.setHeaderText(null);
+        alert.setContentText(mensaje);
+        alert.showAndWait();
+    }
 
 
     //----------------------------Funcionalidad Boton Back----------------------------------//

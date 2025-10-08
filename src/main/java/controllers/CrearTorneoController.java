@@ -177,7 +177,7 @@ public class CrearTorneoController {
         }
         return null;
     }
-    //-----------------------------------------------Limpiar Todo una vez que lo cargo-------------------------------------
+    //----------------------------------------Limpiar Todo una vez que lo cargo y preciono confirmar-------------------------------------
     private void limpiarFormulario() {
         comboBoxCategoria.setValue(null);
         comboBoxTipoTorneo.setValue(null);
