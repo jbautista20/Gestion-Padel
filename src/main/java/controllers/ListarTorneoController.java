@@ -89,8 +89,7 @@ public class ListarTorneoController {
     }
 
     private void cargarTorneos() {
-        TorneoDAOImpl dao = new TorneoDAOImpl();
-        List<Torneo> torneosBD = dao.findAll();
+        List<Torneo> torneosBD = torneoDAO.findAll();
         listaTorneos.setAll(torneosBD);
     }
 
@@ -113,37 +112,46 @@ public class ListarTorneoController {
         System.out.println("cambiando la ventana");
     }
     //----------------------------Abrir scene crear torneo----------------------------------//
-    //----------------------------Abrir scene crear torneo----------------------------------//
+
     @FXML
     private void handleEliminarTorneo() {
         Torneo torneoSeleccionado = tableTorneos.getSelectionModel().getSelectedItem();
 
-        if (torneoSeleccionado != null) {//verifica que haya pulsado algun torneo
+        if (torneoSeleccionado != null) {
             Alert confirmacion = new Alert(Alert.AlertType.CONFIRMATION);
             confirmacion.setTitle("Confirmar Eliminación");
             confirmacion.setHeaderText("¿Está seguro de eliminar el torneo?");
-            confirmacion.setContentText("Torneo: " + "\nEsta acción no se puede deshacer.");
+            confirmacion.setContentText("Torneo: " + torneoSeleccionado.getTipo() +
+                    " - " + torneoSeleccionado.getCategoria() +
+                    "\nEsta acción no se puede deshacer.");
+
+            Optional<ButtonType> resultado = confirmacion.showAndWait();
 
             Es estadoTorneo = torneoSeleccionado.getEstados();
 
-            Optional<ButtonType> resultado = confirmacion.showAndWait();//esera la confimacion del boton del cartel de alerta
-            if(estadoTorneo == Es.Abierto) {
-                if (resultado.isPresent() && resultado.get() == ButtonType.OK) {//si presiono ok elimina el torneo
+            if (estadoTorneo == Es.Abierto) {
+                if (resultado.isPresent() && resultado.get() == ButtonType.OK) {
                     try {
-                        torneoDAO.delete(torneoSeleccionado.getId());//elimina de la bd
-                        listaTorneos.remove(torneoSeleccionado);//elimina de la tableView
-                        tableTorneos.refresh();//refresca la tableView
-                        mostrarAlerta("Éxito", "Torneo eliminado correctamente");
+                        // Eliminar de la base de datos
+                        torneoDAO.delete(torneoSeleccionado.getId());
+
+                        // Eliminar del ObservableList (la tabla se actualiza sola)
+                        listaTorneos.remove(torneoSeleccionado);
+
+                        mostrarAlerta("Éxito", "Torneo eliminado correctamente.");
 
                     } catch (Exception e) {
                         mostrarAlerta("Error", "No se pudo eliminar el torneo: " + e.getMessage());
                     }
                 }
+            } else {
+                mostrarAlerta("Advertencia", "Solo se pueden eliminar torneos en estado 'Abierto'.");
             }
         } else {
-            mostrarAlerta("Error", "Seleccione un torneo para eliminar");
+            mostrarAlerta("Error", "Seleccione un torneo para eliminar.");
         }
     }
+
     private void mostrarAlerta(String titulo, String mensaje) {
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
         alert.setTitle(titulo);
