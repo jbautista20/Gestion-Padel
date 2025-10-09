@@ -1,6 +1,6 @@
 package DAO.impl;
 
-import DAO.JugadorDAO;
+import DAO.GenericDAO;
 import db.Conexion;
 import models.Jugador;
 
@@ -9,7 +9,7 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
-public class JugadorDAOImpl implements JugadorDAO {
+public class JugadorDAOImpl implements GenericDAO<Jugador> {
 
     private Connection conn;
 

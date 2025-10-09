@@ -15,7 +15,6 @@ public class MenuPrincipalController {
     @FXML
     private ImageView botonBack;
 
-    //----------------------------Declarecion de variables------------------------------//
 
     //----------------------------Abrir Scene Listar Torneo------------------------------//
     @FXML

@@ -1,5 +1,5 @@
 package controllers;
-import DAO.TorneoDAO;
+import DAO.GenericDAO;
 import DAO.impl.TorneoDAOImpl;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleObjectProperty;
@@ -47,7 +47,7 @@ public class ListarTorneoController {
     @FXML private TableColumn<Torneo, String> colPremioCampeon;
     @FXML private TableColumn<Torneo, String> colPremioSubcampeon;
     @FXML private TableColumn<Torneo, String> colInscriptos;
-    private TorneoDAO torneoDAO = new TorneoDAOImpl();
+    private GenericDAO<Torneo> torneoDAO = new TorneoDAOImpl();
 
     @FXML
     public void initialize() {

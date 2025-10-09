@@ -1,6 +1,6 @@
 package DAO.impl;
 
-import DAO.PartidoDAO;
+import DAO.GenericDAO;
 import db.Conexion;
 import models.*;
 
@@ -9,7 +9,7 @@ import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 
-public class PartidoDAOImpl implements PartidoDAO {
+public class PartidoDAOImpl implements GenericDAO<Partido> {
 
     private Connection conn;
 

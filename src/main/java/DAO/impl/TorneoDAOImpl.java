@@ -1,6 +1,6 @@
 package DAO.impl;
 
-import DAO.TorneoDAO;
+import DAO.GenericDAO;
 import db.Conexion;
 import models.Es;
 import models.T;
@@ -11,7 +11,7 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
-public class TorneoDAOImpl implements TorneoDAO {
+public class TorneoDAOImpl implements GenericDAO<Torneo> {
 
     private Connection conn;
 

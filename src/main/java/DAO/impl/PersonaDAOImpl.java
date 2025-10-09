@@ -1,6 +1,6 @@
 package DAO.impl;
 
-import DAO.PersonaDAO;
+import DAO.GenericDAO;
 import db.Conexion;
 import models.Persona;
 
@@ -8,7 +8,7 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public class PersonaDAOImpl implements PersonaDAO {
+public class PersonaDAOImpl implements GenericDAO<Persona> {
 
     private Connection conn;
 

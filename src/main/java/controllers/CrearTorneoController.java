@@ -1,5 +1,6 @@
 package controllers;
 
+import DAO.GenericDAO;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ComboBox;
@@ -14,7 +15,6 @@ import utilities.NavigationHelper;
 import utilities.Paths;
 import javafx.scene.control.TextField;
 import java.time.LocalDate;
-import DAO.TorneoDAO;
 import DAO.impl.TorneoDAOImpl;
 import models.T;
 
@@ -36,7 +36,7 @@ public class CrearTorneoController {
     private TextField valorDeInscripcion;
 
 
-    private TorneoDAO torneoDAO = new TorneoDAOImpl();
+    private GenericDAO<Torneo> torneoDAO = new TorneoDAOImpl();
     //---------------------------------Variables------------------------------------------
     //---------------------------------Inicializar comboBox-------------------------------
     @FXML
