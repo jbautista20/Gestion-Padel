@@ -1,6 +1,6 @@
 package DAO.impl;
 
-import DAO.TurnoDAO;
+import DAO.GenericDAO;
 import db.Conexion;
 import models.*;
 
@@ -10,7 +10,7 @@ import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 
-public class TurnoDAOImpl implements TurnoDAO {
+public class TurnoDAOImpl implements GenericDAO<Turno> {
 
     private Connection conn;
 

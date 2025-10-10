@@ -7,8 +7,10 @@ import javafx.stage.Stage;
 import javafx.animation.TranslateTransition;
 import javafx.scene.image.ImageView;
 import javafx.util.Duration;
+import models.Torneo;
 
 public class NavigationHelper {
+    private  static  Object datos;
     private static NavigationHelper instance;
     public static NavigationHelper getInstance() {
         if (instance == null) {
@@ -52,6 +54,43 @@ public class NavigationHelper {
         }
     }
 
+
+    public static void cambiarVistaConDatos(Stage stage, String fxml, String titulo, Object datos) {
+        try {
+            // Guardar datos temporalmente
+            NavigationHelper.datos = datos;
+
+            FXMLLoader loader = new FXMLLoader(NavigationHelper.class.getResource(fxml));
+            Parent root = loader.load();
+
+            Scene scene = stage.getScene();
+
+            if (scene == null) {
+                scene = new Scene(root);
+                stage.setScene(scene);
+            } else {
+                scene.setRoot(root);
+            }
+
+            if (titulo != null && !titulo.isEmpty()) {
+                stage.setTitle(titulo);
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            System.out.println("Error al cargar vista: " + fxml);
+        }
+    }
+
+    // ✅ Obtener datos
+    public static Object getDatos() {
+        return datos;
+    }
+
+    // ✅ Limpiar datos
+    public static void clearDatos() {
+        datos = null;
+    }
 //--------------------------BotonBack----------------------------------------------------------------------------------
 
     /**

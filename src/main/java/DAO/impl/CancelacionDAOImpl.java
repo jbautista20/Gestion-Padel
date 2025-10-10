@@ -1,6 +1,6 @@
 package DAO.impl;
 
-import DAO.CancelacionDAO;
+import DAO.GenericDAO;
 import db.Conexion;
 import models.Cancelacion;
 import models.Turno;
@@ -10,7 +10,7 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
-public class CancelacionDAOImpl implements CancelacionDAO {
+public class CancelacionDAOImpl implements GenericDAO<Cancelacion> {
 
     private Connection conn;
 

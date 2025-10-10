@@ -1,6 +1,6 @@
 package DAO.impl;
 
-import DAO.CanchaDAO;
+import DAO.GenericDAO;
 import db.Conexion;
 import models.Cancha;
 import models.Turno;
@@ -10,7 +10,7 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public class CanchaDAOImpl implements CanchaDAO {
+public class CanchaDAOImpl implements GenericDAO<Cancha> {
 
     private Connection conn;
 

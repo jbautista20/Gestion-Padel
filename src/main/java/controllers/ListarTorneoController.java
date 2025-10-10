@@ -1,5 +1,5 @@
 package controllers;
-import DAO.TorneoDAO;
+import DAO.GenericDAO;
 import DAO.impl.TorneoDAOImpl;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleObjectProperty;
@@ -31,8 +31,10 @@ public class ListarTorneoController {
     private ImageView botonBack;
     @FXML
     private Pane crearTorneoView;
-
-
+    @FXML
+    private Pane botonModificarTorneo;
+    @FXML
+    private Pane botonEliminarTorneo;
     @FXML
     private TableView<Torneo> tableTorneos;
 
@@ -47,7 +49,7 @@ public class ListarTorneoController {
     @FXML private TableColumn<Torneo, String> colPremioCampeon;
     @FXML private TableColumn<Torneo, String> colPremioSubcampeon;
     @FXML private TableColumn<Torneo, String> colInscriptos;
-    private TorneoDAO torneoDAO = new TorneoDAOImpl();
+    private GenericDAO<Torneo> torneoDAO = new TorneoDAOImpl();
 
     @FXML
     public void initialize() {
@@ -83,9 +85,25 @@ public class ListarTorneoController {
 
         // Enlazar la lista observable con la tabla
         tableTorneos.setItems(listaTorneos);
-
+        botonEliminarTorneo.setDisable(true);
+        tableTorneos.getSelectionModel().selectedItemProperty().addListener(
+                (observable, oldValue, newValue) -> {
+                    boolean habilitado = newValue != null;
+                    botonEliminarTorneo.setDisable(!habilitado);
+                    botonEliminarTorneo.setOpacity(habilitado ? 1.0 : 0.5);
+                }
+        );
         // Cargar torneos desde la base
         cargarTorneos();
+        botonModificarTorneo.setDisable(true);//desabilitar torneo
+        //cuando selecciono un torneo de la lista habilito el boton
+        tableTorneos.getSelectionModel().selectedItemProperty().addListener(
+                (observable, oldValue, newValue) -> {
+                    boolean habilitado = newValue != null;
+                    botonModificarTorneo.setDisable(!habilitado);
+                    botonModificarTorneo.setOpacity(habilitado ? 1.0 : 0.5);
+                }
+        );
     }
 
     private void cargarTorneos() {
@@ -169,5 +187,19 @@ public class ListarTorneoController {
         System.out.println("Volviendo al menú principal");
     }
     //----------------------------Funcionalidad Boton Back----------------------------------//
+
+
+    @FXML
+    private void handleModificarTorneo(MouseEvent event) {
+        Torneo torneoSeleccionado = tableTorneos.getSelectionModel().getSelectedItem();
+
+        if (torneoSeleccionado != null) {
+            // Guardar el torneo seleccionado
+            DataManager.getInstance().setTorneoSeleccionado(torneoSeleccionado);
+            Stage stage = (Stage) botonModificarTorneo.getScene().getWindow();
+            NavigationHelper.cambiarVistaConDatos(stage, Paths.pantallaModificarTorneo,
+                    "Modificar Torneo", torneoSeleccionado);
+        }
+    }
 
 }

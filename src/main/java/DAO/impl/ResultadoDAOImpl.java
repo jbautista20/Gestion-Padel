@@ -1,6 +1,6 @@
 package DAO.impl;
 
-import DAO.ResultadoDAO;
+import DAO.GenericDAO;
 import db.Conexion;
 import models.Resultado;
 
@@ -8,7 +8,7 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ResultadoDAOImpl implements ResultadoDAO {
+public class ResultadoDAOImpl implements GenericDAO<Resultado> {
 
     private Connection conn;
 
