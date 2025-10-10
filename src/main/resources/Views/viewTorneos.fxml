@@ -19,7 +19,7 @@
       </ImageView>
       <BorderPane prefHeight="200.0" prefWidth="200.0">
          <right>
-            <Pane prefHeight="720.0" prefWidth="353.0" BorderPane.alignment="CENTER">
+            <Pane onMouseClicked="#handleModificarTorneo" prefHeight="720.0" prefWidth="353.0" BorderPane.alignment="CENTER">
                <children>
                   <Pane layoutX="19.0" layoutY="144.0" prefHeight="56.0" prefWidth="306.0">
                      <children>
@@ -38,7 +38,7 @@
                   <Pane layoutX="21.0" layoutY="238.0" prefHeight="56.0" prefWidth="306.0">
                      <children>
                         <Pane layoutX="5.0" layoutY="5.0" prefHeight="51.0" prefWidth="296.0" style="-fx-background-color: #2a2a2a; -fx-border-radius: 5; -fx-border-color: #2a2a2a; -fx-border-width: 2; -fx-background-radius: 6;" />
-                        <Pane layoutX="2.0" prefHeight="51.0" prefWidth="296.0" style="-fx-background-color: #256c26; -fx-border-radius: 5; -fx-border-color: #2a2a2a; -fx-border-width: 2; -fx-background-radius: 6;">
+                        <Pane fx:id="botonModificarTorneo" layoutX="2.0" onMouseClicked="#handleModificarTorneo" prefHeight="51.0" prefWidth="296.0" style="-fx-background-color: #256c26; -fx-border-radius: 5; -fx-border-color: #2a2a2a; -fx-border-width: 2; -fx-background-radius: 6;">
                            <children>
                               <Label alignment="CENTER" layoutY="3.0" prefHeight="45.0" prefWidth="300.0" text="MODIFICAR TORNEO" textFill="#fcf3f3">
                                  <font>
@@ -52,7 +52,7 @@
                   <Pane layoutX="19.0" layoutY="332.0" prefHeight="56.0" prefWidth="306.0">
                      <children>
                         <Pane layoutX="5.0" layoutY="5.0" prefHeight="51.0" prefWidth="296.0" style="-fx-background-color: #2a2a2a; -fx-border-radius: 5; -fx-border-color: #2a2a2a; -fx-border-width: 2; -fx-background-radius: 6;" />
-                        <Pane layoutX="2.0" onMouseClicked="#handleEliminarTorneo" prefHeight="51.0" prefWidth="296.0" style="-fx-background-color: #256c26; -fx-border-radius: 5; -fx-border-color: #2a2a2a; -fx-border-width: 2; -fx-background-radius: 6;">
+                        <Pane fx:id="botonEliminarTorneo" layoutX="2.0" onMouseClicked="#handleEliminarTorneo" prefHeight="51.0" prefWidth="296.0" style="-fx-background-color: #256c26; -fx-border-radius: 5; -fx-border-color: #2a2a2a; -fx-border-width: 2; -fx-background-radius: 6;">
                            <children>
                               <Label alignment="CENTER" layoutY="3.0" prefHeight="45.0" prefWidth="300.0" text="ELIMINAR TORNEO" textFill="#fcf3f3">
                                  <font>
