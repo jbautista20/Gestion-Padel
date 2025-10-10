@@ -70,8 +70,7 @@ public class TorneoDAOImpl implements TorneoDAO {
     @Override
     public void delete(int id) {
         String sql = "DELETE FROM Torneos WHERE id_torneo = ?";
-        try (Connection conn = Conexion.getConexion();
-             PreparedStatement stmt = conn.prepareStatement(sql)) {
+        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
 
             stmt.setInt(1, id);
             stmt.executeUpdate();
