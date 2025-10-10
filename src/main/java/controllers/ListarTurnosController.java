@@ -1,6 +1,7 @@
 package controllers;
 
 import javafx.fxml.FXML;
+import DAO.impl.TurnoDAOImpl;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.ImageView;
@@ -11,15 +12,14 @@ import javafx.scene.text.TextAlignment;
 import javafx.stage.Stage;
 import models.Turno;
 import models.E;
-import DAO.impl.TurnoDAOImpl;
 import utilities.NavigationHelper;
 import utilities.Paths;
 import utilities.TurnoObserver;
 import utilities.TurnoSubject;
+
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.List;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 public class ListarTurnosController implements TurnoObserver {
@@ -30,11 +30,11 @@ public class ListarTurnosController implements TurnoObserver {
     @FXML
     private TableColumn<Turno, String> columnaEstado;
     @FXML
+    private TableColumn<Turno, String> columnaCancha;
+    @FXML
     private ImageView botonBack;
     @FXML
     private Pane botonCrearReserva;
-    @FXML
-    private ComboBox<String> comboBoxCancha;
     @FXML
     private DatePicker DatePickerFecha;
     @FXML
@@ -47,13 +47,13 @@ public class ListarTurnosController implements TurnoObserver {
 
     @FXML
     public void initialize() {
-        configurarPlaceholder();
+        configurarTextoenTabla();
         configurarColumnas();
         configurarListeners();
         turnoSubject.addObserver(this);
         cargarTodosLosTurnos();
-        cargarOpcionesCancha();
         tablaTurnos.getItems().clear();
+
         tablaTurnos.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
             if (newSelection != null) {
                 mostrarTurnoSeleccionado(newSelection);
@@ -63,13 +63,26 @@ public class ListarTurnosController implements TurnoObserver {
         });
     }
 
+    //-----------------------MÉTODOS PARA TABLA TURNOS-----------------------------
     private void configurarColumnas() {
         columnaHora.setCellValueFactory(new PropertyValueFactory<>("hora"));
         columnaEstado.setCellValueFactory(new PropertyValueFactory<>("estado"));
+
+        // Mostrar número de cancha en la columna
+        columnaCancha.setCellValueFactory(cellData -> {
+            Turno turno = cellData.getValue();
+            if (turno.getCancha() != null) {
+                return new javafx.beans.property.SimpleStringProperty(
+                        String.valueOf(turno.getCancha().getNumero())
+                );
+            } else {
+                return new javafx.beans.property.SimpleStringProperty("-");
+            }
+        });
     }
 
-    private void configurarPlaceholder() {
-        Text placeholderText = new Text("Por favor, seleccione una cancha y una fecha para poder ver turnos");
+    private void configurarTextoenTabla() {
+        Text placeholderText = new Text("Por favor, seleccione una fecha para poder ver turnos");
         placeholderText.setTextAlignment(TextAlignment.CENTER);
         placeholderText.setStyle("-fx-font-size: 14px; -fx-fill: #666;");
 
@@ -80,15 +93,10 @@ public class ListarTurnosController implements TurnoObserver {
     }
 
     private void configurarListeners() {
-        comboBoxCancha.valueProperty().addListener((observable, oldValue, newValue) -> {
-            turnoSubject.setCancha(newValue);
-        });
-
         DatePickerFecha.valueProperty().addListener((observable, oldValue, newValue) -> {
             turnoSubject.setFecha(newValue);
         });
     }
-
 
     private void cargarTodosLosTurnos() {
         try {
@@ -98,30 +106,19 @@ public class ListarTurnosController implements TurnoObserver {
             todosLosTurnos = List.of();
         }
     }
+    //-----------------------MÉTODOS PARA TABLA TURNOS-----------------------------
 
-    private void cargarOpcionesCancha() {
-        Set<String> canchasUnicas = todosLosTurnos.stream()
-                .filter(turno -> turno.getCancha() != null)
-                .map(turno -> String.valueOf(turno.getCancha().getNumero()))
-                .collect(Collectors.toSet());
-
-        comboBoxCancha.getItems().clear();
-        comboBoxCancha.getItems().addAll(canchasUnicas);
-        comboBoxCancha.getItems().add(0, "");
-    }
-
+    //------------------------------FILTROS--------------------------
     @Override
     public void onFiltrosCambiados(String cancha, LocalDate fecha) {
-        aplicarFiltros(cancha, fecha);
+        aplicarFiltros(fecha);
     }
 
-    private void aplicarFiltros(String cancha, LocalDate fecha) {
-        boolean canchaSeleccionada = cancha != null && !cancha.trim().isEmpty();
+    private void aplicarFiltros(LocalDate fecha) {
         boolean fechaSeleccionada = fecha != null;
 
-        if (canchaSeleccionada && fechaSeleccionada) {
+        if (fechaSeleccionada) {
             List<Turno> turnosFiltrados = todosLosTurnos.stream()
-                    .filter(turno -> filtrarPorCancha(turno, cancha))
                     .filter(turno -> filtrarPorFecha(turno, fecha))
                     .collect(Collectors.toList());
 
@@ -137,21 +134,13 @@ public class ListarTurnosController implements TurnoObserver {
         }
     }
 
-    private boolean filtrarPorCancha(Turno turno, String canchaFiltro) {
-        if (turno.getCancha() == null) return false;
-
-        int numeroCanchaTurno = turno.getCancha().getNumero();
-        String numeroCanchaStr = String.valueOf(numeroCanchaTurno);
-        return canchaFiltro.equals(numeroCanchaStr);
-    }
-
     private boolean filtrarPorFecha(Turno turno, LocalDate fecha) {
         if (turno.getFecha() == null) return false;
         return fecha.equals(turno.getFecha());
     }
+    //------------------------------FILTROS--------------------------
 
-
-
+    //-------------------BOTON PARA VOLVER--------------------------
     @FXML
     private void handleBackButton() {
         try {
@@ -161,7 +150,9 @@ public class ListarTurnosController implements TurnoObserver {
             e.printStackTrace();
         }
     }
+    //-------------------BOTON PARA VOLVER--------------------------
 
+    //-------------------------BOTON CREAR RESERVA----------------------------------
     @FXML
     private void handleCrearReserva() {
         try {
@@ -174,8 +165,9 @@ public class ListarTurnosController implements TurnoObserver {
                 mostrarAlertaError("Turno no disponible", "El turno seleccionado no está disponible.\n" + "Estado actual: " + turnoSeleccionado.getEstado() + "\n\n" + "Por favor, seleccione un turno con estado 'LIBRE'.");
                 return;
             }
-
-            // Si pasa todas las validaciones, navegar a la pantalla de crear reserva
+            // Guardar turno seleccionado en el contexto global
+            utilities.TurnoContext.setTurnoSeleccionado(turnoSeleccionado);
+            // Ir a la pantalla CrearReserva
             Stage stage = (Stage) botonCrearReserva.getScene().getWindow();
             NavigationHelper.cambiarVista(stage, Paths.pantallaCrearReserva, "CrearReserva");
 
@@ -184,26 +176,24 @@ public class ListarTurnosController implements TurnoObserver {
             mostrarAlertaError("Error", "Ocurrió un error al procesar la reserva: " + e.getMessage());
         }
     }
+    //-------------------------BOTON CREAR RESERVA----------------------------------
 
-
+    //----------------------PARA VER EL TURNO QUE SELECCIONO--------------------------------
     private void mostrarTurnoSeleccionado(Turno turno) {
         String fecha = turno.getFecha() != null ? turno.getFecha().toString() : "-";
         String hora = turno.getHora() != null ? turno.getHora().toString() : "-";
         String cancha = (turno.getCancha() != null) ? String.valueOf(turno.getCancha().getNumero()) : "-";
 
-        labelTurnoSeleccionado.setText(
-                "Turno seleccionado: \nFecha: " + fecha + " \nHora: " + hora + " \nCancha: " + cancha
-        );
+        labelTurnoSeleccionado.setText("Turno seleccionado: \nFecha: " + fecha + " \nHora: " + hora + " \nCancha: " + cancha);
     }
-
+    //----------------------PARA VER EL TURNO QUE SELECCIONO--------------------------------
 
     //--------------------------ALERTAS-----------------------------------
     private void mostrarAlertaSinResultados() {
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
         alert.setTitle("Sin resultados");
         alert.setHeaderText(null);
-        alert.setContentText("No se encontraron turnos para la cancha " + comboBoxCancha.getValue() +
-                " en la fecha " + DatePickerFecha.getValue());
+        alert.setContentText("No se encontraron turnos en la fecha " + DatePickerFecha.getValue());
         alert.showAndWait();
     }
 
@@ -215,3 +205,4 @@ public class ListarTurnosController implements TurnoObserver {
         alert.showAndWait();
     }
 }
+//--------------------------ALERTAS-----------------------------------

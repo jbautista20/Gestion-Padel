@@ -12,9 +12,6 @@ public class TurnoSubject {
         observers.add(observer);
     }
 
-    public void removeObserver(TurnoObserver observer) {
-        observers.remove(observer);
-    }
 
     public void setCancha(String cancha) {
         this.canchaSeleccionada = cancha;
@@ -32,11 +29,4 @@ public class TurnoSubject {
         }
     }
 
-    public String getCanchaSeleccionada() {
-        return canchaSeleccionada;
-    }
-
-    public LocalDate getFechaSeleccionada() {
-        return fechaSeleccionada;
-    }
 }

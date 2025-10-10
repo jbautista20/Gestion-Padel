@@ -9,9 +9,12 @@ import javafx.scene.image.ImageView;
 import javafx.util.Duration;
 import models.Torneo;
 
+import java.net.URL;
+
 public class NavigationHelper {
-    private  static  Object datos;
+    private static Object datos;
     private static NavigationHelper instance;
+
     public static NavigationHelper getInstance() {
         if (instance == null) {
             instance = new NavigationHelper();
@@ -26,11 +29,22 @@ public class NavigationHelper {
      * @param fxml    ruta del archivo FXML (ejemplo: "/Views/menuPrincipal.fxml")
      * @param titulo  título opcional para la ventana
      */
-
     public static void cambiarVista(Stage stage, String fxml, String titulo) {
         try {
+            System.out.println("🔍 Buscando archivo FXML: " + fxml);
 
-            FXMLLoader loader = new FXMLLoader(NavigationHelper.class.getResource(fxml));
+            // Método mejorado para encontrar el recurso
+            URL resource = findResource(fxml);
+
+            if (resource == null) {
+                System.err.println("❌ NO SE ENCONTRÓ EL ARCHIVO: " + fxml);
+                System.err.println("❌ Verifica que el archivo exista en: src/main/resources/Views/");
+                return;
+            }
+
+            System.out.println("✅ Archivo encontrado: " + resource.getPath());
+
+            FXMLLoader loader = new FXMLLoader(resource);
             Parent root = loader.load();
 
             Scene scene = stage.getScene();
@@ -48,19 +62,76 @@ public class NavigationHelper {
                 stage.setTitle(titulo);
             }
 
+            System.out.println("✅ Vista cambiada exitosamente a: " + titulo);
+
         } catch (Exception e) {
             e.printStackTrace();
-            System.out.println("Error al cargar vista: " + fxml);
+            System.err.println("❌ Error al cargar vista: " + fxml);
         }
     }
 
+    /**
+     * Método mejorado para encontrar recursos FXML
+     */
+    private static URL findResource(String fxmlPath) {
+        // Eliminar slash inicial si existe
+        String cleanPath = fxmlPath.startsWith("/") ? fxmlPath.substring(1) : fxmlPath;
+
+        System.out.println("🔍 Buscando: " + cleanPath);
+
+        // Intentar diferentes métodos de búsqueda
+        URL resource = null;
+
+        // Método 1: Usar ClassLoader del sistema
+        resource = ClassLoader.getSystemResource(cleanPath);
+        if (resource != null) {
+            System.out.println("✅ Encontrado con ClassLoader");
+            return resource;
+        }
+
+        // Método 2: Usar ClassLoader del thread actual
+        resource = Thread.currentThread().getContextClassLoader().getResource(cleanPath);
+        if (resource != null) {
+            System.out.println("✅ Encontrado con ContextClassLoader");
+            return resource;
+        }
+
+        // Método 3: Usar la clase NavigationHelper
+        resource = NavigationHelper.class.getResource("/" + cleanPath);
+        if (resource != null) {
+            System.out.println("✅ Encontrado con NavigationHelper.class");
+            return resource;
+        }
+
+        // Método 4: Buscar sin el prefijo "Views/"
+        if (cleanPath.startsWith("Views/")) {
+            String alternativePath = cleanPath.substring(6); // Remover "Views/"
+            resource = ClassLoader.getSystemResource(alternativePath);
+            if (resource != null) {
+                System.out.println("✅ Encontrado sin prefijo Views/");
+                return resource;
+            }
+        }
+
+        return null;
+    }
 
     public static void cambiarVistaConDatos(Stage stage, String fxml, String titulo, Object datos) {
         try {
             // Guardar datos temporalmente
             NavigationHelper.datos = datos;
 
-            FXMLLoader loader = new FXMLLoader(NavigationHelper.class.getResource(fxml));
+            System.out.println("🔍 Buscando archivo FXML: " + fxml);
+            URL resource = findResource(fxml);
+
+            if (resource == null) {
+                System.err.println("❌ NO SE ENCONTRÓ EL ARCHIVO: " + fxml);
+                return;
+            }
+
+            System.out.println("✅ Archivo encontrado: " + resource.getPath());
+
+            FXMLLoader loader = new FXMLLoader(resource);
             Parent root = loader.load();
 
             Scene scene = stage.getScene();
@@ -78,7 +149,7 @@ public class NavigationHelper {
 
         } catch (Exception e) {
             e.printStackTrace();
-            System.out.println("Error al cargar vista: " + fxml);
+            System.err.println("❌ Error al cargar vista: " + fxml);
         }
     }
 
@@ -91,8 +162,8 @@ public class NavigationHelper {
     public static void clearDatos() {
         datos = null;
     }
-//--------------------------BotonBack----------------------------------------------------------------------------------
 
+    //--------------------------BotonBack----------------------------------------------------------------------------------
     /**
      * Configura un ImageView como botón "Back" con animación y navegación.
      * @param botonBack ImageView que actúa como botón
@@ -116,21 +187,5 @@ public class NavigationHelper {
         System.out.println("Navegando a: " + titulo);
         cambiarVista(stage, fxml, titulo);
     }
-//    public void setupBackButton(ImageView botonBack, String fxmlPath, String titulo) {
-//        botonBack.setOnMousePressed(mouseEvent -> {
-//            TranslateTransition press = new TranslateTransition(Duration.millis(50), botonBack);
-//            press.setToX(10);
-//            press.setToY(10);
-//            press.play();
-//        });
-//
-//        botonBack.setOnMouseReleased(mouseEvent -> {
-//            Stage stage = (Stage) botonBack.getScene().getWindow();
-//            TranslateTransition release = new TranslateTransition(Duration.millis(50), botonBack);
-//            release.setToX(0);
-//            release.setToY(0);
-//            release.setOnFinished(event -> cambiarVista(stage,fxmlPath,titulo));
-//            release.play();
-//        });
-    }
+}
 
