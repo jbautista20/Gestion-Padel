@@ -15,11 +15,9 @@ import DAO.impl.PersonaDAOImpl;
 import DAO.impl.TurnoDAOImpl;
 import utilities.NavigationHelper;
 import utilities.Paths;
-import utilities.TurnoContext;
 
 import java.time.LocalDate;
 import java.util.List;
-
 public class CrearReservaController {
     private GenericDAO<Turno> turnoDAO = new TurnoDAOImpl();
     private GenericDAO<Persona> personaDAO = new PersonaDAOImpl();
@@ -49,13 +47,11 @@ public class CrearReservaController {
     private TextField textMonto;
     @FXML
     private DatePicker datePickerFechaPago;
-    //-----ABM PERSONA-------
-    @FXML
-    private  Label botonAltaPersona;
-    @FXML
-    private  Label botonBajaPersona;
-    @FXML
-    private Label botonModificarPersona;
+
+    // ----- Botones ABM Persona -----
+    @FXML private Label botonAltaPersona;
+    @FXML private Label botonBajaPersona;
+    @FXML private Label botonModificarPersona;
 
     @FXML
     public void initialize() {
@@ -63,17 +59,35 @@ public class CrearReservaController {
         cargarPersonas();
         configurarSeleccionTabla();
 
-        // Recuperamos el turno seleccionado en listar turnos
-        turnoSeleccionado = TurnoContext.getTurnoSeleccionado();
-        if (turnoSeleccionado != null) {
-            LabelTurnoSeleccionado.setText("Datos de reserva:\nFecha: " + turnoSeleccionado.getFecha() + "\nHora: " + turnoSeleccionado.getHora() + "\nCancha: " + (turnoSeleccionado.getCancha() != null ? turnoSeleccionado.getCancha().getNumero() : "-")
-            );
+        // ✅ Recuperamos el turno seleccionado desde NavigationHelper
+        Object datos = NavigationHelper.getDatos();
+        if (datos instanceof Turno) {
+            turnoSeleccionado = (Turno) datos;
+            NavigationHelper.clearDatos(); // limpiar después de usarlo (opcional)
         }
 
-        tablaPersonas.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
-            personaSeleccionada = newSelection;
-            if (newSelection != null) {
-                labelPersonaSeleccionada.setText("Persona seleccionada:\nNombre: " + newSelection.getNombre() + " " + newSelection.getApellido() + "\nTeléfono: " + newSelection.getTelefono());
+        if (turnoSeleccionado != null) {
+            LabelTurnoSeleccionado.setText(
+                    "Datos de reserva:\n" +
+                            "Fecha: " + turnoSeleccionado.getFecha() +
+                            "\nHora: " + turnoSeleccionado.getHora() +
+                            "\nCancha: " + (turnoSeleccionado.getCancha() != null
+                            ? turnoSeleccionado.getCancha().getNumero()
+                            : "-")
+            );
+        } else {
+            LabelTurnoSeleccionado.setText("No se ha seleccionado un turno.");
+        }
+
+        // Listener para mostrar persona seleccionada
+        tablaPersonas.getSelectionModel().selectedItemProperty().addListener((obs, oldSel, newSel) -> {
+            personaSeleccionada = newSel;
+            if (newSel != null) {
+                labelPersonaSeleccionada.setText(
+                        "Persona seleccionada:\n" +
+                                "Nombre: " + newSel.getNombre() + " " + newSel.getApellido() +
+                                "\nTeléfono: " + newSel.getTelefono()
+                );
             } else {
                 labelPersonaSeleccionada.setText("No hay persona seleccionada");
             }
@@ -98,50 +112,52 @@ public class CrearReservaController {
     }
 
     private void configurarSeleccionTabla() {
-        tablaPersonas.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
-            if (newSelection != null) {
-                personaSeleccionada = newSelection;
-                System.out.println("Persona seleccionada: " + newSelection.getNombre() + " " + newSelection.getApellido());
+        tablaPersonas.getSelectionModel().selectedItemProperty().addListener((obs, oldSel, newSel) -> {
+            personaSeleccionada = newSel;
+            if (newSel != null) {
+                System.out.println("Persona seleccionada: " + newSel.getNombre() + " " + newSel.getApellido());
             }
         });
     }
 
-    //---------------------------------BOTON DE BACK--------------------------------------
+    // -------------------- BOTÓN BACK --------------------
     @FXML
     private void handleBackButton(MouseEvent event) {
         Stage stage = (Stage) botonBack.getScene().getWindow();
-        NavigationHelper.cambiarVista(stage, Paths.pantallaTurnos, "ListarTorneos");
-        System.out.println("Volviendo a la pantalla turnos");
+        NavigationHelper.cambiarVista(stage, Paths.pantallaTurnos, "ListarTurnos");
+        System.out.println("Volviendo a la pantalla de turnos");
     }
-    //---------------------------------BOTON DE BACK--------------------------------------
 
-    //--------------------------------CREAR RESERVA---------------------------------------
+    // -------------------- CREAR RESERVA --------------------
     @FXML
     private void handleCrearReserva(MouseEvent event) {
         if (personaSeleccionada == null) {
-            mostrarAlertaError("Selección requerida", "Por favor, seleccione una persona de la tabla para crear la reserva.");
+            mostrarAlertaError("Selección requerida", "Por favor, seleccione una persona para crear la reserva.");
             return;
         }
+
         if (turnoSeleccionado == null) {
             mostrarAlertaError("Error", "No se ha seleccionado ningún turno.");
             return;
         }
 
-        // pars validar contenido de pago
+        // Validar monto
         String montoTexto = textMonto.getText();
         if (montoTexto == null || montoTexto.trim().isEmpty()) {
-            mostrarAlertaError("Error", "Por favor, ingrese monto pagado para poder cargar la reserva.");
+            mostrarAlertaError("Error", "Por favor, ingrese el monto pagado.");
             return;
         }
+
         if (datePickerFechaPago.getValue() == null) {
-            mostrarAlertaError("Error", "Por favor, ingrese fecha de pago para poder cargar la reserva.");
+            mostrarAlertaError("Error", "Por favor, ingrese la fecha de pago.");
             return;
         }
+
         double monto;
         try {
             monto = Double.parseDouble(montoTexto.trim());
-            if(monto<0){
-                mostrarAlertaError("Monto inválido","Por favor, ingrese un número válido en el campo de monto.");
+            if (monto < 0) {
+                mostrarAlertaError("Monto inválido", "Por favor, ingrese un número válido en el campo de monto.");
                 return;
             }
         } catch (NumberFormatException e) {
@@ -150,17 +166,18 @@ public class CrearReservaController {
         }
 
         try {
+            // Seteamos los datos en el turno
             turnoSeleccionado.setPersona(personaSeleccionada);
-            int montoEntero = (int) monto; // Convertir a int para el set
-            turnoSeleccionado.setPago(montoEntero);
+            turnoSeleccionado.setPago((int) monto);
             turnoSeleccionado.setFecha_Pago(datePickerFechaPago.getValue());
             turnoSeleccionado.setEstado(E.Ocupado);
 
-            crearReserva(turnoSeleccionado, personaSeleccionada);
-            mostrarAlertaExito("Reserva creada", "Reserva creada exitosamente para " + personaSeleccionada.getNombre() + " " + personaSeleccionada.getApellido());
+            crearReserva(turnoSeleccionado);
 
-            TurnoContext.limpiar();
+            mostrarAlertaExito("Reserva creada", "Reserva creada exitosamente para " +
+                    personaSeleccionada.getNombre() + " " + personaSeleccionada.getApellido());
 
+            // Volver a pantalla de turnos
             Stage stage = (Stage) botonCrearReserva.getScene().getWindow();
             NavigationHelper.cambiarVista(stage, Paths.pantallaTurnos, "ListarTurnos");
 
@@ -170,50 +187,17 @@ public class CrearReservaController {
         }
     }
 
-    //inserta en la BD
-    private void crearReserva(Turno turno, Persona persona) {
+    // -------------------- GUARDAR EN BASE --------------------
+    private void crearReserva(Turno turno) {
         try {
-            int monto = (int) Double.parseDouble(textMonto.getText());
-            LocalDate fechaPago = datePickerFechaPago.getValue();
-
-            turno.setEstado(E.Ocupado);
-            turno.setPersona(persona);
-            turno.setPago(monto);
-            turno.setFecha_Pago(fechaPago);
-
             turnoDAO.update(turno);
-
         } catch (Exception e) {
             e.printStackTrace();
             throw new RuntimeException("Error al crear la reserva: " + e.getMessage());
         }
     }
-    //--------------------------------CREAR RESERVA---------------------------------------
 
-
-    // ----------------Métodos para los botones de gestión de personas----------------------------------
-    @FXML
-    private void handleAltaPersona(MouseEvent event) {
-        Stage stage = (Stage) botonAltaPersona.getScene().getWindow();
-        mostrarAlertaInfo("Alta Persona", "Funcionalidad de Alta en desarrollo.");
-
-    }
-
-    @FXML
-    private void handleBajaPersona(MouseEvent event) {
-        Stage stage = (Stage) botonBajaPersona.getScene().getWindow();
-        mostrarAlertaInfo("Baja Persona", "Funcionalidad de Baja en desarrollo.");
-    }
-
-    @FXML
-    private void handleModificarPersona(MouseEvent event) {
-        Stage stage = (Stage) botonModificarPersona.getScene().getWindow();
-        mostrarAlertaInfo("Modificar Persona", "Funcionalidad de modificación en desarrollo.");
-
-    }
-    // ----------------Métodos para los botones de gestión de personas----------------------------------
-
-    // ---------------------Métodos auxiliares para alertas---------------------------------
+    // -------------------- MÉTODOS AUXILIARES --------------------
     private void mostrarAlertaError(String titulo, String mensaje) {
         Alert alert = new Alert(Alert.AlertType.ERROR);
         alert.setTitle(titulo);
@@ -238,4 +222,3 @@ public class CrearReservaController {
         alert.showAndWait();
     }
 }
-
