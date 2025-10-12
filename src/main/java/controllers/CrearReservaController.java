@@ -221,4 +221,18 @@ public class CrearReservaController {
         alert.setContentText(mensaje);
         alert.showAndWait();
     }
+
+    @FXML
+    private void handleModificarPersona(MouseEvent event) {
+        // tu código aquí
+    }
+    @FXML
+    private void handleAltaPersona(MouseEvent event) {
+        // tu código aquí
+    }
+    @FXML
+    private void handleBajaPersona(MouseEvent event) {
+        // tu código aquí
+    }
+
 }
