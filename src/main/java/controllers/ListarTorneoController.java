@@ -7,6 +7,7 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
+import javafx.scene.Node;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
 import javafx.scene.image.ImageView;
@@ -15,6 +16,7 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.TableColumn;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
+import javafx.stage.Window;
 import models.Equipo;
 import models.Es;
 import models.Torneo;
@@ -196,9 +198,14 @@ public class ListarTorneoController {
         if (torneoSeleccionado != null) {
             // Guardar el torneo seleccionado
             DataManager.getInstance().setTorneoSeleccionado(torneoSeleccionado);
-            Stage stage = (Stage) botonModificarTorneo.getScene().getWindow();
-            NavigationHelper.cambiarVistaConDatos(stage, Paths.pantallaModificarTorneo,
-                    "Modificar Torneo", torneoSeleccionado);
+
+            // ✅ SOLUCIÓN SUPER SIMPLE - Usar la primera ventana que encuentre
+            if (!Window.getWindows().isEmpty()) {
+                Stage stage = (Stage) Window.getWindows().get(0);
+                NavigationHelper.cambiarVista(stage, Paths.pantallaModificarTorneo, "Modificar Torneo");
+            } else {
+                mostrarAlerta("Error", "No hay ventanas disponibles");
+            }
         }
     }
 

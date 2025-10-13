@@ -48,7 +48,7 @@ public class TorneoDAOImpl implements GenericDAO<Torneo> {
 
     @Override
     public void update(Torneo torneo) {
-        String sql = "UPDATE Torneos SET tipo = ?, categoria = ?, fecha = ?, premio1 = ?, premio2 = ?, valor_insc = ?, estado = ? WHERE torneo_id = ?";
+        String sql = "UPDATE Torneos SET tipo = ?, categoria = ?, fecha = ?, premio1 = ?, premio2 = ?, valor_insc = ?, estado = ? WHERE id_torneo = ?";
         try (PreparedStatement stmt = conn.prepareStatement(sql)) {
 
             stmt.setString(1, torneo.getTipo().name()); // enum → String

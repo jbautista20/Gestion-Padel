@@ -32,7 +32,7 @@
                                  </image>
                               </ImageView>
                               <Pane layoutX="21.0" layoutY="19.0" prefHeight="63.0" prefWidth="65.0" style="-fx-background-color: #86a55f;" />
-                              <ImageView fx:id="botonBack" fitHeight="100.0" fitWidth="120.0" pickOnBounds="true" preserveRatio="true">
+                              <ImageView fx:id="botonBack" fitHeight="100.0" fitWidth="120.0" onMouseClicked="#handleBackButton" pickOnBounds="true" preserveRatio="true">
                                  <image>
                                     <Image url="@../Imagenes/Back.png" />
                                  </image>
@@ -48,7 +48,7 @@
                         <Pane layoutX="400.0" layoutY="580.0" prefHeight="56.0" prefWidth="306.0">
                            <children>
                               <Pane layoutX="5.0" layoutY="5.0" prefHeight="51.0" prefWidth="296.0" style="-fx-background-color: #2a2a2a; -fx-border-radius: 5; -fx-border-color: #2a2a2a; -fx-border-width: 2; -fx-background-radius: 6;" />
-                              <Pane prefHeight="51.0" prefWidth="296.0" style="-fx-background-color: #256c26; -fx-border-radius: 5; -fx-border-color: #2a2a2a; -fx-border-width: 2; -fx-background-radius: 6;">
+                              <Pane onMouseClicked="#handleGuardarModificacion" prefHeight="51.0" prefWidth="296.0" style="-fx-background-color: #256c26; -fx-border-radius: 5; -fx-border-color: #2a2a2a; -fx-border-width: 2; -fx-background-radius: 6;">
                                  <children>
                                     <Label alignment="CENTER" prefHeight="45.0" prefWidth="300.0" text="Confirmar" textFill="#fcf3f3">
                                        <font>
