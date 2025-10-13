@@ -19,14 +19,36 @@ public class EquipoDAOImpl implements GenericDAO<Equipo> {
 
     @Override
     public void create(Equipo equipo) {
-        String sql = "INSERT INTO Equipos (id_jugador1, id_jugador2, id_torneo, nombre, ptos_T_Obt, fecha_Insc) VALUES (?, ?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO Equipos (id_jugador1, id_jugador2, id_torneo, nombre, ptos_T_Obt, fecha_Insc, motivo_desc, fecha_desc) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
         try (PreparedStatement stmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
-            stmt.setInt(1, equipo.getJugador1() != null ? equipo.getJugador1().getId() : 0);
-            stmt.setInt(2, equipo.getJugador2() != null ? equipo.getJugador2().getId() : 0);
-            stmt.setInt(3, equipo.getTorneo() != null ? equipo.getTorneo().getId() : 0);
+
+            // Relaciones
+            if (equipo.getJugador1() != null)
+                stmt.setInt(1, equipo.getJugador1().getId());
+            else
+                stmt.setNull(1, Types.INTEGER);
+
+            if (equipo.getJugador2() != null)
+                stmt.setInt(2, equipo.getJugador2().getId());
+            else
+                stmt.setNull(2, Types.INTEGER);
+
+            if (equipo.getTorneo() != null)
+                stmt.setInt(3, equipo.getTorneo().getId());
+            else
+                stmt.setNull(3, Types.INTEGER);
+
+            // Atributos propios
             stmt.setString(4, equipo.getNombre());
             stmt.setInt(5, equipo.getPtos_T_Obt());
-            stmt.setString(6, equipo.getFecha_Insc().toString()); // LocalDate → String
+            stmt.setString(6, equipo.getFecha_Insc().toString());
+
+            // Campos nuevos (pueden ser nulos)
+            stmt.setString(7, equipo.getMotivo_desc());
+            if (equipo.getFecha_desc() != null)
+                stmt.setString(8, equipo.getFecha_desc().toString());
+            else
+                stmt.setNull(8, Types.VARCHAR);
 
             stmt.executeUpdate();
 
@@ -36,6 +58,7 @@ public class EquipoDAOImpl implements GenericDAO<Equipo> {
                     equipo.setId(rs.getInt(1));
                 }
             }
+
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -43,15 +66,33 @@ public class EquipoDAOImpl implements GenericDAO<Equipo> {
 
     @Override
     public void update(Equipo equipo) {
-        String sql = "UPDATE Equipos SET id_jugador1 = ?, id_jugador2 = ?, id_torneo = ?, nombre = ?, ptos_T_Obt = ?, fecha_Insc = ? WHERE id_equipo = ?";
+        String sql = "UPDATE Equipos SET id_jugador1 = ?, id_jugador2 = ?, id_torneo = ?, nombre = ?, ptos_T_Obt = ?, fecha_Insc = ?, motivo_desc = ?, fecha_desc = ? WHERE id_equipo = ?";
         try (PreparedStatement stmt = conn.prepareStatement(sql)) {
-            stmt.setInt(1, equipo.getJugador1() != null ? equipo.getJugador1().getId() : 0);
-            stmt.setInt(2, equipo.getJugador2() != null ? equipo.getJugador2().getId() : 0);
-            stmt.setInt(3, equipo.getTorneo() != null ? equipo.getTorneo().getId() : 0);
+
+            if (equipo.getJugador1() != null)
+                stmt.setInt(1, equipo.getJugador1().getId());
+            else
+                stmt.setNull(1, Types.INTEGER);
+
+            if (equipo.getJugador2() != null)
+                stmt.setInt(2, equipo.getJugador2().getId());
+            else
+                stmt.setNull(2, Types.INTEGER);
+
+            if (equipo.getTorneo() != null)
+                stmt.setInt(3, equipo.getTorneo().getId());
+            else
+                stmt.setNull(3, Types.INTEGER);
+
             stmt.setString(4, equipo.getNombre());
             stmt.setInt(5, equipo.getPtos_T_Obt());
             stmt.setString(6, equipo.getFecha_Insc().toString());
-            stmt.setInt(7, equipo.getId());
+            stmt.setString(7, equipo.getMotivo_desc());
+            if (equipo.getFecha_desc() != null)
+                stmt.setString(8, equipo.getFecha_desc().toString());
+            else
+                stmt.setNull(8, Types.VARCHAR);
+            stmt.setInt(9, equipo.getId());
 
             stmt.executeUpdate();
             System.out.println("Equipo actualizado correctamente.");
@@ -87,11 +128,13 @@ public class EquipoDAOImpl implements GenericDAO<Equipo> {
                         rs.getString("nombre"),
                         rs.getInt("ptos_T_Obt"),
                         LocalDate.parse(rs.getString("fecha_Insc")),
-                        null, // Jugador1 → cargar con JugadorDAO.findById(rs.getInt("id_jugador1"))
-                        null, // Jugador2 → idem
-                        null, // Torneo → cargar con TorneoDAO.findById(rs.getInt("id_torneo"))
-                        null, // PartidosGanados → otro DAO
-                        null  // PartidosJugados → otro DAO
+                        null, // Jugador1 (podés cargar luego con JugadorDAO.findById)
+                        null, // Jugador2
+                        null, // Torneo
+                        null, // PartidosGanados
+                        null, // PartidosJugados
+                        rs.getString("motivo_desc"),
+                        rs.getString("fecha_desc") != null ? LocalDate.parse(rs.getString("fecha_desc")) : null
                 );
             }
         } catch (SQLException e) {
@@ -118,7 +161,9 @@ public class EquipoDAOImpl implements GenericDAO<Equipo> {
                         null,
                         null,
                         null,
-                        null
+                        null,
+                        rs.getString("motivo_desc"),
+                        rs.getString("fecha_desc") != null ? LocalDate.parse(rs.getString("fecha_desc")) : null
                 );
                 equipos.add(equipo);
             }

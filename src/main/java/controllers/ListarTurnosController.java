@@ -143,29 +143,36 @@ public class ListarTurnosController {
     }
 
     private void generarTurnosDelDia(LocalDate fecha) {
-        LocalTime horaInicio = LocalTime.of(12, 0);
-        LocalTime horaFin = LocalTime.of(22, 0);
+        LocalTime[] horarios = { LocalTime.of(12,0), LocalTime.of(14,0), LocalTime.of(16,0),
+                LocalTime.of(18,0), LocalTime.of(20,0), LocalTime.of(22,0) };
 
-        // Obtener todas las canchas de la base de datos
         CanchaDAOImpl canchaDAO = new CanchaDAOImpl();
         List<Cancha> canchas = canchaDAO.findAll();
 
         for (Cancha cancha : canchas) {
-            for (LocalTime hora = horaInicio; hora.isBefore(horaFin); hora = hora.plusHours(2)) {
-                Turno turno = new Turno();
-                turno.setFecha(fecha);
-                turno.setHora(hora);
-                turno.setEstado(E.Libre);
-                turno.setCancha(cancha);
-                turno.setPago(0);
-                turno.setPersona(null); // null hasta que se reserve
+            for (LocalTime hora : horarios) {
+                // Verificar si ya existe el turno
+                if (!turnoDAO.existeTurno(cancha.getNumero(), fecha, hora)) {
+                    Turno turno = new Turno();
+                    turno.setFecha(fecha);
+                    turno.setHora(hora);
+                    turno.setEstado(E.Libre);
+                    turno.setPago(0);
+                    turno.setPersona(null);
+                    turno.setCancha(cancha);
+                    turno.setFecha_Pago(null);
+                    turno.setFecha_Cancelacion(null);
+                    turno.setReintegro_Cancelacion(null);
 
-                turnoDAO.create(turno);
+                    turnoDAO.create(turno);
+                    System.out.println("Turno generado: " + fecha + " - " + hora + " - Cancha " + cancha.getNumero());
+                }
             }
         }
 
         System.out.println("Turnos generados para " + fecha);
     }
+
 
     @FXML
     private void handleBackButton() {

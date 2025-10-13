@@ -7,24 +7,28 @@ public class Partido {
     private LocalTime Hora;
     private int Instancia;
     private int Puntos;
-    private Resultado resultado;
     private Cancha cancha;  // Relación 1..1 con Cancha
     private Equipo equipo1;
     private Equipo equipo2;
     private Equipo ganador;
     private Torneo torneo;
+    private String set1;
+    private String set2;
+    private String set3;
 
-    public Partido(int Id, LocalTime hora, int instancia, int puntos, Resultado resultado, Cancha cancha, Equipo equipo1, Equipo equipo2, Equipo ganador, Torneo torneo) {
+    public Partido(int Id, LocalTime hora, int instancia, int puntos, Cancha cancha, Equipo equipo1, Equipo equipo2, Equipo ganador, Torneo torneo,  String set1, String set2, String set3) {
         Hora = hora;
         this.Id = Id;
         Instancia = instancia;
         Puntos = puntos;
-        this.resultado = resultado;
         this.cancha = cancha;
         this.equipo1 = equipo1;
         this.equipo2 = equipo2;
         this.ganador = ganador;
         this.torneo = torneo;
+        this.set1 = set1;
+        this.set2 = set2;
+        this.set3 = set3;
     }
 
     public int getId() {
@@ -57,14 +61,6 @@ public class Partido {
 
     public void setPuntos(int puntos) {
         Puntos = puntos;
-    }
-
-    public Resultado getResultado() {
-        return resultado;
-    }
-
-    public void setResultado(Resultado resultado) {
-        this.resultado = resultado;
     }
 
     public Cancha getCancha() {
@@ -105,5 +101,29 @@ public class Partido {
 
     public void setTorneo(Torneo torneo) {
         this.torneo = torneo;
+    }
+
+    public String getSet1() {
+        return set1;
+    }
+
+    public void setSet1(String set1) {
+        this.set1 = set1;
+    }
+
+    public String getSet2() {
+        return set2;
+    }
+
+    public void setSet2(String set2) {
+        this.set2 = set2;
+    }
+
+    public String getSet3() {
+        return set3;
+    }
+
+    public void setSet3(String set3) {
+        this.set3 = set3;
     }
 }

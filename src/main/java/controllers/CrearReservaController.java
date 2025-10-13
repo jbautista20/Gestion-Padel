@@ -59,11 +59,11 @@ public class CrearReservaController {
         cargarPersonas();
         configurarSeleccionTabla();
 
-        // ✅ Recuperamos el turno seleccionado desde NavigationHelper
+        // Recuperamos el turno seleccionado desde NavigationHelper
         Object datos = NavigationHelper.getDatos();
         if (datos instanceof Turno) {
             turnoSeleccionado = (Turno) datos;
-            NavigationHelper.clearDatos(); // limpiar después de usarlo (opcional)
+            NavigationHelper.clearDatos(); // limpiar después de usarlo
         }
 
         if (turnoSeleccionado != null) {

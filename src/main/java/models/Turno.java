@@ -11,9 +11,10 @@ public class Turno {
     private LocalDate Fecha_Pago;
     private Persona persona; // 1..* relación
     private Cancha cancha;          // 1 cancha asignada
-    private Cancelacion cancelacion; // Puede tener 0 o 1 cancelación
+    private LocalDate Fecha_Cancelacion;
+    private String Reintegro_Cancelacion;
 
-    public Turno(int Id, LocalDate fecha, LocalTime hora, E estado, int pago, LocalDate fecha_Pago, Persona persona, Cancha cancha) {
+    public Turno(int Id, LocalDate fecha, LocalTime hora, E estado, int pago, LocalDate fecha_Pago, Persona persona, Cancha cancha, LocalDate Fecha_Cancelacion, String Reintegro_Cancelacion) {
         this.Id = Id;
         Fecha = fecha;
         Hora = hora;
@@ -22,6 +23,8 @@ public class Turno {
         Fecha_Pago = fecha_Pago;
         this.persona = persona;
         this.cancha = cancha;
+        this.Fecha_Cancelacion = Fecha_Cancelacion;
+        this.Reintegro_Cancelacion = Reintegro_Cancelacion;
     }
 
     public Turno() {
@@ -92,12 +95,20 @@ public class Turno {
         this.cancha = cancha;
     }
 
-    public Cancelacion getCancelacion() {
-        return cancelacion;
+    public LocalDate getFecha_Cancelacion() {
+        return Fecha_Cancelacion;
     }
 
-    public void setCancelacion(Cancelacion cancelacion) {
-        this.cancelacion = cancelacion;
+    public void setFecha_Cancelacion(LocalDate fecha_Cancelacion) {
+        Fecha_Cancelacion = fecha_Cancelacion;
+    }
+
+    public String getReintegro_Cancelacion() {
+        return Reintegro_Cancelacion;
+    }
+
+    public void setReintegro_Cancelacion(String reintegro_Cancelacion) {
+        Reintegro_Cancelacion = reintegro_Cancelacion;
     }
 }
 

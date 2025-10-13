@@ -19,18 +19,20 @@ public class PartidoDAOImpl implements GenericDAO<Partido> {
 
     @Override
     public void create(Partido partido) {
-        String sql = "INSERT INTO Partidos (hora, instancia, puntos, id_resultado, num_cancha, id_equipo1, id_equipo2, id_ganador, id_torneo) " +
-                "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO Partidos (hora, instancia, puntos, set1, num_cancha, id_equipo1, id_equipo2, id_ganador, id_torneo, set2, set3) " +
+                "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
         try (PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setString(1, partido.getHora().toString()); // LocalTime → String
             stmt.setInt(2, partido.getInstancia());
             stmt.setInt(3, partido.getPuntos());
-            stmt.setInt(4, partido.getResultado() != null ? partido.getResultado().getId() : null);
+            stmt.setString(4, partido.getSet1());
             stmt.setInt(5, partido.getCancha() != null ? partido.getCancha().getNumero() : null);
             stmt.setInt(6, partido.getEquipo1() != null ? partido.getEquipo1().getId() : null);
             stmt.setInt(7, partido.getEquipo2() != null ? partido.getEquipo2().getId() : null);
             stmt.setInt(8, partido.getGanador() != null ? partido.getGanador().getId() : null);
             stmt.setInt(9, partido.getTorneo() != null ? partido.getTorneo().getId() : null);
+            stmt.setString(10, partido.getSet2());
+            stmt.setString(11, partido.getSet3());
 
             stmt.executeUpdate();
 
@@ -49,18 +51,20 @@ public class PartidoDAOImpl implements GenericDAO<Partido> {
 
     @Override
     public void update(Partido partido) {
-        String sql = "UPDATE Partidos SET hora = ?, instancia = ?, puntos = ?, id_resultado = ?, num_cancha = ?, id_equipo1 = ?, id_equipo2 = ?, id_ganador = ?, id_torneo = ? WHERE id_partido = ?";
+        String sql = "UPDATE Partidos SET hora = ?, instancia = ?, puntos = ?, set1 = ?, num_cancha = ?, id_equipo1 = ?, id_equipo2 = ?, id_ganador = ?, id_torneo = ?, set2 = ?, set3 = ? WHERE id_partido = ?";
         try (PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setString(1, partido.getHora().toString());
             stmt.setInt(2, partido.getInstancia());
             stmt.setInt(3, partido.getPuntos());
-            stmt.setInt(4, partido.getResultado() != null ? partido.getResultado().getId() : null);
+            stmt.setString(4, partido.getSet1());
             stmt.setInt(5, partido.getCancha() != null ? partido.getCancha().getNumero() : null);
             stmt.setInt(6, partido.getEquipo1() != null ? partido.getEquipo1().getId() : null);
             stmt.setInt(7, partido.getEquipo2() != null ? partido.getEquipo2().getId() : null);
             stmt.setInt(8, partido.getGanador() != null ? partido.getGanador().getId() : null);
             stmt.setInt(9, partido.getTorneo() != null ? partido.getTorneo().getId() : null);
-            stmt.setInt(10, partido.getId());
+            stmt.setString(10, partido.getSet2());
+            stmt.setString(11, partido.getSet3());
+            stmt.setInt(12, partido.getId());
 
             stmt.executeUpdate();
             System.out.println("Partido actualizado correctamente.");
@@ -96,12 +100,14 @@ public class PartidoDAOImpl implements GenericDAO<Partido> {
                         LocalTime.parse(rs.getString("hora")),
                         rs.getInt("instancia"),
                         rs.getInt("puntos"),
-                        null, // Resultado (se puede buscar con ResultadoDAO)
-                        null, // Cancha (buscar con CanchaDAO)
-                        null, // Equipo1
-                        null, // Equipo2
-                        null, // Ganador
-                        null  // Torneo
+                        null, // cancha
+                        null, // equipo1
+                        null, // equipo2
+                        null, // ganador
+                        null, // torneo
+                        rs.getString("set1"),
+                        rs.getString("set2"),
+                        rs.getString("set3")
                 );
             }
         } catch (SQLException e) {
@@ -109,6 +115,7 @@ public class PartidoDAOImpl implements GenericDAO<Partido> {
         }
         return partido;
     }
+
 
     @Override
     public List<Partido> findAll() {
@@ -124,12 +131,14 @@ public class PartidoDAOImpl implements GenericDAO<Partido> {
                         LocalTime.parse(rs.getString("hora")),
                         rs.getInt("instancia"),
                         rs.getInt("puntos"),
-                        null, // Resultado
-                        null, // Cancha
-                        null, // Equipo1
-                        null, // Equipo2
-                        null, // Ganador
-                        null  // Torneo
+                        null, // cancha
+                        null, // equipo1
+                        null, // equipo2
+                        null, // ganador
+                        null, // torneo
+                        rs.getString("set1"),
+                        rs.getString("set2"),
+                        rs.getString("set3")
                 );
                 partidos.add(partido);
             }
@@ -138,4 +147,6 @@ public class PartidoDAOImpl implements GenericDAO<Partido> {
         }
         return partidos;
     }
+
+
 }

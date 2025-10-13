@@ -9,7 +9,6 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
-
 public class TurnoDAOImpl implements GenericDAO<Turno> {
 
     private Connection conn;
@@ -20,62 +19,92 @@ public class TurnoDAOImpl implements GenericDAO<Turno> {
 
     @Override
     public void create(Turno turno) {
-        String sql = "INSERT INTO Turnos (fecha, id_persona, hora, estado, pago, fecha_pago, num_cancha) VALUES (?, ?, ?, ?, ?, ?, ?)";
-        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+        String sql = "INSERT INTO Turnos (fecha, id_persona, hora, estado, pago, fecha_pago, num_cancha, fecha_cancelacion, reintegro_cancelacion) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        try (PreparedStatement stmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
 
             stmt.setString(1, turno.getFecha().toString());
 
-            // Manejar persona nula
-            if (turno.getPersona() != null) {
+            // Persona (puede ser null)
+            if (turno.getPersona() != null)
                 stmt.setInt(2, turno.getPersona().getId());
-            } else {
+            else
                 stmt.setNull(2, Types.INTEGER);
-            }
 
             stmt.setString(3, turno.getHora().toString());
             stmt.setString(4, turno.getEstado().name());
             stmt.setInt(5, turno.getPago());
 
-            if (turno.getFecha_Pago() != null) {
+            if (turno.getFecha_Pago() != null)
                 stmt.setString(6, turno.getFecha_Pago().toString());
-            } else {
-                stmt.setNull(6, java.sql.Types.VARCHAR);
-            }
+            else
+                stmt.setNull(6, Types.VARCHAR);
 
+            if (turno.getCancha() != null)
+                stmt.setInt(7, turno.getCancha().getNumero());
+            else
+                stmt.setNull(7, Types.INTEGER);
 
-            stmt.setInt(7, turno.getCancha().getNumero());
+            // Nuevos campos: cancelación
+            if (turno.getFecha_Cancelacion() != null)
+                stmt.setString(8, turno.getFecha_Cancelacion().toString());
+            else
+                stmt.setNull(8, Types.VARCHAR);
+
+            stmt.setString(9, turno.getReintegro_Cancelacion());
 
             stmt.executeUpdate();
 
-            // Obtener ID generado por SQLite
-            try (Statement stmt2 = conn.createStatement();
-                 ResultSet rs = stmt2.executeQuery("SELECT last_insert_rowid()")) {
+            // Obtener ID generado
+            try (ResultSet rs = stmt.getGeneratedKeys()) {
                 if (rs.next()) {
                     turno.setId(rs.getInt(1));
                 }
             }
+
+            System.out.println("Turno creado correctamente: " + turno.getId());
 
         } catch (SQLException e) {
             e.printStackTrace();
         }
     }
 
-
     @Override
     public void update(Turno turno) {
-        String sql = "UPDATE Turnos SET fecha=?, id_persona=?, hora=?, estado=?, pago=?, fecha_pago=?, num_cancha=? WHERE id_turno=?";
+        String sql = "UPDATE Turnos SET fecha=?, id_persona=?, hora=?, estado=?, pago=?, fecha_pago=?, num_cancha=?, fecha_cancelacion=?, reintegro_cancelacion=? WHERE id_turno=?";
         try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+
             stmt.setString(1, turno.getFecha().toString());
-            stmt.setObject(2, turno.getPersona() != null ? turno.getPersona().getId() : null);
+
+            if (turno.getPersona() != null)
+                stmt.setInt(2, turno.getPersona().getId());
+            else
+                stmt.setNull(2, Types.INTEGER);
+
             stmt.setString(3, turno.getHora().toString());
             stmt.setString(4, turno.getEstado().name());
             stmt.setInt(5, turno.getPago());
-            stmt.setString(6, turno.getFecha_Pago() != null ? turno.getFecha_Pago().toString() : null);
-            stmt.setInt(7, turno.getCancha().getNumero());
-            stmt.setInt(8, turno.getId());
+
+            if (turno.getFecha_Pago() != null)
+                stmt.setString(6, turno.getFecha_Pago().toString());
+            else
+                stmt.setNull(6, Types.VARCHAR);
+
+            if (turno.getCancha() != null)
+                stmt.setInt(7, turno.getCancha().getNumero());
+            else
+                stmt.setNull(7, Types.INTEGER);
+
+            if (turno.getFecha_Cancelacion() != null)
+                stmt.setString(8, turno.getFecha_Cancelacion().toString());
+            else
+                stmt.setNull(8, Types.VARCHAR);
+
+            stmt.setString(9, turno.getReintegro_Cancelacion());
+            stmt.setInt(10, turno.getId());
 
             stmt.executeUpdate();
             System.out.println("Turno actualizado: " + turno.getId());
+
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -97,20 +126,26 @@ public class TurnoDAOImpl implements GenericDAO<Turno> {
     public Turno findById(int id) {
         String sql = "SELECT * FROM Turnos WHERE id_turno=?";
         Turno turno = null;
+
         try (PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setInt(1, id);
+
             try (ResultSet rs = stmt.executeQuery()) {
                 if (rs.next()) {
-                    turno = new Turno();
-                    turno.setId(rs.getInt("id_turno"));
-                    turno.setFecha(LocalDate.parse(rs.getString("fecha")));
-                    turno.setHora(LocalTime.parse(rs.getString("hora")));
-                    turno.setEstado(E.valueOf(rs.getString("estado")));
-                    turno.setPago(rs.getInt("pago"));
-                    String fechaPago = rs.getString("fecha_pago");
-                    turno.setFecha_Pago(fechaPago != null ? LocalDate.parse(fechaPago) : null);
+                    turno = new Turno(
+                            rs.getInt("id_turno"),
+                            LocalDate.parse(rs.getString("fecha")),
+                            LocalTime.parse(rs.getString("hora")),
+                            E.valueOf(rs.getString("estado")),
+                            rs.getInt("pago"),
+                            rs.getString("fecha_pago") != null ? LocalDate.parse(rs.getString("fecha_pago")) : null,
+                            null, // Persona se carga abajo
+                            null, // Cancha se carga abajo
+                            rs.getString("fecha_cancelacion") != null ? LocalDate.parse(rs.getString("fecha_cancelacion")) : null,
+                            rs.getString("reintegro_cancelacion")
+                    );
 
-                    // Cargar relaciones
+                    // Relaciones
                     Persona persona = new Persona();
                     persona.setId(rs.getInt("id_persona"));
                     turno.setPersona(persona);
@@ -118,14 +153,13 @@ public class TurnoDAOImpl implements GenericDAO<Turno> {
                     Cancha cancha = new Cancha();
                     cancha.setNumero(rs.getInt("num_cancha"));
                     turno.setCancha(cancha);
-
-                    // Cancelacion queda null por ahora
-                    turno.setCancelacion(null);
                 }
             }
+
         } catch (SQLException e) {
             e.printStackTrace();
         }
+
         return turno;
     }
 
@@ -133,20 +167,24 @@ public class TurnoDAOImpl implements GenericDAO<Turno> {
     public List<Turno> findAll() {
         String sql = "SELECT * FROM Turnos";
         List<Turno> turnos = new ArrayList<>();
+
         try (Statement stmt = conn.createStatement();
              ResultSet rs = stmt.executeQuery(sql)) {
 
             while (rs.next()) {
-                Turno turno = new Turno();
-                turno.setId(rs.getInt("id_turno"));
-                turno.setFecha(LocalDate.parse(rs.getString("fecha")));
-                turno.setHora(LocalTime.parse(rs.getString("hora")));
-                turno.setEstado(E.valueOf(rs.getString("estado")));
-                turno.setPago(rs.getInt("pago"));
-                String fechaPago = rs.getString("fecha_pago");
-                turno.setFecha_Pago(fechaPago != null ? LocalDate.parse(fechaPago) : null);
+                Turno turno = new Turno(
+                        rs.getInt("id_turno"),
+                        LocalDate.parse(rs.getString("fecha")),
+                        LocalTime.parse(rs.getString("hora")),
+                        E.valueOf(rs.getString("estado")),
+                        rs.getInt("pago"),
+                        rs.getString("fecha_pago") != null ? LocalDate.parse(rs.getString("fecha_pago")) : null,
+                        null, // Persona (se asigna abajo)
+                        null, // Cancha (se asigna abajo)
+                        rs.getString("fecha_cancelacion") != null ? LocalDate.parse(rs.getString("fecha_cancelacion")) : null,
+                        rs.getString("reintegro_cancelacion")
+                );
 
-                // Relaciones
                 Persona persona = new Persona();
                 persona.setId(rs.getInt("id_persona"));
                 turno.setPersona(persona);
@@ -155,14 +193,13 @@ public class TurnoDAOImpl implements GenericDAO<Turno> {
                 cancha.setNumero(rs.getInt("num_cancha"));
                 turno.setCancha(cancha);
 
-                turno.setCancelacion(null);
-
                 turnos.add(turno);
             }
 
         } catch (SQLException e) {
             e.printStackTrace();
         }
+
         return turnos;
     }
 
@@ -182,5 +219,5 @@ public class TurnoDAOImpl implements GenericDAO<Turno> {
         }
         return false;
     }
-
 }
+
