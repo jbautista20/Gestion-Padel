@@ -22,12 +22,27 @@ public class TurnoDAOImpl implements GenericDAO<Turno> {
     public void create(Turno turno) {
         String sql = "INSERT INTO Turnos (fecha, id_persona, hora, estado, pago, fecha_pago, num_cancha) VALUES (?, ?, ?, ?, ?, ?, ?)";
         try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+
             stmt.setString(1, turno.getFecha().toString());
-            stmt.setInt(2, turno.getPersona().getId());
+
+            // Manejar persona nula
+            if (turno.getPersona() != null) {
+                stmt.setInt(2, turno.getPersona().getId());
+            } else {
+                stmt.setNull(2, Types.INTEGER);
+            }
+
             stmt.setString(3, turno.getHora().toString());
             stmt.setString(4, turno.getEstado().name());
             stmt.setInt(5, turno.getPago());
-            stmt.setString(6, turno.getFecha_Pago() != null ? turno.getFecha_Pago().toString() : null);
+
+            if (turno.getFecha_Pago() != null) {
+                stmt.setString(6, turno.getFecha_Pago().toString());
+            } else {
+                stmt.setNull(6, java.sql.Types.VARCHAR);
+            }
+
+
             stmt.setInt(7, turno.getCancha().getNumero());
 
             stmt.executeUpdate();
@@ -45,12 +60,13 @@ public class TurnoDAOImpl implements GenericDAO<Turno> {
         }
     }
 
+
     @Override
     public void update(Turno turno) {
         String sql = "UPDATE Turnos SET fecha=?, id_persona=?, hora=?, estado=?, pago=?, fecha_pago=?, num_cancha=? WHERE id_turno=?";
         try (PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setString(1, turno.getFecha().toString());
-            stmt.setInt(2, turno.getPersona().getId());
+            stmt.setObject(2, turno.getPersona() != null ? turno.getPersona().getId() : null);
             stmt.setString(3, turno.getHora().toString());
             stmt.setString(4, turno.getEstado().name());
             stmt.setInt(5, turno.getPago());
@@ -149,4 +165,22 @@ public class TurnoDAOImpl implements GenericDAO<Turno> {
         }
         return turnos;
     }
+
+    public boolean existeTurno(int numeroCancha, LocalDate fecha, LocalTime hora) {
+        String sql = "SELECT COUNT(*) FROM Turnos WHERE num_cancha = ? AND fecha = ? AND hora = ?";
+        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setInt(1, numeroCancha);
+            stmt.setString(2, fecha.toString());
+            stmt.setString(3, hora.toString());
+            try (ResultSet rs = stmt.executeQuery()) {
+                if (rs.next()) {
+                    return rs.getInt(1) > 0;
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
 }

@@ -16,13 +16,7 @@ public class Cancha {
         //defecto
     }
 
-    public int getNumero() {
-        return Numero;
-    }
 
-    public void setNumero(int numero) {
-        Numero = numero;
-    }
 
     public List<Turno> getTurnos() {
         return turnos;
@@ -39,4 +33,18 @@ public class Cancha {
     public void setPartidos(List<Partido> partidos) {
         this.partidos = partidos;
     }
+
+    @Override
+    public String toString(){
+        return String.valueOf(Numero);
+    }
+    public int getNumero() {
+        return Numero;
+    }
+
+    public void setNumero(int numero) {
+        Numero = numero;
+    }
+
+
 }

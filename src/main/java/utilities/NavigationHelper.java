@@ -82,12 +82,12 @@ public class NavigationHelper {
         }
     }
 
-    // ✅ Obtener datos
+    // Obtener datos
     public static Object getDatos() {
         return datos;
     }
 
-    // ✅ Limpiar datos
+    // Limpiar datos
     public static void clearDatos() {
         datos = null;
     }
@@ -116,21 +116,4 @@ public class NavigationHelper {
         System.out.println("Navegando a: " + titulo);
         cambiarVista(stage, fxml, titulo);
     }
-//    public void setupBackButton(ImageView botonBack, String fxmlPath, String titulo) {
-//        botonBack.setOnMousePressed(mouseEvent -> {
-//            TranslateTransition press = new TranslateTransition(Duration.millis(50), botonBack);
-//            press.setToX(10);
-//            press.setToY(10);
-//            press.play();
-//        });
-//
-//        botonBack.setOnMouseReleased(mouseEvent -> {
-//            Stage stage = (Stage) botonBack.getScene().getWindow();
-//            TranslateTransition release = new TranslateTransition(Duration.millis(50), botonBack);
-//            release.setToX(0);
-//            release.setToY(0);
-//            release.setOnFinished(event -> cambiarVista(stage,fxmlPath,titulo));
-//            release.play();
-//        });
-    }
-
+}
