@@ -196,10 +196,10 @@ public class ListarTorneoController {
         Torneo torneoSeleccionado = tableTorneos.getSelectionModel().getSelectedItem();
 
         if (torneoSeleccionado != null) {
-            // Guardar el torneo seleccionado
+
             DataManager.getInstance().setTorneoSeleccionado(torneoSeleccionado);
 
-            // ✅ SOLUCIÓN SUPER SIMPLE - Usar la primera ventana que encuentre
+
             if (!Window.getWindows().isEmpty()) {
                 Stage stage = (Stage) Window.getWindows().get(0);
                 NavigationHelper.cambiarVista(stage, Paths.pantallaModificarTorneo, "Modificar Torneo");
