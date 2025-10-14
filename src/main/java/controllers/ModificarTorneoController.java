@@ -2,7 +2,9 @@ package controllers;
 
 import DAO.GenericDAO;
 import javafx.fxml.FXML;
-import javafx.scene.control.*;
+import javafx.scene.control.Alert;
+import javafx.scene.control.ComboBox;
+import javafx.scene.control.DatePicker;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
@@ -12,7 +14,7 @@ import controllers.DataManager;
 import models.Torneo;
 import utilities.NavigationHelper;
 import utilities.Paths;
-
+import javafx.scene.control.TextField;
 import java.time.LocalDate;
 import DAO.impl.TorneoDAOImpl;
 import models.T;
@@ -37,32 +39,9 @@ public class ModificarTorneoController {
     private  Torneo torneoActual;
 
     public void initialize() {
-
         comboBoxCategoria.getItems().addAll("1", "2°", "3°","4°","5°","6°","7°","8°","9°","10°");
         comboBoxTipoTorneo.getItems().addAll("damas", "caballeros", "mixto");
         cargarDatosTorneo();
-
-        fecha.setDayCellFactory(picker -> new DateCell() {
-            @Override
-            public void updateItem(LocalDate date, boolean empty) {
-                super.updateItem(date, empty);
-
-                LocalDate today = LocalDate.now();
-                LocalDate maxDate = today.plusMonths(2);
-
-                // Deshabilita fechas fuera del rango permitido
-                setDisable(empty || date.isBefore(today) || date.isAfter(maxDate));
-
-                // Estilo visual para las fechas no disponibles
-                if (isDisable()) {
-                    setStyle("-fx-background-color: #eeeeee;");
-                }
-            }
-        });
-
-// Valor inicial en hoy
-        fecha.setValue(LocalDate.now());
-
         //configurarEventos();
     }
     private void cargarDatosTorneo() {

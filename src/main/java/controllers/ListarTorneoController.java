@@ -186,7 +186,7 @@ public class ListarTorneoController {
     private void handleBackButton(MouseEvent event) {
         event.consume();
         Stage stage = (Stage) botonBack.getScene().getWindow();
-        NavigationHelper.cambiarVista(stage, Paths.pantallaMenuPrincipal, "Menu principal");
+        NavigationHelper.cambiarVista(stage, Paths.pantallaMenuPrincipal, "ListarTorneos");
         System.out.println("Volviendo al menú principal");
     }
     //----------------------------Funcionalidad Boton Back----------------------------------//
