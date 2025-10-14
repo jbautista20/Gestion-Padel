@@ -3,61 +3,67 @@ import java.time.LocalDate;
 import java.util.List;
 
 public class Jugador extends Persona {
-    private int Id;
-    private int Categoria;
-    private int Sexo;
-    private int Puntos;
-    private LocalDate Anio_Nac;
+
+    private int idJugador;
+    private int categoria;
+    private int sexo;
+    private int puntos;
+    private LocalDate anioNac;
     private List<Equipo> equipos;
 
-    public Jugador(int Idpersona, int Id, String nombre, String apellido, String telefono, String direccion, List<Turno> turnos, int id, int categoria, int sexo, int puntos, LocalDate anio_Nac, List<Equipo> equipos) {
-        super(Idpersona, nombre, apellido, telefono, direccion, turnos);
-        this.Id = id;
-        Categoria = categoria;
-        Sexo = sexo;
-        Puntos = puntos;
-        Anio_Nac = anio_Nac;
+    public Jugador(int idPersona, int idJugador, String nombre, String apellido, String telefono, String direccion,
+                   List<Turno> turnos, int categoria, int sexo, int puntos,
+                   LocalDate anioNac, List<Equipo> equipos) {
+
+        super(idPersona, nombre, apellido, telefono, direccion, turnos);
+        this.idJugador = idJugador;
+        this.categoria = categoria;
+        this.sexo = sexo;
+        this.puntos = puntos;
+        this.anioNac = anioNac;
         this.equipos = equipos;
     }
 
-    public int getId() {
-        return Id;
+    // Getters y Setters
+
+    public int getIdJugador() {
+        return idJugador;
     }
 
-    public void setId(int Id) {
-        this.Id = Id;
+    public void setIdJugador(int idJugador) {
+        this.idJugador = idJugador;
     }
 
     public int getCategoria() {
-        return Categoria;
+        return categoria;
     }
 
     public void setCategoria(int categoria) {
-        Categoria = categoria;
+        this.categoria = categoria;
     }
 
     public int getSexo() {
-        return Sexo;
+        return sexo;
     }
 
     public void setSexo(int sexo) {
-        Sexo = sexo;
+        this.sexo = sexo;
     }
 
     public int getPuntos() {
-        return Puntos;
+        return puntos;
     }
 
     public void setPuntos(int puntos) {
-        Puntos = puntos;
+        this.puntos = puntos;
     }
 
-    public LocalDate getAnio_Nac() {
-        return Anio_Nac;
+    public LocalDate getAnioNac() {
+        return anioNac;
     }
 
-    public void setAnio_Nac(LocalDate anio_Nac) {
-        Anio_Nac = anio_Nac;
+    public void setAnioNac(LocalDate anioNac) {
+        this.anioNac = anioNac;
     }
 
     public List<Equipo> getEquipos() {

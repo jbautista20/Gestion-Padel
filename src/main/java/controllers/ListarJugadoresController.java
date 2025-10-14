@@ -46,7 +46,7 @@ public class ListarJugadoresController {
         colTelefono.setCellValueFactory(new PropertyValueFactory<>("telefono"));
         colDireccion.setCellValueFactory(new PropertyValueFactory<>("direccion"));
         colSexo.setCellValueFactory(new PropertyValueFactory<>("sexo"));
-        colAnioNacimiento.setCellValueFactory(new PropertyValueFactory<>("anio_Nac"));
+        colAnioNacimiento.setCellValueFactory(new PropertyValueFactory<>("anioNac"));
         colPuntos.setCellValueFactory(new PropertyValueFactory<>("puntos"));
 
         // Cargamos los jugadores desde la base de datos
