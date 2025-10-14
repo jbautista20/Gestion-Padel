@@ -185,7 +185,7 @@ public class CrearTorneoController {
         String categoriaElegida = comboBoxCategoria.getValue();
         if (categoriaElegida != null && !categoriaElegida.isEmpty()) {
             try {
-            // replace cambia el string ° a "" para que pueda almacenar el numero de la categoria
+                // replace cambia el string ° a "" para que pueda almacenar el numero de la categoria
                 String numeroTexto = categoriaElegida.replace("°", "");
                 return Integer.parseInt(numeroTexto);//castea a int el string
             } catch (NumberFormatException e) {

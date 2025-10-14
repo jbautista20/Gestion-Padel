@@ -184,6 +184,7 @@ public class ListarTorneoController {
     //----------------------------Funcionalidad Boton Back----------------------------------//
     @FXML
     private void handleBackButton(MouseEvent event) {
+        event.consume();
         Stage stage = (Stage) botonBack.getScene().getWindow();
         NavigationHelper.cambiarVista(stage, Paths.pantallaMenuPrincipal, "Menu principal");
         System.out.println("Volviendo al menú principal");
