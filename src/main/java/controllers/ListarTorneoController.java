@@ -8,6 +8,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
+import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
 import javafx.scene.image.ImageView;
@@ -127,6 +128,7 @@ public class ListarTorneoController {
     //----------------------------Abrir scene crear torneo----------------------------------//
     @FXML
     private void abrirCrearTorneo(MouseEvent event) {
+        event.consume();
         Stage stage = (Stage) crearTorneoView.getScene().getWindow();
         NavigationHelper.cambiarVista(stage, Paths.pantellaCrearTorneo, "CrearTorneo");
         System.out.println("cambiando la ventana");
@@ -191,23 +193,43 @@ public class ListarTorneoController {
     }
     //----------------------------Funcionalidad Boton Back----------------------------------//
 
-
     @FXML
     private void handleModificarTorneo(MouseEvent event) {
         Torneo torneoSeleccionado = tableTorneos.getSelectionModel().getSelectedItem();
 
-        if (torneoSeleccionado != null) {
+        if (torneoSeleccionado == null) {
+            mostrarAlerta("Error", "Seleccione un torneo para modificar.");
+            return;
+        }
 
-            DataManager.getInstance().setTorneoSeleccionado(torneoSeleccionado);
-
-
-            if (!Window.getWindows().isEmpty()) {
-                Stage stage = (Stage) Window.getWindows().get(0);
-                NavigationHelper.cambiarVista(stage, Paths.pantallaModificarTorneo, "Modificar Torneo");
+        try {
+            // Obtenemos el Stage de forma segura
+            Stage stage = null;
+            if (tableTorneos.getScene() != null) {
+                stage = (Stage) tableTorneos.getScene().getWindow();
+            } else if (event.getSource() instanceof Node node && node.getScene() != null) {
+                stage = (Stage) node.getScene().getWindow();
             } else {
-                mostrarAlerta("Error", "No hay ventanas disponibles");
+                // Último recurso: buscar cualquier Stage visible
+                for (Window window : Window.getWindows()) {
+                    if (window instanceof Stage s && s.isShowing()) {
+                        stage = s;
+                        break;
+                    }
+                }
             }
+
+            if (stage == null) {
+                mostrarAlerta("Error al cambiar de vista", "No se pudo acceder a la ventana actual o cargar la nueva vista.");
+                return;
+            }
+
+            // Cambio de vista con paso de datos
+            NavigationHelper.cambiarVistaConDatos(stage, Paths.pantallaModificarTorneo, "Modificar Torneo", torneoSeleccionado);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            mostrarAlerta("Error al cambiar de vista", "Ocurrió un error al cargar la pantalla de modificación.");
         }
     }
-
 }
