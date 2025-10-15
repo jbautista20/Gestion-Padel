@@ -1,6 +1,7 @@
 package controllers;
 import DAO.GenericDAO;
 import DAO.impl.TorneoDAOImpl;
+import DAO.impl.TurnoDAOImpl;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
@@ -18,9 +19,7 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 import javafx.stage.Window;
-import models.Equipo;
-import models.Es;
-import models.Torneo;
+import models.*;
 import utilities.NavigationHelper;
 import utilities.Paths;
 import java.time.LocalDate;
@@ -156,6 +155,7 @@ public class ListarTorneoController {
                     try {
                         // Eliminar de la base de datos
                         torneoDAO.delete(torneoSeleccionado.getId());
+                        liberarTurnos(torneoSeleccionado.getFecha());
 
                         // Eliminar del ObservableList (la tabla se actualiza sola)
                         listaTorneos.remove(torneoSeleccionado);
@@ -172,6 +172,23 @@ public class ListarTorneoController {
         } else {
             mostrarAlerta("Error", "Seleccione un torneo para eliminar.");
         }
+    }
+
+    private void liberarTurnos(LocalDate fecha) {
+        TurnoDAOImpl turnoDAO = new TurnoDAOImpl();
+        List<Turno> turnos = turnoDAO.findAll();
+        for (Turno t : turnos) {
+            if (t.getFecha().equals(fecha)) {
+                t.setEstado(E.Libre);
+                t.setPersona(null);
+                t.setPago(0);
+                t.setFecha_Pago(null);
+                t.setFecha_Cancelacion(null);
+                t.setReintegro_Cancelacion(null);
+                turnoDAO.update(t);
+            }
+        }
+        System.out.println("Turnos liberados para: " + fecha);
     }
 
     private void mostrarAlerta(String titulo, String mensaje) {

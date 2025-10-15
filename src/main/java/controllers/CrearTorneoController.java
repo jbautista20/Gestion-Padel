@@ -1,22 +1,23 @@
 package controllers;
 
 import DAO.GenericDAO;
+import DAO.impl.CanchaDAOImpl;
+import DAO.impl.TurnoDAOImpl;
 import javafx.fxml.FXML;
-import javafx.scene.control.Alert;
-import javafx.scene.control.ComboBox;
-import javafx.scene.control.DatePicker;
+import javafx.scene.control.*;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.Pane;
+import javafx.util.Callback;
 import javafx.stage.Stage;
-import models.Es;
-import models.Torneo;
+import models.*;
 import utilities.NavigationHelper;
 import utilities.Paths;
-import javafx.scene.control.TextField;
+
 import java.time.LocalDate;
+import java.time.LocalTime;
+import java.util.List;
+
 import DAO.impl.TorneoDAOImpl;
-import models.T;
 
 public class CrearTorneoController {
     //---------------------------------Variables------------------------------------------
@@ -35,6 +36,7 @@ public class CrearTorneoController {
     @FXML
     private TextField valorDeInscripcion;
 
+    TurnoDAOImpl turnoDAO = new TurnoDAOImpl();
 
     private GenericDAO<Torneo> torneoDAO = new TorneoDAOImpl();
     //---------------------------------Variables------------------------------------------
@@ -43,6 +45,29 @@ public class CrearTorneoController {
     public void initialize(){
         comboBoxCategoria.getItems().addAll("1", "2°", "3°", "4°", "5°", "6°", "7°", "8°", "9°", "10°");
         comboBoxTipoTorneo.getItems().addAll("damas", "caballeros", "mixto");
+        fecha.setDayCellFactory(new Callback<DatePicker, DateCell>() {
+            @Override
+            public DateCell call(DatePicker datePicker) {
+                return new DateCell() {
+                    @Override
+                    public void updateItem(LocalDate item, boolean empty) {
+                        super.updateItem(item, empty);
+
+                        LocalDate hoy = LocalDate.now();
+                        LocalDate tresMeses = hoy.plusMonths(3);
+
+                        // Deshabilitar días fuera del rango o que no sean sábados/domingo
+                        if (item.isBefore(hoy) || item.isAfter(tresMeses)
+                                || (item.getDayOfWeek() != java.time.DayOfWeek.FRIDAY
+                                && item.getDayOfWeek() != java.time.DayOfWeek.SATURDAY
+                                && item.getDayOfWeek() != java.time.DayOfWeek.SUNDAY)) {
+                            setDisable(true);
+                            setStyle("-fx-background-color: #ffc0cb;"); // opcional
+                        }
+                    }
+                };
+            }
+        });
     }
     //---------------------------------Inicializar comboBox-------------------------------
 
@@ -54,6 +79,38 @@ public class CrearTorneoController {
         System.out.println("Volviendo al menú principal");
     }
     //---------------------------------Boton de back--------------------------------------
+
+    private void generarTurnosDelDia(LocalDate fecha) {
+        LocalTime[] horarios = { LocalTime.of(12,0), LocalTime.of(14,0), LocalTime.of(16,0),
+                LocalTime.of(18,0), LocalTime.of(20,0), LocalTime.of(22,0) };
+
+        CanchaDAOImpl canchaDAO = new CanchaDAOImpl();
+        List<Cancha> canchas = canchaDAO.findAll();
+
+        for (Cancha cancha : canchas) {
+            for (LocalTime hora : horarios) {
+                // Verificar si ya existe el turno
+                if (!turnoDAO.existeTurno(cancha.getNumero(), fecha, hora)) {
+                    Turno turno = new Turno();
+                    turno.setFecha(fecha);
+                    turno.setHora(hora);
+                    turno.setEstado(E.Libre);
+                    turno.setPago(0);
+                    turno.setPersona(null);
+                    turno.setCancha(cancha);
+                    turno.setFecha_Pago(null);
+                    turno.setFecha_Cancelacion(null);
+                    turno.setReintegro_Cancelacion(null);
+
+                    turnoDAO.create(turno);
+                    System.out.println("Turno generado: " + fecha + " - " + hora + " - Cancha " + cancha.getNumero());
+                }
+            }
+        }
+
+        System.out.println("Turnos generados para " + fecha);
+    }
+
     //------------------------Recibiendo los datos de la creacion de torneo---------------
     @FXML
     private void recibirDatosDeTorneo() {
@@ -75,12 +132,16 @@ public class CrearTorneoController {
             return;
         }
         LocalDate fechaTorneo = fecha.getValue();
-        if (!validarCampos(categoria, tipoTorneo, premio1, premio2, fechaTorneo, inscripcion)) {//validamos que todo este bien cargado
+        generarTurnosDelDia(fechaTorneo);
+        if (!validarCampos(categoria, tipoTorneo, premio1, premio2, fechaTorneo, inscripcion)) {//validamos quetodo este bien cargado
             mostrarAlerta("Error", "Por favor complete todos los campos");//en caso de algo mal cargado
             return;
         } else {
             Torneo torneo = crearTorneo(categoria, tipoDeTorneo, premio1, premio2, fechaTorneo, inscripcion);
             torneoDAO.create(torneo);//enviamos el torneo a la bd
+
+            turnoDAO.ocuparTurnosPorFecha(torneo.getFecha()); // Ocupa todos los turnos de esa fecha
+
             limpiarFormulario();//limpiamos para que el usuario entienda que se cargo o que hubo un error
         }
     }

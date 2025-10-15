@@ -4,10 +4,6 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
-import javafx.animation.TranslateTransition;
-import javafx.scene.image.ImageView;
-import javafx.util.Duration;
-import models.Torneo;
 
 public class NavigationHelper {
     private  static  Object datos;
@@ -91,29 +87,5 @@ public class NavigationHelper {
     public static void clearDatos() {
         datos = null;
     }
-//--------------------------BotonBack----------------------------------------------------------------------------------
 
-    /**
-     * Configura un ImageView como botón "Back" con animación y navegación.
-     * @param botonBack ImageView que actúa como botón
-     * @param fxmlPath Ruta del FXML al que se quiere volver
-     */
-    public void setupBackButton(ImageView botonBack, String fxmlPath, String titulo) {
-        botonBack.setOnMouseClicked(event -> {
-            Stage stage = (Stage) botonBack.getScene().getWindow();
-            navigateTo(stage, fxmlPath, titulo);
-        });
-    }
-
-    // Método específico para navegación que evita ciclos
-    private void navigateTo(Stage stage, String fxml, String titulo) {
-        // Verificar si ya estamos en la vista destino para evitar ciclos
-        if (stage.getTitle() != null && stage.getTitle().equals(titulo)) {
-            System.out.println("Ya estamos en: " + titulo + " - Evitando navegación cíclica");
-            return;
-        }
-
-        System.out.println("Navegando a: " + titulo);
-        cambiarVista(stage, fxml, titulo);
-    }
 }

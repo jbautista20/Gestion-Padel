@@ -219,5 +219,18 @@ public class TurnoDAOImpl implements GenericDAO<Turno> {
         }
         return false;
     }
+
+    public void ocuparTurnosPorFecha(LocalDate fecha) {
+        String sql = "UPDATE Turnos SET estado = ? WHERE fecha = ?";
+        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setString(1, E.Ocupado.name()); // asumimos que E es el enum de estado
+            stmt.setString(2, fecha.toString());
+            int rowsUpdated = stmt.executeUpdate();
+            System.out.println("Turnos ocupados: " + rowsUpdated);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
 }
 

@@ -1,54 +1,82 @@
 package controllers;
 
 import DAO.GenericDAO;
+import DAO.impl.CanchaDAOImpl;
 import DAO.impl.TorneoDAOImpl;
+import DAO.impl.TurnoDAOImpl;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
-import javafx.stage.Window;
-import models.T;
-import models.Torneo;
+import models.*;
+
 import utilities.NavigationHelper;
 import utilities.Paths;
 
 import java.time.LocalDate;
+import java.time.LocalTime;
+import java.util.List;
 
 public class ModificarTorneoController {
 
-    @FXML
-    private TextField primerPremio;
-    @FXML
-    private TextField segundoPremio;
-    @FXML
-    private DatePicker fecha;
-    @FXML
-    private TextField valorDeInscripcion;
-    @FXML
-    private ComboBox<String> comboBoxCategoria;
-    @FXML
-    private ComboBox<String> comboBoxTipoTorneo;
-    @FXML
-    private ImageView botonBack;
+    @FXML private TextField primerPremio;
+    @FXML private TextField segundoPremio;
+    @FXML private DatePicker fecha;
+    @FXML private TextField valorDeInscripcion;
+    @FXML private ComboBox<String> comboBoxCategoria;
+    @FXML private ComboBox<String> comboBoxTipoTorneo;
+    @FXML private ImageView botonBack;
 
     private final GenericDAO<Torneo> torneoDAO = new TorneoDAOImpl();
+    private final TurnoDAOImpl turnoDAO = new TurnoDAOImpl();
     private Torneo torneoActual;
+
+    private LocalDate fechaAnterior;
 
     @FXML
     public void initialize() {
-        comboBoxCategoria.getItems().addAll("1°", "2°", "3°", "4°", "5°", "6°", "7°", "8°", "9°", "10°");
-        comboBoxTipoTorneo.getItems().addAll("damas", "caballeros", "mixto");
+        comboBoxCategoria.getItems().addAll("1°","2°","3°","4°","5°","6°","7°","8°","9°","10°");
+        comboBoxTipoTorneo.getItems().addAll("damas","caballeros","mixto");
         cargarDatosTorneo();
+
+        // Configurar DatePicker para seleccionar solo viernes, sábados y domingos en los próximos 3 meses
+        fecha.setDayCellFactory(dp -> new DateCell() {
+            @Override
+            public void updateItem(LocalDate item, boolean empty) {
+                super.updateItem(item, empty);
+                LocalDate hoy = LocalDate.now();
+                LocalDate tresMeses = hoy.plusMonths(3);
+
+                if (item.isBefore(hoy) || item.isAfter(tresMeses)
+                        || (item.getDayOfWeek() != java.time.DayOfWeek.FRIDAY
+                        && item.getDayOfWeek() != java.time.DayOfWeek.SATURDAY
+                        && item.getDayOfWeek() != java.time.DayOfWeek.SUNDAY)) {
+                    setDisable(true);
+                    setStyle("-fx-background-color: #ffc0cb;"); // opcional: colorear los días deshabilitados
+                }
+            }
+        });
+
+        // Listener para generar turnos cuando se cambia la fecha
+        fecha.valueProperty().addListener((obs, oldDate, newDate) -> {
+            if (newDate != null) {
+                // Liberar turnos de la fecha anterior
+                if (fechaAnterior != null && !fechaAnterior.equals(newDate)) {
+                    liberarTurnos(fechaAnterior);
+                }
+                fechaAnterior = newDate;
+
+                // Generar turnos para la nueva fecha si no existen
+                generarTurnosDelDia(newDate);
+            }
+        });
     }
 
     private void cargarDatosTorneo() {
         Object datos = NavigationHelper.getDatos();
-
         if (datos instanceof Torneo) {
             torneoActual = (Torneo) datos;
-
-            // Limpiar datos almacenados para evitar fugas entre vistas
             NavigationHelper.clearDatos();
 
             primerPremio.setText(torneoActual.getPremio1());
@@ -57,9 +85,55 @@ public class ModificarTorneoController {
             comboBoxCategoria.setValue(torneoActual.getCategoria() + "°");
             comboBoxTipoTorneo.setValue(convertirEnumATexto(torneoActual.getTipo()));
             fecha.setValue(torneoActual.getFecha());
+
+            // Guardar fecha inicial para liberar turnos si se cambia
+            fechaAnterior = torneoActual.getFecha();
         } else {
-            System.err.println("⚠️ No se recibieron datos válidos del torneo en NavigationHelper.");
+            System.err.println("No se recibieron datos válidos del torneo en NavigationHelper.");
         }
+    }
+
+    private void generarTurnosDelDia(LocalDate fecha) {
+        LocalTime[] horarios = { LocalTime.of(12,0), LocalTime.of(14,0), LocalTime.of(16,0),
+                LocalTime.of(18,0), LocalTime.of(20,0), LocalTime.of(22,0) };
+
+        CanchaDAOImpl canchaDAO = new CanchaDAOImpl();
+        List<Cancha> canchas = canchaDAO.findAll();
+
+        for (Cancha cancha : canchas) {
+            for (LocalTime hora : horarios) {
+                if (!turnoDAO.existeTurno(cancha.getNumero(), fecha, hora)) {
+                    Turno turno = new Turno();
+                    turno.setFecha(fecha);
+                    turno.setHora(hora);
+                    turno.setEstado(E.Libre);
+                    turno.setPago(0);
+                    turno.setPersona(null);
+                    turno.setCancha(cancha);
+                    turno.setFecha_Pago(null);
+                    turno.setFecha_Cancelacion(null);
+                    turno.setReintegro_Cancelacion(null);
+                    turnoDAO.create(turno);
+                    System.out.println("Turno generado: " + fecha + " - " + hora + " - Cancha " + cancha.getNumero());
+                }
+            }
+        }
+    }
+
+    private void liberarTurnos(LocalDate fecha) {
+        List<Turno> turnos = turnoDAO.findAll();
+        for (Turno t : turnos) {
+            if (t.getFecha().equals(fecha)) {
+                t.setEstado(E.Libre);
+                t.setPersona(null);
+                t.setPago(0);
+                t.setFecha_Pago(null);
+                t.setFecha_Cancelacion(null);
+                t.setReintegro_Cancelacion(null);
+                turnoDAO.update(t);
+            }
+        }
+        System.out.println("Turnos liberados para: " + fecha);
     }
 
     // Botón para volver atrás
@@ -108,6 +182,7 @@ public class ModificarTorneoController {
 
         // Guardamos en BD
         torneoDAO.update(torneoActual);
+        turnoDAO.ocuparTurnosPorFecha(torneoActual.getFecha()); // Ocupa todos los turnos de esa fecha
         mostrarAlerta("Éxito", "Torneo modificado correctamente.");
 
         limpiarFormulario();
