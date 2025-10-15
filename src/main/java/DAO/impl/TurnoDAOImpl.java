@@ -232,5 +232,21 @@ public class TurnoDAOImpl implements GenericDAO<Turno> {
         }
     }
 
+    public boolean hayTurnosOcupadosEnFecha(LocalDate fecha) {
+        String sql = "SELECT COUNT(*) FROM Turnos WHERE fecha = ? AND estado = ?";
+        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setString(1, fecha.toString());
+            stmt.setString(2, "Ocupado"); // o el nombre exacto del enum E.Ocupado si lo guardás así
+            ResultSet rs = stmt.executeQuery();
+            if (rs.next()) {
+                return rs.getInt(1) > 0;
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+
 }
 

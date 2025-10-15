@@ -83,16 +83,13 @@ public class ModificarTorneoController {
         // Listener para generar turnos cuando se cambia la fecha
         fecha.valueProperty().addListener((obs, oldDate, newDate) -> {
             if (newDate != null) {
-                // Liberar turnos de la fecha anterior
-                if (fechaAnterior != null && !fechaAnterior.equals(newDate)) {
-                    liberarTurnos(fechaAnterior);
-                }
                 fechaAnterior = newDate;
 
                 // Generar turnos para la nueva fecha si no existen
                 generarTurnosDelDia(newDate);
             }
         });
+
     }
 
     private void cargarDatosTorneo() {
@@ -199,13 +196,22 @@ public class ModificarTorneoController {
         if (!validarCampos(categoria, tipoTorneo, premio1, premio2, fechaTorneo, inscripcion))
             return;
 
+        // Si cambió la fecha, liberar los turnos del día anterior antes de actualizar
+        if (fechaAnterior != null && !fechaAnterior.equals(torneoActual.getFecha())) {
+            liberarTurnos(fechaAnterior);
+        }
+
         // Actualizamos los datos
         actualizarTorneo(categoria, tipoEnum, premio1, premio2, fechaTorneo, inscripcion);
 
         // Guardamos en BD
         torneoDAO.update(torneoActual);
-        turnoDAO.ocuparTurnosPorFecha(torneoActual.getFecha()); // Ocupa todos los turnos de esa fecha
+
+        // Ocupa los turnos del nuevo día
+        turnoDAO.ocuparTurnosPorFecha(torneoActual.getFecha());
+
         mostrarAlerta("Éxito", "Torneo modificado correctamente.");
+
 
         limpiarFormulario();
         // Volver a la pantalla de torneos
@@ -276,6 +282,10 @@ public class ModificarTorneoController {
         }
         if (fechaInicio.isBefore(LocalDate.now())) {
             mostrarAlerta("Error", "La fecha no puede ser en el pasado.");
+            return false;
+        }
+        if (turnoDAO.hayTurnosOcupadosEnFecha(fechaInicio)) {
+            mostrarAlerta("Error", "No se puede crear el torneo: hay turnos ocupados para esa fecha.");
             return false;
         }
         return true;

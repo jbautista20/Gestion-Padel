@@ -127,12 +127,8 @@ public class CrearTorneoController {
             return;
         }
 
-        List<Torneo> torneosExistentes = torneoDAO.findAll();
-        boolean torneoMismaFecha = torneosExistentes.stream()
-                .anyMatch(t -> t.getFecha().equals(fechaTorneo));
-
-        if (torneoMismaFecha) {
-            mostrarAlerta("Error", "Las canchas no están disponibles para ese día. \nPor favor, elija otra fecha.");
+        if (turnoDAO.hayTurnosOcupadosEnFecha(fechaTorneo)) {
+            mostrarAlerta("Error", "No se puede crear el torneo: hay turnos ocupados para esa fecha.");
             return;
         }
 
