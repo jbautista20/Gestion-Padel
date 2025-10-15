@@ -5,7 +5,6 @@ import db.Conexion;
 import models.Jugador;
 
 import java.sql.*;
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -24,12 +23,11 @@ public class JugadorDAOImpl implements GenericDAO<Jugador> {
             stmt.setInt(1, jugador.getCategoria());
             stmt.setInt(2, jugador.getSexo());
             stmt.setInt(3, jugador.getPuntos());
-            stmt.setString(4, jugador.getAnioNac().toString()); // LocalDate → String
+            stmt.setInt(4, jugador.getAnioNac()); // ahora es int, no LocalDate
             stmt.setInt(5, jugador.getId()); // id_persona (de la clase Persona)
 
             stmt.executeUpdate();
 
-            // obtener el id_jugador generado
             try (ResultSet rs = stmt.getGeneratedKeys()) {
                 if (rs.next()) {
                     jugador.setIdJugador(rs.getInt(1));
@@ -47,7 +45,7 @@ public class JugadorDAOImpl implements GenericDAO<Jugador> {
             stmt.setInt(1, jugador.getCategoria());
             stmt.setInt(2, jugador.getSexo());
             stmt.setInt(3, jugador.getPuntos());
-            stmt.setString(4, jugador.getAnioNac().toString());
+            stmt.setInt(4, jugador.getAnioNac()); // int en lugar de String/LocalDate
             stmt.setInt(5, jugador.getId()); // id_persona
             stmt.setInt(6, jugador.getIdJugador());
 
@@ -98,7 +96,7 @@ public class JugadorDAOImpl implements GenericDAO<Jugador> {
                         rs.getInt("Categoria"),
                         rs.getInt("Sexo"),
                         rs.getInt("Puntos"),
-                        LocalDate.parse(rs.getString("Anio_Nac")),
+                        rs.getInt("Anio_Nac"), // ahora directamente int
                         null // lista de equipos
                 );
             }
@@ -115,7 +113,7 @@ public class JugadorDAOImpl implements GenericDAO<Jugador> {
                p.id_persona, p.nombre, p.apellido, p.telefono, p.direccion
         FROM Jugadores j
         JOIN Personas p ON j.id_persona = p.id_persona
-    """;
+        """;
 
         List<Jugador> jugadores = new ArrayList<>();
 
@@ -123,18 +121,6 @@ public class JugadorDAOImpl implements GenericDAO<Jugador> {
              ResultSet rs = stmt.executeQuery(sql)) {
 
             while (rs.next()) {
-                // convierte el año (texto) en LocalDate
-                LocalDate anioNacimiento;
-                try {
-                    anioNacimiento = LocalDate.of(
-                            Integer.parseInt(rs.getString("Anio_Nac")),
-                            1, 1
-                    );
-                } catch (Exception e) {
-                    // si el valor no es válido, lo dejamos nulo
-                    anioNacimiento = null;
-                }
-
                 Jugador jugador = new Jugador(
                         rs.getInt("id_persona"),
                         rs.getInt("id_jugador"),
@@ -146,10 +132,9 @@ public class JugadorDAOImpl implements GenericDAO<Jugador> {
                         rs.getInt("Categoria"),
                         rs.getInt("Sexo"),
                         rs.getInt("Puntos"),
-                        anioNacimiento,
+                        rs.getInt("Anio_Nac"), // directamente int
                         null // lista de equipos
                 );
-
                 jugadores.add(jugador);
             }
         } catch (SQLException e) {
@@ -158,5 +143,4 @@ public class JugadorDAOImpl implements GenericDAO<Jugador> {
 
         return jugadores;
     }
-
 }

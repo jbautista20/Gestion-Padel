@@ -8,14 +8,10 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.ImageView;
-import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 import models.Jugador;
 import utilities.NavigationHelper;
 import utilities.Paths;
-
-import java.time.LocalDate;
 
 public class ListarJugadoresController {
 
@@ -31,7 +27,7 @@ public class ListarJugadoresController {
     @FXML private TableColumn<Jugador, String> colTelefono;
     @FXML private TableColumn<Jugador, String> colDireccion;
     @FXML private TableColumn<Jugador, Integer> colSexo;
-    @FXML private TableColumn<Jugador, LocalDate> colAnioNacimiento;
+    @FXML private TableColumn<Jugador, Integer> colAnioNacimiento; // ✅ cambiado de LocalDate a Integer
     @FXML private TableColumn<Jugador, Integer> colPuntos;
 
     private ObservableList<Jugador> listaJugadores = FXCollections.observableArrayList();
@@ -39,46 +35,28 @@ public class ListarJugadoresController {
 
     @FXML
     public void initialize() {
-        // Asignamos las propiedades según los nombres de los getters
+        // Mapeo con los getters de Jugador
         colNombre.setCellValueFactory(new PropertyValueFactory<>("nombre"));
         colApellido.setCellValueFactory(new PropertyValueFactory<>("apellido"));
         colCategoria.setCellValueFactory(new PropertyValueFactory<>("categoria"));
         colTelefono.setCellValueFactory(new PropertyValueFactory<>("telefono"));
         colDireccion.setCellValueFactory(new PropertyValueFactory<>("direccion"));
         colSexo.setCellValueFactory(new PropertyValueFactory<>("sexo"));
-        colAnioNacimiento.setCellValueFactory(new PropertyValueFactory<>("anioNac"));
+        colAnioNacimiento.setCellValueFactory(new PropertyValueFactory<>("anioNac")); // getter getAnioNac()
         colPuntos.setCellValueFactory(new PropertyValueFactory<>("puntos"));
 
-        // Cargamos los jugadores desde la base de datos
+        // Cargar jugadores desde la base de datos
         listaJugadores.addAll(jugadorDAO.findAll());
         tableJugadores.setItems(listaJugadores);
     }
 
-
     @FXML
-    void abrirCargarJugador(MouseEvent event) {
-
+    private void handleBackButton() {
+        try {
+            Stage stage = (Stage) botonBack.getScene().getWindow();
+            NavigationHelper.cambiarVista(stage, Paths.pantallaMenuPrincipal, "Menú Principal");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
-
-    @FXML
-    void abrirCrearTorneo(MouseEvent event) {
-
-    }
-
-    @FXML
-    void abrirModificarJugador(MouseEvent event) {
-
-    }
-
-    @FXML
-    void eliminarJugador(MouseEvent event) {
-
-    }
-
-    @FXML
-    private void handleBackButton(MouseEvent event) {
-        Stage stage = (Stage) botonBack.getScene().getWindow();
-        NavigationHelper.cambiarVista(stage, Paths.pantallaMenuPrincipal, "ListarJugadores");
-    }
-
 }

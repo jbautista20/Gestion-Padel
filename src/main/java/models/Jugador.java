@@ -8,12 +8,12 @@ public class Jugador extends Persona {
     private int categoria;
     private int sexo;
     private int puntos;
-    private LocalDate anioNac;
+    private int anioNac;
     private List<Equipo> equipos;
 
     public Jugador(int idPersona, int idJugador, String nombre, String apellido, String telefono, String direccion,
                    List<Turno> turnos, int categoria, int sexo, int puntos,
-                   LocalDate anioNac, List<Equipo> equipos) {
+                   int anioNac, List<Equipo> equipos) {
 
         super(idPersona, nombre, apellido, telefono, direccion, turnos);
         this.idJugador = idJugador;
@@ -58,11 +58,11 @@ public class Jugador extends Persona {
         this.puntos = puntos;
     }
 
-    public LocalDate getAnioNac() {
+    public int getAnioNac() {
         return anioNac;
     }
 
-    public void setAnioNac(LocalDate anioNac) {
+    public void setAnioNac(int anioNac) {
         this.anioNac = anioNac;
     }
 
