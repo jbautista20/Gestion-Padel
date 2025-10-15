@@ -92,6 +92,25 @@ public class CrearReservaController {
                 labelPersonaSeleccionada.setText("No hay persona seleccionada");
             }
         });
+
+        // Restringir selección de fecha de pago (no permitir fechas futuras)
+        LocalDate hoy = LocalDate.now();
+        datePickerFechaPago.setDayCellFactory(picker -> new DateCell() {
+            @Override
+            public void updateItem(LocalDate item, boolean empty) {
+                super.updateItem(item, empty);
+                if (empty) {
+                    setDisable(true);
+                } else {
+                    // Deshabilitar fechas futuras
+                    if (item.isAfter(hoy)) {
+                        setDisable(true);
+                        setStyle("-fx-background-color: #ffc0cb;"); // opcional: colorear las fechas inválidas
+                    }
+                }
+            }
+        });
+
     }
 
     private void configurarColumnas() {
