@@ -233,25 +233,17 @@ public class CrearReservaController {
         alert.showAndWait();
     }
 
-    private void mostrarAlertaInfo(String titulo, String mensaje) {
-        Alert alert = new Alert(Alert.AlertType.INFORMATION);
-        alert.setTitle(titulo);
-        alert.setHeaderText(null);
-        alert.setContentText(mensaje);
-        alert.showAndWait();
-    }
-
     @FXML
     private void handleModificarPersona(MouseEvent event) {
-        // tu código aquí
+        mostrarAlertaExito("Modificar Persona", "Esta funcionalidad aún no está disponible.");
     }
     @FXML
     private void handleAltaPersona(MouseEvent event) {
-        // tu código aquí
+        mostrarAlertaExito("Alta Persona", "Esta funcionalidad aún no está disponible.");
     }
     @FXML
     private void handleBajaPersona(MouseEvent event) {
-        // tu código aquí
+        mostrarAlertaExito("Baja Persona", "Esta funcionalidad aún no está disponible.");
     }
 
 }

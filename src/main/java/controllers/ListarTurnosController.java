@@ -215,15 +215,7 @@ public class ListarTurnosController {
         labelTurnoSeleccionado.setText("Turno seleccionado:\nFecha: " + fecha + "\nHora: " + hora + "\nCancha: " + cancha);
     }
 
-    // ----- Alertas -----
-    private void mostrarAlertaSinResultados(LocalDate fecha) {
-        Alert alert = new Alert(Alert.AlertType.INFORMATION);
-        alert.setTitle("Sin resultados");
-        alert.setHeaderText(null);
-        alert.setContentText("No se encontraron turnos en la fecha " + fecha);
-        alert.showAndWait();
-    }
-
+    //--------------------------ALERTAS-----------------------------------
     private void mostrarAlertaError(String titulo, String mensaje) {
         Alert alert = new Alert(Alert.AlertType.ERROR);
         alert.setTitle(titulo);

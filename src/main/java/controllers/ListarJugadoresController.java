@@ -4,10 +4,13 @@ import DAO.impl.JugadorDAOImpl;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
 import models.Jugador;
 import utilities.NavigationHelper;
@@ -32,6 +35,11 @@ public class ListarJugadoresController {
 
     private ObservableList<Jugador> listaJugadores = FXCollections.observableArrayList();
     private JugadorDAOImpl jugadorDAO = new JugadorDAOImpl();
+
+    //ABM JUGADORES
+    @FXML private Label cargarJugador;
+    @FXML private Label eliminarJugador;
+    @FXML private Label modificarJugador;
 
     @FXML
     public void initialize() {
@@ -59,4 +67,26 @@ public class ListarJugadoresController {
             e.printStackTrace();
         }
     }
+
+    private void mostrarAlertaExito(String titulo, String mensaje) {
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle(titulo);
+        alert.setHeaderText(null);
+        alert.setContentText(mensaje);
+        alert.showAndWait();
+    }
+
+    @FXML
+    private void handleModificarPersona(MouseEvent event) {
+        mostrarAlertaExito("Modificar Persona", "Esta funcionalidad aún no está disponible.");
+    }
+    @FXML
+    private void handleAltaPersona(MouseEvent event) {
+        mostrarAlertaExito("Alta Persona", "Esta funcionalidad aún no está disponible.");
+    }
+    @FXML
+    private void handleBajaPersona(MouseEvent event) {
+        mostrarAlertaExito("Baja Persona", "Esta funcionalidad aún no está disponible.");
+    }
+
 }
