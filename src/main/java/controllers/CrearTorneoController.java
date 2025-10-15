@@ -191,7 +191,6 @@ public class CrearTorneoController {
         if (tipoTorneo == null) {
             return null;
         }
-
         switch (tipoTorneo.toLowerCase()) {//
             case "damas":
                 return T.Damas;
@@ -217,39 +216,7 @@ public class CrearTorneoController {
             throw new IllegalArgumentException("El precio debe ser un número válido");
         }
     }
-    //-------------------------------Validar que los campos no esten vacios-----------------------------------------
-    private boolean validarCampos(Integer categoria, String tipoTorneo, String premio1,
-                                  String premio2, LocalDate fechaInicio, int inscripcion) {
-        if (categoria == null) {
-            mostrarAlerta("Error", "Seleccione una categoría");
-            return false;
-        }
-        if (tipoTorneo == null) {
-            mostrarAlerta("Error", "Seleccione un tipo de torneo");
-            return false;
-        }
-        if (premio1.isEmpty()) {
-            mostrarAlerta("Error", "Ingrese el primer premio");
-            return false;
-        }
-        if (premio2.isEmpty()) {
-            mostrarAlerta("Error", "Ingrese el segundo premio");
-            return false;
-        }
-        if (fechaInicio == null) {
-            mostrarAlerta("Error", "Seleccione la fecha de inicio");
-            return false;
-        }
-        if (inscripcion==0) {
-            mostrarAlerta("Error", "inscripcion");
-            return false;
-        }
-        if (fechaInicio.isBefore(LocalDate.now())) {
-            mostrarAlerta("Error", "La fecha no puede ser en el pasado");
-            return false;
-        }
-        return true;
-    }
+
     //----------------------Cargo todos los atriburos del torneo para luego subirlo a la BD---------------------
     private Torneo crearTorneo(int categoria, T tipoTorneo, String premio1, String premio2,LocalDate fechaI, int inscripcion){
         Torneo torneoNuevo = new Torneo();
@@ -285,14 +252,6 @@ public class CrearTorneoController {
         }
         return null;
     }
-    //----------------------------------------Limpiar Todo una vez que lo cargo y preciono confirmar-------------------------------------
-    private void limpiarFormulario() {
-        comboBoxCategoria.setValue(null);
-        comboBoxTipoTorneo.setValue(null);
-        primerPremio.clear();
-        segundoPremio.clear();
-        valorDeInscripcion.clear(); // Limpiar el campo de inscripción
-        fecha.setValue(null);
-    }
+
 }
 
