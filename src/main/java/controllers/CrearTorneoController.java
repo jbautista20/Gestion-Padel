@@ -114,37 +114,78 @@ public class CrearTorneoController {
     //------------------------Recibiendo los datos de la creacion de torneo---------------
     @FXML
     private void recibirDatosDeTorneo() {
-        int categoria = obtenerCategoriaNumerica();
+        // leo valores del formulario
+        String categoriaStr = comboBoxCategoria.getValue();
         String tipoTorneo = comboBoxTipoTorneo.getValue();
-        T tipoDeTorneo = convertirTipoTorneo(tipoTorneo);
-        if (tipoDeTorneo == null) {
-            mostrarAlerta("Error", "Tipo de torneo no válido");
-            return;
-        }
-        String premio1 = primerPremio.getText().trim();
-        String premio2 = segundoPremio.getText().trim();
-        int inscripcion = 0;
-        //validamos que haya ingresado algo correcto en la inscripcion
-        try {
-            inscripcion = validarYConvertirPrecio(valorDeInscripcion.getText().trim());
-        } catch (IllegalArgumentException e) {
-            mostrarAlerta("Error", e.getMessage());
-            return;
-        }
+        String premio1 = primerPremio.getText() == null ? "" : primerPremio.getText().trim();
+        String premio2 = segundoPremio.getText() == null ? "" : segundoPremio.getText().trim();
+        String inscripcionText = valorDeInscripcion.getText() == null ? "" : valorDeInscripcion.getText().trim();
         LocalDate fechaTorneo = fecha.getValue();
-        generarTurnosDelDia(fechaTorneo);
-        if (!validarCampos(categoria, tipoTorneo, premio1, premio2, fechaTorneo, inscripcion)) {//validamos quetodo este bien cargado
-            mostrarAlerta("Error", "Por favor complete todos los campos");//en caso de algo mal cargado
+
+        if (categoriaStr == null || categoriaStr.isBlank() || tipoTorneo == null || tipoTorneo.isBlank() || premio1.isEmpty() || premio2.isEmpty() || inscripcionText.isEmpty() || fechaTorneo == null) {
+            mostrarAlerta("Error", "Por favor, complete todos los campos");
             return;
-        } else {
-            Torneo torneo = crearTorneo(categoria, tipoDeTorneo, premio1, premio2, fechaTorneo, inscripcion);
-            torneoDAO.create(torneo);//enviamos el torneo a la bd
-
-            turnoDAO.ocuparTurnosPorFecha(torneo.getFecha()); // Ocupa todos los turnos de esa fecha
-
-            limpiarFormulario();//limpiamos para que el usuario entienda que se cargo o que hubo un error
         }
+
+        List<Torneo> torneosExistentes = torneoDAO.findAll();
+        boolean torneoMismaFecha = torneosExistentes.stream()
+                .anyMatch(t -> t.getFecha().equals(fechaTorneo));
+
+        if (torneoMismaFecha) {
+            mostrarAlerta("Error", "Las canchas no están disponibles para ese día. \nPor favor, elija otra fecha.");
+            return;
+        }
+
+        int categoria = obtenerCategoriaNumerica();
+        T tipoDeTorneo = convertirTipoTorneo(tipoTorneo);
+
+        final int inscripcion;
+        try {
+            inscripcion = validarYConvertirPrecio(inscripcionText); // tu función que lanza IllegalArgumentException si no es válido
+        } catch (IllegalArgumentException e) {
+            mostrarAlerta("Error", e.getMessage()); // por ejemplo: "Ingrese un valor numérico para la inscripción"
+            return;
+        }
+
+        generarTurnosDelDia(fechaTorneo);
+
+        String mensaje = String.format("¿Seguro que deseas crear el torneo con los siguientes datos?\n\n" + "Categoría: %d\n" + "Fecha: %s\n" + "Tipo: %s\n" + "Premio 1: %s\n" + "Premio 2: %s\n" + "Inscripción: %d", categoria, fechaTorneo != null ? fechaTorneo.toString() : "—", tipoTorneo, premio1, premio2, inscripcion);
+
+        // Alerta de confirmación con dos botones
+        Alert alertaConfirmacion = new Alert(Alert.AlertType.CONFIRMATION);
+        alertaConfirmacion.setTitle("Confirmar creación");
+        alertaConfirmacion.setHeaderText("Confirmación requerida");
+        alertaConfirmacion.setContentText(mensaje);
+
+        ButtonType botonConfirmar = new ButtonType("Confirmar");
+        ButtonType botonCancelar = new ButtonType("Cancelar", ButtonBar.ButtonData.CANCEL_CLOSE);
+        alertaConfirmacion.getButtonTypes().setAll(botonConfirmar, botonCancelar);
+
+        alertaConfirmacion.showAndWait().ifPresent(respuesta -> {
+            if (respuesta == botonConfirmar) {
+                try {
+
+                    Torneo torneo = crearTorneo(categoria, tipoDeTorneo, premio1, premio2, fechaTorneo, inscripcion);
+                    torneoDAO.create(torneo);
+                    turnoDAO.ocuparTurnosPorFecha(torneo.getFecha());
+
+                    mostrarAlerta("Éxito", "Torneo creado correctamente.");
+
+                    // Navegar a la pantalla de listar torneos
+                    Stage stage = (Stage) comboBoxTipoTorneo.getScene().getWindow();
+                    NavigationHelper.cambiarVista(stage, Paths.pantallaTorneos, "Torneos");
+
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    mostrarAlerta("Error", "Ocurrió un error al crear el torneo.");
+                }
+            } else {
+                // Si cancela no hacemos nada y el formulario queda con los mismos datos
+            }
+        });
     }
+
+
     //----------------------------Convierte el TextFiel de tipo de torneo a Enum------------------------------
     private T convertirTipoTorneo(String tipoTorneo) {
         if (tipoTorneo == null) {
@@ -165,7 +206,13 @@ public class CrearTorneoController {
     //-------------------------------La validamos que la inscripcion este bien----------------------------
     private int validarYConvertirPrecio(String precioTexto) {
         try {
-            return Integer.parseInt(precioTexto);//castea a int
+            int precio = Integer.parseInt(precioTexto); // intenta convertir a número
+
+            if (precio < 0) {
+                throw new IllegalArgumentException("El precio no puede ser negativo");
+            }
+
+            return precio;
         } catch (NumberFormatException e) {
             throw new IllegalArgumentException("El precio debe ser un número válido");
         }

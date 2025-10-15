@@ -142,9 +142,7 @@ public class ListarTorneoController {
             Alert confirmacion = new Alert(Alert.AlertType.CONFIRMATION);
             confirmacion.setTitle("Confirmar Eliminación");
             confirmacion.setHeaderText("¿Está seguro de eliminar el torneo?");
-            confirmacion.setContentText("Torneo: " + torneoSeleccionado.getTipo() +
-                    " - " + torneoSeleccionado.getCategoria() +
-                    "\nEsta acción no se puede deshacer.");
+            confirmacion.setContentText("Fecha" + torneoSeleccionado.getFecha()+ "\nTipo: " + torneoSeleccionado.getTipo() + "\nCategoría: " + torneoSeleccionado.getCategoria() + "\nEsta acción no se puede deshacer.");
 
             Optional<ButtonType> resultado = confirmacion.showAndWait();
 

@@ -18,6 +18,12 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.List;
 
+//para cambiar de pantalla
+import javafx.stage.Stage;
+import javafx.scene.Node;
+import utilities.NavigationHelper;
+import utilities.Paths;
+
 public class ModificarTorneoController {
 
     @FXML private TextField primerPremio;
@@ -33,6 +39,8 @@ public class ModificarTorneoController {
     private Torneo torneoActual;
 
     private LocalDate fechaAnterior;
+    @FXML
+    private Label TorneoModificar; //para mostrar los datos actuales de torneo
 
     @FXML
     public void initialize() {
@@ -53,10 +61,24 @@ public class ModificarTorneoController {
                         && item.getDayOfWeek() != java.time.DayOfWeek.SATURDAY
                         && item.getDayOfWeek() != java.time.DayOfWeek.SUNDAY)) {
                     setDisable(true);
-                    setStyle("-fx-background-color: #ffc0cb;"); // opcional: colorear los días deshabilitados
+                    setStyle("-fx-background-color: #ffc0cb;");
                 }
             }
         });
+
+        // para el cartel de mostrar torneo actual
+        if (torneoActual != null) {
+            TorneoModificar.setText("Fecha: " + torneoActual.getFecha() +
+                            "\nCategoria: " + torneoActual.getCategoria() +
+                            "\nEstado: " + torneoActual.getEstados()+
+                            "\nTipo: " + torneoActual.getTipo() +
+                            "\nPremio Campeón: " + torneoActual.getPremio1() +
+                            "\nPremio Subcampeón: " + torneoActual.getPremio2() +
+                            "\nValor de inscripción: " + torneoActual.getValor_Inscripcion()
+            );
+        } else {
+            TorneoModificar.setText("No se ha seleccionado un turno.");
+        }
 
         // Listener para generar turnos cuando se cambia la fecha
         fecha.valueProperty().addListener((obs, oldDate, newDate) -> {
@@ -186,6 +208,9 @@ public class ModificarTorneoController {
         mostrarAlerta("Éxito", "Torneo modificado correctamente.");
 
         limpiarFormulario();
+        // Volver a la pantalla de torneos
+        Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+        NavigationHelper.cambiarVista(stage, Paths.pantallaTorneos, "Torneos");
     }
 
     private void actualizarTorneo(int categoria, T tipo, String premio1, String premio2,

@@ -10,8 +10,9 @@
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
 
-<StackPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="720.0" prefWidth="1280.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.ModificarTorneoController">
+<StackPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="720.0" prefWidth="1280.0" xmlns="http://javafx.com/javafx/24.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.ModificarTorneoController">
    <children>
       <Pane prefHeight="200.0" prefWidth="200.0">
          <children>
@@ -39,6 +40,16 @@
                               </ImageView>
                            </children>
                         </Pane>
+                        <Text fill="WHITE" layoutX="126.0" layoutY="153.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Torneo a modificar:">
+                           <font>
+                              <Font size="24.0" />
+                           </font>
+                        </Text>
+                        <Label fx:id="TorneoModificar" alignment="CENTER" contentDisplay="CENTER" layoutX="52.0" layoutY="176.0" prefHeight="316.0" prefWidth="354.0" text="Datos de Torneo a Modificar" textFill="WHITE">
+                           <font>
+                              <Font name="Cambria Math" size="24.0" />
+                           </font>
+                        </Label>
                      </children>
                   </Pane>
                </right>
@@ -59,12 +70,17 @@
                               </Pane>
                            </children>
                         </Pane>
-                        <ComboBox fx:id="comboBoxCategoria" layoutX="151.0" layoutY="218.0" prefHeight="34.0" prefWidth="163.0" promptText="Categoria" />
-                        <ComboBox fx:id="comboBoxTipoTorneo" layoutX="448.0" layoutY="218.0" prefHeight="34.0" prefWidth="163.0" promptText="Tipo" />
-                        <DatePicker fx:id="fecha" layoutX="147.0" layoutY="356.0" promptText="Fecha " />
-                        <TextField fx:id="primerPremio" layoutX="455.0" layoutY="356.0" promptText="Premio Campeon" />
-                        <TextField fx:id="segundoPremio" layoutX="151.0" layoutY="461.0" promptText="Premio subcampeon" />
-                        <TextField fx:id="valorDeInscripcion" layoutX="455.0" layoutY="455.0" promptText="Inscripción" />
+                        <ComboBox fx:id="comboBoxCategoria" layoutX="234.0" layoutY="179.0" prefHeight="50.0" prefWidth="203.0" promptText="Categoria" />
+                        <ComboBox fx:id="comboBoxTipoTorneo" layoutX="234.0" layoutY="296.0" prefHeight="50.0" prefWidth="203.0" promptText="Tipo" />
+                        <DatePicker fx:id="fecha" layoutX="233.0" layoutY="405.0" prefHeight="52.0" prefWidth="205.0" promptText="Fecha " />
+                        <TextField fx:id="primerPremio" layoutX="603.0" layoutY="178.0" prefHeight="52.0" prefWidth="206.0" promptText="Premio Campeon" />
+                        <TextField fx:id="segundoPremio" layoutX="604.0" layoutY="294.0" prefHeight="53.0" prefWidth="205.0" promptText="Premio subcampeon" />
+                        <TextField fx:id="valorDeInscripcion" layoutX="605.0" layoutY="405.0" prefHeight="52.0" prefWidth="203.0" promptText="Valor inscripción" />
+                        <Text fill="WHITE" layoutX="91.0" layoutY="140.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Por favor, modifique algun campo:">
+                           <font>
+                              <Font name="Cambria Math" size="30.0" />
+                           </font>
+                        </Text>
                      </children>
                   </Pane>
                </center>
