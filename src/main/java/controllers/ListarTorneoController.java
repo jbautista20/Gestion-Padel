@@ -106,6 +106,15 @@ public class ListarTorneoController {
                     botonModificarTorneo.setOpacity(habilitado ? 1.0 : 0.5);
                 }
         );
+
+        // Deshabilitar el botón al inicio
+        gestionarTorneo.setDisable(true);
+
+        // Escuchar cambios en la selección de la tabla
+        tableTorneos.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
+            // Habilitar si hay selección, deshabilitar si no
+            gestionarTorneo.setDisable(newSelection == null);
+        });
     }
 
     private void cargarTorneos() {
@@ -117,8 +126,13 @@ public class ListarTorneoController {
     //----------------------------Abrir scene gestionar torneo------------------------------//
     @FXML
     private void abrirGestionarTorneo(MouseEvent event) {
+        Torneo torneoSeleccionado = tableTorneos.getSelectionModel().getSelectedItem();
+        if (torneoSeleccionado == null) {
+            mostrarAlerta("Error", "Debe seleccionar un torneo antes de gestionar.");
+            return;
+        }
         Stage stage = (Stage) gestionarTorneo.getScene().getWindow();
-        NavigationHelper.cambiarVista(stage, Paths.pantallaGestionarTorneos, "GestionarTorneo");
+        NavigationHelper.cambiarVistaConDatos(stage, Paths.pantallaGestionarTorneos, "GestionarTorneo", torneoSeleccionado);
         System.out.println("cambiando la ventana");
     }
 
