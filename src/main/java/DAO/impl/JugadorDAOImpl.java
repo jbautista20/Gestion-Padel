@@ -13,7 +13,7 @@ public class JugadorDAOImpl implements GenericDAO<Jugador> {
     private final Connection conn;
 
     public JugadorDAOImpl() {
-        this.conn = Conexion.getConexion();
+        this.conn = Conexion.getInstance().getConnection();
     }
 
     @Override

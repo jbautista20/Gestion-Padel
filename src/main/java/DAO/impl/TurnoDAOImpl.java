@@ -14,7 +14,7 @@ public class TurnoDAOImpl implements GenericDAO<Turno> {
     private Connection conn;
 
     public TurnoDAOImpl() {
-        this.conn = Conexion.getConexion();
+        this.conn = Conexion.getInstance().getConnection();
     }
 
     @Override

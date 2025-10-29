@@ -1,30 +1,49 @@
 package db;
 
-import java.io.File;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 
 public class Conexion {
 
-    // Atributo estático que guarda la única instancia de la conexión
-    private static Connection conexion;
+    private static Conexion instancia;
+    private Connection conexion; // no estática
 
-    // Constructor privado para evitar instanciación directa
-    private Conexion() { }
+    private static final String URL = "jdbc:sqlite:basededatos.db";
 
-    // Metodo que devuelve la conexión
-    public static Connection getConexion() {
-        if (conexion == null) {
+    // Constructor privado
+    private Conexion() {
+        try {
+            conexion = DriverManager.getConnection(URL);
+            System.out.println("Conexión establecida correctamente a SQLite.");
+        } catch (SQLException e) {
+            System.out.println("Error al conectar a SQLite: " + e.getMessage());
+        }
+    }
+
+    // Singleton thread-safe
+    public static synchronized Conexion getInstance() {
+        if (instancia == null) {
+            instancia = new Conexion();
+        }
+        return instancia;
+    }
+
+    public Connection getConnection() {
+        return conexion;
+    }
+
+    // Metodo para cerrar la conexión
+    public void cerrarConexion() {
+        if (conexion != null) {
             try {
-                String url = "jdbc:sqlite:basededatos.db"; // tu archivo de base de datos
-                conexion = DriverManager.getConnection(url);
-                System.out.println("Conexión establecida correctamente a SQLite.");
-
+                conexion.close();
+                conexion = null;
+                instancia = null;
+                System.out.println("Conexión cerrada.");
             } catch (SQLException e) {
-                System.out.println("Error al conectar a SQLite: " + e.getMessage());
+                System.out.println("Error al cerrar la conexión: " + e.getMessage());
             }
         }
-        return conexion;
     }
 }

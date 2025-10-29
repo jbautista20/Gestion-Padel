@@ -13,7 +13,7 @@ public class PersonaDAOImpl implements GenericDAO<Persona> {
     private Connection conn;
 
     public PersonaDAOImpl() {
-        this.conn = Conexion.getConexion();
+        this.conn = Conexion.getInstance().getConnection();
     }
 
     @Override

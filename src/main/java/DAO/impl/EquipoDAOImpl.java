@@ -14,7 +14,7 @@ public class EquipoDAOImpl implements GenericDAO<Equipo> {
     private Connection conn;
 
     public EquipoDAOImpl() {
-        this.conn = Conexion.getConexion();
+        this.conn = Conexion.getInstance().getConnection();
     }
 
     @Override

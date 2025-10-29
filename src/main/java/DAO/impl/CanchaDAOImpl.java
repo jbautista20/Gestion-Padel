@@ -15,7 +15,7 @@ public class CanchaDAOImpl implements GenericDAO<Cancha> {
     private Connection conn;
 
     public CanchaDAOImpl() {
-        this.conn = Conexion.getConexion();
+        this.conn = Conexion.getInstance().getConnection();
     }
 
     @Override

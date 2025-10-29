@@ -16,7 +16,7 @@ public class TorneoDAOImpl implements GenericDAO<Torneo> {
     private Connection conn;
 
     public TorneoDAOImpl() {
-        this.conn = Conexion.getConexion();
+        this.conn = Conexion.getInstance().getConnection();
     }
 
     @Override

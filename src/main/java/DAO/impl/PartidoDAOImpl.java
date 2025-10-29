@@ -14,7 +14,7 @@ public class PartidoDAOImpl implements GenericDAO<Partido> {
     private Connection conn;
 
     public PartidoDAOImpl() {
-        this.conn = Conexion.getConexion();
+        this.conn = Conexion.getInstance().getConnection();
     }
 
     @Override
