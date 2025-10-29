@@ -9,7 +9,7 @@ public class Conexion {
     private static Conexion instancia;
     private Connection conexion; // no estática
 
-    private static final String URL = "jdbc:sqlite:basededatos.db";
+    private String URL = "jdbc:sqlite:basededatos.db";
 
     // Constructor privado
     private Conexion() {
