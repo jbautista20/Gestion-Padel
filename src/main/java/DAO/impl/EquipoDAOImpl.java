@@ -3,6 +3,7 @@ package DAO.impl;
 import DAO.GenericDAO;
 import db.Conexion;
 import models.Equipo;
+import models.Torneo;
 
 import java.sql.*;
 import java.time.LocalDate;
@@ -172,4 +173,48 @@ public class EquipoDAOImpl implements GenericDAO<Equipo> {
         }
         return equipos;
     }
+
+    public int contarEquiposPorTorneo(int idTorneo) {
+        String sql = "SELECT COUNT(*) FROM Equipos WHERE id_torneo = ?";
+        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setInt(1, idTorneo);
+            ResultSet rs = stmt.executeQuery();
+            if (rs.next()) {
+                return rs.getInt(1);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return 0;
+    }
+
+    public List<Equipo> findByTorneoId(int idTorneo) {
+        List<Equipo> equipos = new ArrayList<>();
+        String sql = "SELECT * FROM Equipos WHERE id_torneo = ?";
+
+        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+            stmt.setInt(1, idTorneo);
+            ResultSet rs = stmt.executeQuery();
+
+            while (rs.next()) {
+                Equipo equipo = new Equipo();
+                equipo.setId(rs.getInt("id_equipo"));
+                equipo.setNombre(rs.getString("nombre"));
+
+                // Si tenés un campo torneo en Equipo:
+                Torneo torneo = new Torneo();
+                torneo.setId(rs.getInt("id_torneo"));
+                equipo.setTorneo(torneo);
+
+                equipos.add(equipo);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return equipos;
+    }
+
+
 }

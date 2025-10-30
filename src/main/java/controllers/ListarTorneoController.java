@@ -41,7 +41,6 @@ public class ListarTorneoController {
 
     private ObservableList<Torneo> listaTorneos = FXCollections.observableArrayList();
 
-
     @FXML private TableColumn<Torneo, String> colEstado;
     @FXML private TableColumn<Torneo, LocalDate> colFecha;
     @FXML private TableColumn<Torneo, Integer> colCategoria;

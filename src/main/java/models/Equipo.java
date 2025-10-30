@@ -29,6 +29,10 @@ public class Equipo {
         this.fecha_desc = fecha_desc;
     }
 
+    public Equipo() {
+        //defecto
+    }
+
     public int getId() {
         return Id;
     }
