@@ -31,6 +31,10 @@ public class Partido {
         this.set3 = set3;
     }
 
+    public Partido() {
+        //default
+    }
+
     public int getId() {
         return Id;
     }
