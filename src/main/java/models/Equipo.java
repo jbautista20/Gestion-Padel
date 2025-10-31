@@ -13,9 +13,8 @@ public class Equipo {
     private List<Partido>  partidosGanados;
     private List<Partido> partidosJugados;
     private String motivo_desc;
-    private LocalDate fecha_desc;
 
-    public Equipo(int Id, String nombre, int ptos_T_Obt, LocalDate fecha_Insc, Jugador jugador1, Jugador jugador2, Torneo torneo, List<Partido> partidosGanados, List<Partido> partidosJugados,  String motivo_desc, LocalDate fecha_desc) {
+    public Equipo(int Id, String nombre, int ptos_T_Obt, LocalDate fecha_Insc, Jugador jugador1, Jugador jugador2, Torneo torneo, List<Partido> partidosGanados, List<Partido> partidosJugados,  String motivo_desc) {
         this.Id = Id;
         Nombre = nombre;
         Ptos_T_Obt = ptos_T_Obt;
@@ -26,7 +25,6 @@ public class Equipo {
         this.partidosGanados = partidosGanados;
         this.partidosJugados = partidosJugados;
         this.motivo_desc = motivo_desc;
-        this.fecha_desc = fecha_desc;
     }
 
     public Equipo() {
@@ -111,13 +109,5 @@ public class Equipo {
 
     public void setMotivo_desc(String motivo_desc) {
         this.motivo_desc = motivo_desc;
-    }
-
-    public LocalDate getFecha_desc() {
-        return fecha_desc;
-    }
-
-    public void setFecha_desc(LocalDate fecha_desc) {
-        this.fecha_desc = fecha_desc;
     }
 }

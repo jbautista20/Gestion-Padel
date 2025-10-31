@@ -143,4 +143,42 @@ public class JugadorDAOImpl implements GenericDAO<Jugador> {
 
         return jugadores;
     }
+
+    public List<Jugador> findByCategoria(int categoria) {
+        String sql = """
+            SELECT j.id_jugador, j.Categoria, j.Sexo, j.Puntos, j.Anio_Nac,
+                   p.id_persona, p.nombre, p.apellido, p.telefono, p.direccion
+            FROM Jugadores j
+            JOIN Personas p ON j.id_persona = p.id_persona
+            WHERE j.Categoria = ?
+        """;
+
+        List<Jugador> jugadores = new ArrayList<>();
+
+        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setInt(1, categoria);
+            ResultSet rs = stmt.executeQuery();
+
+            while (rs.next()) {
+                Jugador jugador = new Jugador(
+                        rs.getInt("id_persona"),
+                        rs.getInt("id_jugador"),
+                        rs.getString("nombre"),
+                        rs.getString("apellido"),
+                        rs.getString("telefono"),
+                        rs.getString("direccion"),
+                        null, // lista de turnos
+                        rs.getInt("Categoria"),
+                        rs.getInt("Sexo"),
+                        rs.getInt("Puntos"),
+                        rs.getInt("Anio_Nac"), // directamente int
+                        null // lista de equipos
+                );
+                jugadores.add(jugador);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return jugadores;
+    }
 }

@@ -116,7 +116,7 @@
             <TableColumn fx:id="colPuntos" prefWidth="132.0" text="Puntos" />
          </columns>
       </TableView>
-      <Text fx:id="txtJugador11" layoutX="575.0" layoutY="137.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Jugadores aptos para inscribirse CATEGORIA:" wrappingWidth="475.0">
+      <Text layoutX="575.0" layoutY="137.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Jugadores aptos para inscribirse CATEGORIA:" wrappingWidth="475.0">
          <font>
             <Font name="System Bold Italic" size="22.0" />
          </font>
