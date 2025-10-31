@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
+
+<AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/24.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.InscribirEquipoController">
+   <children>
+      <Pane layoutX="-3.0" layoutY="-4.0" prefHeight="730.0" prefWidth="1290.0" />
+      <ImageView fitHeight="730.0" fitWidth="1290.0" pickOnBounds="true">
+         <image>
+            <Image url="@../Imagenes/CrearTorneo.png" />
+         </image>
+      </ImageView>
+      <Pane layoutX="25.0" layoutY="23.0" prefHeight="80.0" prefWidth="403.0" style="-fx-background-color: #256c26;">
+         <children>
+            <Label layoutX="12.0" layoutY="-3.0" prefHeight="82.0" prefWidth="437.0" text="Inscribir Equipo al Torneo" textFill="#f4f4f4">
+               <font>
+                  <Font name="Cooper Black BT" size="30.0" />
+               </font>
+            </Label>
+         </children>
+      </Pane>
+      <Pane layoutX="14.0" layoutY="103.0" prefHeight="590.0" prefWidth="353.0">
+         <children>
+            <Text fill="WHITE" layoutX="14.0" layoutY="44.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Jugadores:" textAlignment="CENTER" underline="true">
+               <font>
+                  <Font name="Cambria Math" size="30.0" />
+               </font>
+            </Text>
+            <Label alignment="CENTER" layoutX="14.0" layoutY="237.0" prefHeight="34.0" prefWidth="214.0" text="Monto a abonar:" textFill="WHITE" underline="true">
+               <font>
+                  <Font name="Cambria Math" size="30.0" />
+               </font>
+            </Label>
+            <Label alignment="CENTER" layoutX="18.0" layoutY="422.0" prefHeight="34.0" prefWidth="264.0" text="Nombre del Equipo:" textFill="WHITE" underline="true">
+               <font>
+                  <Font name="Cambria Math" size="30.0" />
+               </font>
+            </Label>
+            <Text fx:id="txtJugador1" layoutX="11.0" layoutY="97.0" strokeType="OUTSIDE" strokeWidth="0.0" wrappingWidth="331.0">
+               <font>
+                  <Font name="System Bold Italic" size="22.0" />
+               </font>
+            </Text>
+            <Text fx:id="txtJugador2" layoutX="11.0" layoutY="167.0" strokeType="OUTSIDE" strokeWidth="0.0" wrappingWidth="331.0">
+               <font>
+                  <Font name="System Bold Italic" size="22.0" />
+               </font>
+            </Text>
+            <Text fx:id="txtValorInscripcion" layoutX="18.0" layoutY="324.0" strokeType="OUTSIDE" strokeWidth="0.0" wrappingWidth="233.0">
+               <font>
+                  <Font name="System Bold Italic" size="35.0" />
+               </font>
+            </Text>
+            <Text fx:id="txtNombreEquipo" layoutX="18.0" layoutY="512.0" strokeType="OUTSIDE" strokeWidth="0.0" wrappingWidth="387.0">
+               <font>
+                  <Font name="System Bold Italic" size="35.0" />
+               </font>
+            </Text>
+         </children>
+      </Pane>
+      <Pane layoutX="923.0" layoutY="103.0" prefHeight="590.0" prefWidth="353.0">
+         <children>
+            <Pane layoutX="38.0" layoutY="295.0" />
+            <Pane layoutX="38.0" layoutY="81.0" />
+            <Pane layoutX="38.0" layoutY="190.0" />
+            <Pane layoutX="117.0" layoutY="418.0" prefHeight="120.0" prefWidth="120.0" />
+            <ImageView fitHeight="100.0" fitWidth="120.0" layoutX="221.0" layoutY="466.0" pickOnBounds="true" preserveRatio="true" x="10.0" y="10.0">
+               <image>
+                  <Image url="@../Imagenes/fondoBotonBack.png" />
+               </image>
+            </ImageView>
+            <Pane layoutX="231.0" layoutY="479.0" prefHeight="65.0" prefWidth="70.0" style="-fx-background-color: #86a55f;" />
+            <ImageView fx:id="botonBack" fitHeight="100.0" fitWidth="120.0" layoutX="221.0" layoutY="466.0" onMouseClicked="#handleBackButton" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../Imagenes/Back.png" />
+               </image>
+            </ImageView>
+            <Text fx:id="txtCategoria" layoutX="125.0" layoutY="36.0" strokeType="OUTSIDE" strokeWidth="0.0" translateX="5.0" translateY="-2.0" wrappingWidth="36.0">
+               <font>
+                  <Font name="System Bold Italic" size="22.0" />
+               </font>
+            </Text>
+         </children>
+      </Pane>
+      <Pane layoutX="503.0" layoutY="596.0">
+         <children>
+            <Pane layoutX="5.0" layoutY="5.0" prefHeight="49.0" prefWidth="278.0" style="-fx-background-color: #2a2a2a; -fx-border-radius: 5; -fx-border-color: #2a2a2a; -fx-border-width: 2; -fx-background-radius: 6;" />
+            <Pane fx:id="btnConfirmar" onMouseClicked="#botonConfirmarEquipo" prefHeight="49.0" prefWidth="278.0" style="-fx-background-color: #256c26; -fx-border-radius: 5; -fx-border-color: #2a2a2a; -fx-border-width: 2; -fx-background-radius: 6;">
+               <children>
+                  <Label alignment="CENTER" layoutX="1.0" layoutY="2.0" prefHeight="47.0" prefWidth="277.0" text="CONFIRMAR EQUIPO" textFill="WHITE">
+                     <font>
+                        <Font name="Arial Black" size="20.0" />
+                     </font>
+                  </Label>
+               </children>
+            </Pane>
+         </children>
+      </Pane>
+      <TableView fx:id="tableJugadores" layoutX="419.0" layoutY="157.0" prefHeight="400.0" prefWidth="817.0">
+         <columns>
+            <TableColumn fx:id="colNombre" prefWidth="103.0" text="Nombre" />
+            <TableColumn fx:id="colApellido" prefWidth="103.0" text="Apellido" />
+            <TableColumn fx:id="colCategoria" prefWidth="61.0" text="Categoria" />
+            <TableColumn fx:id="colTelefono" prefWidth="95.0" text="Telefono" />
+            <TableColumn fx:id="colDireccion" prefWidth="128.0" text="Direccion" />
+            <TableColumn fx:id="colSexo" prefWidth="96.0" text="Sexo" />
+            <TableColumn fx:id="colAnioNacimiento" prefWidth="106.0" text="Año Nacimiento" />
+            <TableColumn fx:id="colPuntos" prefWidth="132.0" text="Puntos" />
+         </columns>
+      </TableView>
+      <Text fx:id="txtJugador11" layoutX="575.0" layoutY="137.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Jugadores aptos para inscribirse CATEGORIA:" wrappingWidth="475.0">
+         <font>
+            <Font name="System Bold Italic" size="22.0" />
+         </font>
+      </Text>
+   </children>
+</AnchorPane>

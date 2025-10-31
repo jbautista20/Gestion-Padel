@@ -215,7 +215,9 @@ public class GestionarTorneoController {
 
     @FXML
     private void botonGestionarEquipos() {
-        // ...
+        Stage stage = (Stage) btnComenzarTorneo.getScene().getWindow();
+        NavigationHelper.cambiarVistaConDatos(stage, Paths.pantallaGestionarEquipos, "Gestionar Equipos", torneoActual);
+        System.out.println("cambiando la ventana");
     }
 
 }

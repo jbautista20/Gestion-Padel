@@ -12,5 +12,6 @@ public class Paths {
     public static final String pantallaModificarTorneo = "/Views/viewModificarTorneo.fxml";
     public static final String pantallaTurnos = "/Views/viewGestionarTurnos.fxml";
     public static final String pantallaCrearReserva = "/Views/viewCrearReserva.fxml";
-    public static final String pantallaGestionarEquipos = "/Views/viewGestionarTorneo.fxml";
+    public static final String pantallaGestionarEquipos = "/Views/viewGestionarEquipos.fxml";
+    public static final String pantallaInscribirEquipo = "/Views/viewInscribirEquipo.fxml";
 }
