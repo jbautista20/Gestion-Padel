@@ -1,5 +1,6 @@
 package controllers;
 import DAO.GenericDAO;
+import DAO.impl.EquipoDAOImpl;
 import DAO.impl.TorneoDAOImpl;
 import DAO.impl.TurnoDAOImpl;
 import javafx.beans.property.SimpleIntegerProperty;
@@ -50,6 +51,7 @@ public class ListarTorneoController {
     @FXML private TableColumn<Torneo, String> colPremioSubcampeon;
     @FXML private TableColumn<Torneo, String> colInscriptos;
     private GenericDAO<Torneo> torneoDAO = new TorneoDAOImpl();
+    private EquipoDAOImpl equipoDAO = new EquipoDAOImpl();
 
     @FXML
     public void initialize() {
@@ -76,12 +78,11 @@ public class ListarTorneoController {
                 new SimpleStringProperty(cellData.getValue().getPremio2()));
 
         colInscriptos.setCellValueFactory(cellData -> {
-            int cantidad = 0;
-            if (cellData.getValue().getEquipos() != null)
-                for (Equipo e : cellData.getValue().getEquipos())
-                    if (e != null) cantidad++;
+            Torneo torneo = cellData.getValue();
+            int cantidad = equipoDAO.contarEquiposPorTorneo(torneo.getId());
             return new SimpleStringProperty(String.valueOf(cantidad));
         });
+
 
         // Enlazar la lista observable con la tabla
         tableTorneos.setItems(listaTorneos);

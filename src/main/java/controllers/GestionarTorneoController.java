@@ -106,6 +106,13 @@ public class GestionarTorneoController {
             torneoDAO.update(torneoActual);
             mostrarInfo("Torneo iniciado", "El torneo ha comenzado correctamente.");
         }
+        // Mostrar estructura base
+        txtEquipoSemi1.setText("Ganador C1");
+        txtEquipoSemi2.setText("Ganador C2");
+        txtEquipoSemi3.setText("Ganador C3");
+        txtEquipoSemi4.setText("Ganador C4");
+        txtEquipoFinal1.setText("Ganador S1");
+        txtEquipoFinal2.setText("Ganador S2");
     }
 
     /** Manejo de botón Armar Cruces */
@@ -118,6 +125,12 @@ public class GestionarTorneoController {
         if (totalInscriptos < 8) {
             mostrarAlerta("No se pueden armar los cruces",
                     "Se necesitan 8 equipos inscriptos para armar los cruces.");
+            return;
+        }
+
+        if (crucesArmados) {
+            mostrarAlerta("Cruces armados",
+                    "Ya se armaron los cruces .");
             return;
         }
 
@@ -172,13 +185,6 @@ public class GestionarTorneoController {
             index += 2;
         }
 
-        // Mostrar estructura base
-        txtEquipoSemi1.setText("Ganador C1");
-        txtEquipoSemi2.setText("Ganador C2");
-        txtEquipoSemi3.setText("Ganador C3");
-        txtEquipoSemi4.setText("Ganador C4");
-        txtEquipoFinal1.setText("Ganador S1");
-        txtEquipoFinal2.setText("Ganador S2");
     }
 
 

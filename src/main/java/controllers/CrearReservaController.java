@@ -111,6 +111,8 @@ public class CrearReservaController {
             }
         });
 
+        textMonto.setText("20000");
+
     }
 
     private void configurarColumnas() {

@@ -142,6 +142,7 @@ public class InscribirEquipoController {
         nuevoEquipo.setPtos_T_Obt(0);
         nuevoEquipo.setFecha_Insc(LocalDate.now());
         nuevoEquipo.setMotivo_desc(null);
+        nuevoEquipo.setMotivo_desc(null);
 
         // Guardar en BD
         EquipoDAOImpl equipoDAO = new EquipoDAOImpl();

@@ -92,9 +92,10 @@
                                  <columns>
                                     <TableColumn fx:id="colNombre" prefWidth="183.0" text="Nombre" />
                                     <TableColumn fx:id="colPuntos" prefWidth="104.0" text="Puntos" />
-                                    <TableColumn fx:id="colFechaInscripcion" prefWidth="182.0" text="Fecha de Inscripcion" />
-                                    <TableColumn fx:id="colDescalificado" prefWidth="90.0" text="Descalificado" />
-                                    <TableColumn fx:id="colMotivo" prefWidth="268.0" text="Motivo" />
+                                    <TableColumn fx:id="colFechaInscripcion" prefWidth="154.0" text="Fecha de Inscripcion" />
+                                    <TableColumn fx:id="colDescalificado" prefWidth="79.0" text="Descalificado" />
+                                    <TableColumn fx:id="colFechaDesc" prefWidth="129.0" text="Fecha" />
+                                    <TableColumn fx:id="colMotivo" prefWidth="179.0" text="Motivo" />
                                  </columns>
                               </TableView>
                            </children>

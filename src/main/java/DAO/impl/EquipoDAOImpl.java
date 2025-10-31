@@ -19,7 +19,7 @@ public class EquipoDAOImpl implements GenericDAO<Equipo> {
 
     @Override
     public void create(Equipo equipo) {
-        String sql = "INSERT INTO Equipos (id_jugador1, id_jugador2, id_torneo, nombre, ptos_T_Obt, fecha_Insc, motivo_desc) VALUES (?, ?, ?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO Equipos (id_jugador1, id_jugador2, id_torneo, nombre, ptos_T_Obt, fecha_Insc, motivo_desc, fecha_desc) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
         try (PreparedStatement stmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
 
             // Relaciones
@@ -42,7 +42,13 @@ public class EquipoDAOImpl implements GenericDAO<Equipo> {
             stmt.setString(4, equipo.getNombre());
             stmt.setInt(5, equipo.getPtos_T_Obt());
             stmt.setString(6, equipo.getFecha_Insc().toString());
+
+            // Campos nuevos (pueden ser nulos)
             stmt.setString(7, equipo.getMotivo_desc());
+            if (equipo.getFecha_desc() != null)
+                stmt.setString(8, equipo.getFecha_desc().toString());
+            else
+                stmt.setNull(8, Types.VARCHAR);
 
             stmt.executeUpdate();
 
@@ -60,7 +66,7 @@ public class EquipoDAOImpl implements GenericDAO<Equipo> {
 
     @Override
     public void update(Equipo equipo) {
-        String sql = "UPDATE Equipos SET id_jugador1 = ?, id_jugador2 = ?, id_torneo = ?, nombre = ?, ptos_T_Obt = ?, fecha_Insc = ?, motivo_desc = ? WHERE id_equipo = ?";
+        String sql = "UPDATE Equipos SET id_jugador1 = ?, id_jugador2 = ?, id_torneo = ?, nombre = ?, ptos_T_Obt = ?, fecha_Insc = ?, motivo_desc = ?, fecha_desc = ? WHERE id_equipo = ?";
         try (PreparedStatement stmt = conn.prepareStatement(sql)) {
 
             if (equipo.getJugador1() != null)
@@ -82,7 +88,11 @@ public class EquipoDAOImpl implements GenericDAO<Equipo> {
             stmt.setInt(5, equipo.getPtos_T_Obt());
             stmt.setString(6, equipo.getFecha_Insc().toString());
             stmt.setString(7, equipo.getMotivo_desc());
-            stmt.setInt(8, equipo.getId());
+            if (equipo.getFecha_desc() != null)
+                stmt.setString(8, equipo.getFecha_desc().toString());
+            else
+                stmt.setNull(8, Types.VARCHAR);
+            stmt.setInt(9, equipo.getId());
 
             stmt.executeUpdate();
             System.out.println("Equipo actualizado correctamente.");
@@ -123,7 +133,8 @@ public class EquipoDAOImpl implements GenericDAO<Equipo> {
                         null, // Torneo
                         null, // PartidosGanados
                         null, // PartidosJugados
-                        rs.getString("motivo_desc")
+                        rs.getString("motivo_desc"),
+                        rs.getString("fecha_desc") != null ? LocalDate.parse(rs.getString("fecha_desc")) : null
                 );
             }
         } catch (SQLException e) {
@@ -151,7 +162,8 @@ public class EquipoDAOImpl implements GenericDAO<Equipo> {
                         null,
                         null,
                         null,
-                        rs.getString("motivo_desc")
+                        rs.getString("motivo_desc"),
+                        rs.getString("fecha_desc") != null ? LocalDate.parse(rs.getString("fecha_desc")) : null
                 );
                 equipos.add(equipo);
             }
@@ -180,7 +192,6 @@ public class EquipoDAOImpl implements GenericDAO<Equipo> {
         String sql = "SELECT * FROM Equipos WHERE id_torneo = ?";
 
         try (PreparedStatement stmt = conn.prepareStatement(sql)) {
-
             stmt.setInt(1, idTorneo);
             ResultSet rs = stmt.executeQuery();
 
@@ -188,7 +199,26 @@ public class EquipoDAOImpl implements GenericDAO<Equipo> {
                 Equipo equipo = new Equipo();
                 equipo.setId(rs.getInt("id_equipo"));
                 equipo.setNombre(rs.getString("nombre"));
+                equipo.setPtos_T_Obt(rs.getInt("ptos_T_Obt"));
 
+                String fechaInscStr = rs.getString("fecha_Insc");
+                if (fechaInscStr != null && !fechaInscStr.isEmpty()) {
+                    equipo.setFecha_Insc(LocalDate.parse(fechaInscStr));
+                } else {
+                    equipo.setFecha_Insc(null);
+                }
+
+                // Cargar motivo y fecha de descalificación
+                equipo.setMotivo_desc(rs.getString("motivo_desc"));
+                String fechaDescStr = rs.getString("fecha_desc");
+                if (fechaDescStr != null && !fechaDescStr.isEmpty()) {
+                    equipo.setFecha_desc(LocalDate.parse(fechaDescStr));
+                } else {
+                    equipo.setFecha_desc(null);
+                }
+
+
+                // Asignar el torneo
                 Torneo torneo = new Torneo();
                 torneo.setId(rs.getInt("id_torneo"));
                 equipo.setTorneo(torneo);
