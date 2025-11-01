@@ -250,10 +250,7 @@ public class TurnoDAOImpl implements GenericDAO<Turno> {
     //--------------FUNCIONES PARA LISTAR RESERVAS------------
 
     public List<Turno> obtenerTurnosPorEstado(E estado) {
-        String sql = "SELECT t.*, p.nombre, p.apellido " +
-                "FROM Turnos t " +
-                "JOIN Personas p ON t.id_persona = p.id_persona " +
-                "WHERE t.estado = ? AND t.id_persona IS NOT NULL";
+        String sql = "SELECT t.*, p.nombre, p.apellido " + "FROM Turnos t " + "JOIN Personas p ON t.id_persona = p.id_persona " + "WHERE t.estado = ? AND t.id_persona IS NOT NULL";
 
         List<Turno> turnos = new ArrayList<>();
         try (PreparedStatement stmt = conn.prepareStatement(sql)) {
@@ -273,14 +270,12 @@ public class TurnoDAOImpl implements GenericDAO<Turno> {
                             rs.getString("reintegro_cancelacion")
                     );
 
-                    // Asignar Persona completa
                     Persona persona = new Persona();
                     persona.setId(rs.getInt("id_persona"));
                     persona.setNombre(rs.getString("nombre"));
                     persona.setApellido(rs.getString("apellido"));
                     turno.setPersona(persona);
 
-                    // Asignar Cancha
                     Cancha cancha = new Cancha();
                     cancha.setNumero(rs.getInt("num_cancha"));
                     turno.setCancha(cancha);
@@ -296,10 +291,7 @@ public class TurnoDAOImpl implements GenericDAO<Turno> {
     }
 
     public List<Turno> obtenerTurnosPorEstadoYFecha(E estado, LocalDate fecha) {
-        String sql = "SELECT t.*, p.nombre, p.apellido " +
-                "FROM Turnos t " +
-                "JOIN Personas p ON t.id_persona = p.id_persona " +
-                "WHERE t.estado = ? AND t.fecha = ? AND t.id_persona IS NOT NULL";
+        String sql = "SELECT t.*, p.nombre, p.apellido " + "FROM Turnos t " + "JOIN Personas p ON t.id_persona = p.id_persona " + "WHERE t.estado = ? AND t.fecha = ? AND t.id_persona IS NOT NULL";
 
         List<Turno> turnos = new ArrayList<>();
         try (PreparedStatement stmt = conn.prepareStatement(sql)) {
@@ -337,9 +329,7 @@ public class TurnoDAOImpl implements GenericDAO<Turno> {
         } catch (SQLException e) {
             e.printStackTrace();
         }
-
         return turnos;
     }
-
 }
 

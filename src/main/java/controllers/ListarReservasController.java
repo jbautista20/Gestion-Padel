@@ -31,7 +31,6 @@ public class ListarReservasController {
     @FXML private TableColumn<Turno, String> columnaFechaP;
     @FXML private DatePicker DatePickerFecha;
     @FXML private ImageView botonBack;
-    @FXML private Pane botonGestionarPagos;
     private TurnoDAOImpl turnoDAO;
 
     @FXML
@@ -47,7 +46,6 @@ public class ListarReservasController {
             @Override
             public void updateItem(LocalDate date, boolean empty) {
                 super.updateItem(date, empty);
-                // No deshabilitar ninguna fecha
                 setDisable(false);
             }
         });
@@ -170,12 +168,12 @@ public class ListarReservasController {
             cancelarTurno(turnoSeleccionado);
             mostrarAlerta("Éxito", "Reserva cancelada correctamente.");
             DatePickerFecha.setValue(null);
-            cargarTurnosOcupados();// Actualizar la tabla después de cancelar
+            cargarTurnosOcupados();// p-actualizar la tabla después de cancelar
         }
 
 
     }
-    // se usa para ver si la reserva ya paso o no
+    //para ver si la reserva ya paso o no
     @FXML
     private boolean esReservaPasada(Turno turno){
         LocalDate fechaHoy = LocalDate.now();
@@ -183,7 +181,7 @@ public class ListarReservasController {
         if (turno.getFecha().isBefore(fechaHoy)) {
             return true;
         }
-        // Si es hoy, verifico la hora
+        // verifico la hora si es hoy
         if (turno.getFecha().isEqual(fechaHoy)) {
             if (turno.getHora().isBefore(horaAhora)) {
                 return true;
@@ -198,7 +196,6 @@ public class ListarReservasController {
         alert.setHeaderText(null);
         alert.setContentText(mensaje);
 
-        // Personalizar los botones
         ButtonType buttonTypeYes = new ButtonType("Sí", ButtonBar.ButtonData.YES);
         ButtonType buttonTypeNo = new ButtonType("No", ButtonBar.ButtonData.NO);
         alert.getButtonTypes().setAll(buttonTypeYes, buttonTypeNo);
@@ -209,24 +206,10 @@ public class ListarReservasController {
 
     private void cancelarTurno(Turno turno) {
         try {
-            // Elimino el turno seleccionado
-            turnoDAO.delete(turno.getId());
+            turnoDAO.delete(turno.getId());  // Elimino el turno seleccionado
 
-            // Creo un nuevo turno con los mismos datos pero libre
-            Turno nuevoTurno = new Turno(
-                    0, // id se genera automáticamente
-                    turno.getFecha(),
-                    turno.getHora(),
-                    E.Libre,
-                    0, // pago, si aplica
-                    null, // fecha de pago
-                    turno.getPersona() != null ? turno.getPersona() : null, // o null si querés que quede sin persona
-                    turno.getCancha(),
-                    null, // fecha cancelación
-                    null  // reintegro
-            );
-
-            // Guardo el nuevo turno como libre
+            // creo un nuevo turno con los mismos datos pero libre
+            Turno nuevoTurno = new Turno(0, turno.getFecha(), turno.getHora(), E.Libre, 0, null, turno.getPersona() != null ? turno.getPersona() : null, turno.getCancha(), null, null);
             turnoDAO.create(nuevoTurno);
 
         } catch (Exception e) {
