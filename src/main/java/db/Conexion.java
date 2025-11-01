@@ -46,4 +46,5 @@ public class Conexion {
             }
         }
     }
+    //public getinstance: si la conexión es nulla llamo al const privado y la creo -> retrn conexión (este método es el unico que llama al constructor privado)
 }

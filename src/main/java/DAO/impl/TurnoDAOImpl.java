@@ -223,7 +223,7 @@ public class TurnoDAOImpl implements GenericDAO<Turno> {
     public void ocuparTurnosPorFecha(LocalDate fecha) {
         String sql = "UPDATE Turnos SET estado = ? WHERE fecha = ?";
         try (PreparedStatement stmt = conn.prepareStatement(sql)) {
-            stmt.setString(1, E.Ocupado.name()); // asumimos que E es el enum de estado
+            stmt.setString(1, E.Ocupado.name());
             stmt.setString(2, fecha.toString());
             int rowsUpdated = stmt.executeUpdate();
             System.out.println("Turnos ocupados: " + rowsUpdated);
@@ -236,7 +236,7 @@ public class TurnoDAOImpl implements GenericDAO<Turno> {
         String sql = "SELECT COUNT(*) FROM Turnos WHERE fecha = ? AND estado = ?";
         try (PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setString(1, fecha.toString());
-            stmt.setString(2, "Ocupado"); // o el nombre exacto del enum E.Ocupado si lo guardás así
+            stmt.setString(2, "Ocupado");
             ResultSet rs = stmt.executeQuery();
             if (rs.next()) {
                 return rs.getInt(1) > 0;
@@ -246,7 +246,100 @@ public class TurnoDAOImpl implements GenericDAO<Turno> {
         }
         return false;
     }
+    //--------------------------------------------------
+    //--------------FUNCIONES PARA LISTAR RESERVAS------------
 
+    public List<Turno> obtenerTurnosPorEstado(E estado) {
+        String sql = "SELECT t.*, p.nombre, p.apellido " +
+                "FROM Turnos t " +
+                "JOIN Personas p ON t.id_persona = p.id_persona " +
+                "WHERE t.estado = ? AND t.id_persona IS NOT NULL";
+
+        List<Turno> turnos = new ArrayList<>();
+        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setString(1, estado.name());
+            try (ResultSet rs = stmt.executeQuery()) {
+                while (rs.next()) {
+                    Turno turno = new Turno(
+                            rs.getInt("id_turno"),
+                            LocalDate.parse(rs.getString("fecha")),
+                            LocalTime.parse(rs.getString("hora")),
+                            E.valueOf(rs.getString("estado")),
+                            rs.getInt("pago"),
+                            rs.getString("fecha_pago") != null ? LocalDate.parse(rs.getString("fecha_pago")) : null,
+                            null, // Persona se asigna abajo
+                            null, // Cancha se asigna abajo
+                            rs.getString("fecha_cancelacion") != null ? LocalDate.parse(rs.getString("fecha_cancelacion")) : null,
+                            rs.getString("reintegro_cancelacion")
+                    );
+
+                    // Asignar Persona completa
+                    Persona persona = new Persona();
+                    persona.setId(rs.getInt("id_persona"));
+                    persona.setNombre(rs.getString("nombre"));
+                    persona.setApellido(rs.getString("apellido"));
+                    turno.setPersona(persona);
+
+                    // Asignar Cancha
+                    Cancha cancha = new Cancha();
+                    cancha.setNumero(rs.getInt("num_cancha"));
+                    turno.setCancha(cancha);
+
+                    turnos.add(turno);
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return turnos;
+    }
+
+    public List<Turno> obtenerTurnosPorEstadoYFecha(E estado, LocalDate fecha) {
+        String sql = "SELECT t.*, p.nombre, p.apellido " +
+                "FROM Turnos t " +
+                "JOIN Personas p ON t.id_persona = p.id_persona " +
+                "WHERE t.estado = ? AND t.fecha = ? AND t.id_persona IS NOT NULL";
+
+        List<Turno> turnos = new ArrayList<>();
+        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setString(1, estado.name());
+            stmt.setString(2, fecha.toString());
+
+            try (ResultSet rs = stmt.executeQuery()) {
+                while (rs.next()) {
+                    Turno turno = new Turno(
+                            rs.getInt("id_turno"),
+                            LocalDate.parse(rs.getString("fecha")),
+                            LocalTime.parse(rs.getString("hora")),
+                            E.valueOf(rs.getString("estado")),
+                            rs.getInt("pago"),
+                            rs.getString("fecha_pago") != null ? LocalDate.parse(rs.getString("fecha_pago")) : null,
+                            null,
+                            null,
+                            rs.getString("fecha_cancelacion") != null ? LocalDate.parse(rs.getString("fecha_cancelacion")) : null,
+                            rs.getString("reintegro_cancelacion")
+                    );
+
+                    Persona persona = new Persona();
+                    persona.setId(rs.getInt("id_persona"));
+                    persona.setNombre(rs.getString("nombre"));
+                    persona.setApellido(rs.getString("apellido"));
+                    turno.setPersona(persona);
+
+                    Cancha cancha = new Cancha();
+                    cancha.setNumero(rs.getInt("num_cancha"));
+                    turno.setCancha(cancha);
+
+                    turnos.add(turno);
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return turnos;
+    }
 
 }
 

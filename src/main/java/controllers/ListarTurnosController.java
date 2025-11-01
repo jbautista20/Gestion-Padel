@@ -1,6 +1,7 @@
 package controllers;
 
 import DAO.impl.CanchaDAOImpl;
+import javafx.scene.input.MouseEvent;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -9,6 +10,7 @@ import DAO.impl.TurnoDAOImpl;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.ImageView;
+
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
@@ -32,6 +34,7 @@ public class ListarTurnosController {
     @FXML private TableColumn<Turno, String> columnaEstado;
     @FXML private TableColumn<Turno, String> columnaCancha;
     @FXML private ImageView botonBack;
+    @FXML private Pane botonhistorial;
     @FXML private Pane botonCrearReserva;
     @FXML private DatePicker DatePickerFecha;
     @FXML private Label labelTurnoSeleccionado;
@@ -185,7 +188,7 @@ public class ListarTurnosController {
     }
 
     @FXML
-    private void handleCrearReserva() {
+    private void handleCrearReserva(MouseEvent event) {
         Turno turnoSeleccionado = tablaTurnos.getSelectionModel().getSelectedItem();
 
         if (turnoSeleccionado == null) {
@@ -205,6 +208,15 @@ public class ListarTurnosController {
         } catch (Exception e) {
             e.printStackTrace();
             mostrarAlertaError("Error", "Ocurrió un error al abrir la pantalla de reserva.");
+        }
+    }
+    @FXML
+    private void handlehistorial(){
+        try {
+            Stage stage = (Stage) botonhistorial.getScene().getWindow();
+            NavigationHelper.cambiarVista(stage, Paths.pantallaHistorialReservas, "Pantalla Historial de Reservas");
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 

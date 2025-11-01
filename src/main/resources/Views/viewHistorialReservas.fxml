@@ -1,60 +1,38 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.control.DatePicker?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.text.Font?>
 
-<StackPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="720.0" prefWidth="1280.0" xmlns="http://javafx.com/javafx/24.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.HistorialReservasController">
+<AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/24.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.ListarReservasController">
    <children>
-      <Pane prefHeight="200.0" prefWidth="200.0">
+      <StackPane layoutX="-7.0" layoutY="-6.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="736.0" prefWidth="1297.0">
          <children>
-            <ImageView fitHeight="720.0" fitWidth="1280.0" pickOnBounds="true">
+            <ImageView fitHeight="720.0" fitWidth="1280.0" pickOnBounds="true" preserveRatio="true">
                <image>
-                  <Image url="@../Imagenes/menu.png" />
+                  <Image url="@../Imagenes/ListarTorneos.png" />
                </image>
             </ImageView>
-            <BorderPane opacity="0.8" prefHeight="720.0" prefWidth="1280.0">
+            <BorderPane prefHeight="731.0" prefWidth="1295.0">
                <right>
-                  <Pane prefHeight="720.0" prefWidth="450.0" BorderPane.alignment="CENTER">
+                  <Pane prefHeight="736.0" prefWidth="357.0" BorderPane.alignment="CENTER">
                      <children>
-                        <Pane layoutX="115.0" layoutY="150.0" prefHeight="56.0" prefWidth="306.0">
-                           <children>
-                              <Pane layoutX="5.0" layoutY="5.0" prefHeight="51.0" prefWidth="296.0" style="-fx-background-color: #2a2a2a; -fx-border-radius: 5; -fx-border-color: #2a2a2a; -fx-border-width: 2; -fx-background-radius: 6;" />
-                              <Pane fx:id="listarTorneosView" onMouseClicked="#abrirListarTorneos" prefHeight="51.0" prefWidth="296.0" style="-fx-background-color: #256c26; -fx-border-radius: 5; -fx-border-color: #2a2a2a; -fx-border-width: 2; -fx-background-radius: 6;" />
-                           </children>
-                        </Pane>
-                        <Pane layoutX="115.0" layoutY="240.0" prefHeight="56.0" prefWidth="306.0">
-                           <children>
-                              <Pane layoutX="5.0" layoutY="5.0" prefHeight="51.0" prefWidth="296.0" style="-fx-background-color: #2a2a2a; -fx-border-radius: 5; -fx-border-color: #2a2a2a; -fx-border-width: 2; -fx-background-radius: 6;" />
-                              <Pane fx:id="listarJugadoresView" prefHeight="51.0" prefWidth="296.0" style="-fx-background-color: #256c26; -fx-border-radius: 5; -fx-border-color: #2a2a2a; -fx-border-width: 2; -fx-background-radius: 6;" />
-                           </children>
-                        </Pane>
-                        <Pane layoutX="115.0" layoutY="330.0" prefHeight="56.0" prefWidth="306.0">
-                           <children>
-                              <Pane layoutX="5.0" layoutY="5.0" prefHeight="51.0" prefWidth="296.0" style="-fx-background-color: #2a2a2a; -fx-border-radius: 5; -fx-border-color: #2a2a2a; -fx-border-width: 2; -fx-background-radius: 6;" />
-                              <Pane prefHeight="51.0" prefWidth="296.0" style="-fx-background-color: #256c26; -fx-border-radius: 5; -fx-border-color: #2a2a2a; -fx-border-width: 2; -fx-background-radius: 6;" />
-                           </children>
-                        </Pane>
-                        <Pane layoutX="115.0" layoutY="420.0" prefHeight="56.0" prefWidth="306.0">
-                           <children>
-                              <Pane layoutX="5.0" layoutY="5.0" prefHeight="51.0" prefWidth="296.0" style="-fx-background-color: #2a2a2a; -fx-border-radius: 5; -fx-border-color: #2a2a2a; -fx-border-width: 2; -fx-background-radius: 6;" />
-                              <Pane prefHeight="51.0" prefWidth="296.0" style="-fx-background-color: #256c26; -fx-border-radius: 5; -fx-border-color: #2a2a2a; -fx-border-width: 2; -fx-background-radius: 6;" />
-                           </children>
-                        </Pane>
-                        <Pane layoutX="215.0" layoutY="528.0" prefHeight="120.0" prefWidth="120.0">
+                        <Pane layoutX="124.0" layoutY="528.0" prefHeight="120.0" prefWidth="120.0">
                            <children>
                               <ImageView fitHeight="100.0" fitWidth="120.0" pickOnBounds="true" preserveRatio="true" x="10.0" y="10.0">
                                  <image>
                                     <Image url="@../Imagenes/fondoBotonBack.png" />
                                  </image>
                               </ImageView>
-                              <Pane layoutX="21.0" layoutY="19.0" prefHeight="63.0" prefWidth="65.0" style="-fx-background-color: #86a55f;" />
+                              <Pane layoutX="10.0" layoutY="13.0" prefHeight="65.0" prefWidth="70.0" style="-fx-background-color: #86a55f;" />
                               <ImageView fx:id="botonBack" fitHeight="100.0" fitWidth="120.0" onMouseClicked="#handleBackButton" pickOnBounds="true" preserveRatio="true">
                                  <image>
                                     <Image url="@../Imagenes/Back.png" />
@@ -62,41 +40,79 @@
                               </ImageView>
                            </children>
                         </Pane>
-                     </children>
-                  </Pane>
-               </right>
-               <center>
-                  <Pane prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER">
-                     <children>
-                        <Pane layoutX="22.0" layoutY="149.0" prefHeight="486.0" prefWidth="831.0">
+                        <Pane layoutX="31.0" layoutY="247.0" prefHeight="49.0" prefWidth="278.0" style="-fx-background-color: #2a2a2a; -fx-border-radius: 5; -fx-border-color: #2a2a2a; -fx-border-width: 2; -fx-background-radius: 6;">
                            <children>
-                              <Pane layoutX="5.0" layoutY="5.0" prefHeight="495.0" prefWidth="838.0" style="-fx-background-color: #2a2a2a; -fx-border-radius: 5; -fx-border-color: #2a2a2a; -fx-border-width: 2; -fx-background-radius: 6;" />
-                              <Pane prefHeight="488.0" prefWidth="834.0" style="-fx-background-color: #a0b9c0; -fx-border-radius: 5; -fx-border-color: #2a2a2a; -fx-border-width: 2; -fx-background-radius: 6;">
+                              <Pane fx:id="botonCancelarReserva" layoutX="-5.0" layoutY="-6.0" onMouseClicked="#handleCancelarReserva" prefHeight="49.0" prefWidth="278.0" style="-fx-background-color: #256c26; -fx-border-radius: 5; -fx-border-color: #2a2a2a; -fx-border-width: 2; -fx-background-radius: 6;">
                                  <children>
-                                    <TableView fx:id="tableReservas" layoutX="1.0" layoutY="-1.0" prefHeight="488.0" prefWidth="831.0">
-                                       <columns>
-                                          <TableColumn prefWidth="138.0" text="Fecha" />
-                                          <TableColumn prefWidth="138.0" text="Hora" />
-                                          <TableColumn prefWidth="138.0" text="Importe" />
-                                          <TableColumn prefWidth="138.0" text="Fecha de pago" />
-                                          <TableColumn prefWidth="138.0" text="Cancelado" />
-                                          <TableColumn prefWidth="138.0" text="Reintegro" />
-                                       </columns>
-                                    </TableView>
+                                    <Label alignment="CENTER" layoutX="1.0" layoutY="2.0" prefHeight="47.0" prefWidth="277.0" text="CANCELAR RESERVA" textFill="WHITE">
+                                       <font>
+                                          <Font size="24.0" />
+                                       </font>
+                                    </Label>
                                  </children>
                               </Pane>
                            </children>
                         </Pane>
-                        <Label alignment="CENTER" layoutX="22.0" layoutY="104.0" prefHeight="45.0" prefWidth="300.0" text="HISTORIAL DE RESERVAS" textFill="#fcf3f3">
-                           <font>
-                              <Font name="Arial Black" size="20.0" />
-                           </font>
-                        </Label>
+                        <Pane layoutX="31.0" layoutY="360.0" prefHeight="49.0" prefWidth="278.0" style="-fx-background-color: #2a2a2a; -fx-border-radius: 5; -fx-border-color: #2a2a2a; -fx-border-width: 2; -fx-background-radius: 6;">
+                           <children>
+                              <Pane fx:id="botonGestionarPagos" layoutX="-5.0" layoutY="-6.0" onMouseClicked="#handleGestionarPagos" prefHeight="49.0" prefWidth="278.0" style="-fx-background-color: #256c26; -fx-border-radius: 5; -fx-border-color: #2a2a2a; -fx-border-width: 2; -fx-background-radius: 6;">
+                                 <children>
+                                    <Label alignment="CENTER" layoutX="1.0" layoutY="2.0" prefHeight="47.0" prefWidth="277.0" text="GESTIONAR PAGOS" textFill="WHITE">
+                                       <font>
+                                          <Font size="24.0" />
+                                       </font>
+                                    </Label>
+                                 </children>
+                              </Pane>
+                           </children>
+                        </Pane>
+                        <Pane layoutX="25.0" layoutY="131.0" prefHeight="49.0" prefWidth="278.0" style="-fx-background-color: #2a2a2a; -fx-border-radius: 5; -fx-border-color: #2a2a2a; -fx-border-width: 2; -fx-background-radius: 6;">
+                           <children>
+                              <Pane fx:id="botonModificarReserva" layoutX="-5.0" layoutY="-6.0" onMouseClicked="#handleModificarReserva" prefHeight="49.0" prefWidth="278.0" style="-fx-background-color: #256c26; -fx-border-radius: 5; -fx-border-color: #2a2a2a; -fx-border-width: 2; -fx-background-radius: 6;">
+                                 <children>
+                                    <Label alignment="CENTER" layoutX="1.0" layoutY="2.0" prefHeight="47.0" prefWidth="277.0" text="MODIFICAR RESERVA" textFill="WHITE">
+                                       <font>
+                                          <Font size="24.0" />
+                                       </font>
+                                    </Label>
+                                 </children>
+                              </Pane>
+                           </children>
+                        </Pane>
                      </children>
                   </Pane>
-               </center>
+               </right>
+               <left>
+                  <Pane prefHeight="720.0" prefWidth="887.0" BorderPane.alignment="CENTER">
+                     <children>
+                        <Pane layoutX="149.0" layoutY="221.0" prefHeight="369.0" prefWidth="630.0">
+                           <children>
+                              <TableView fx:id="tablaReservas" layoutX="-4.0" prefHeight="372.0" prefWidth="633.0">
+                                 <columns>
+                                    <TableColumn fx:id="columnaFechaT" prefWidth="118.0" text="Fecha del turno" />
+                                    <TableColumn fx:id="columnaHora" prefWidth="71.0" text="Hora" />
+                                    <TableColumn fx:id="columnaCancha" prefWidth="70.0" text="Cancha" />
+                                    <TableColumn fx:id="columnaPersona" prefWidth="242.0" text="Persona" />
+                                    <TableColumn fx:id="columnaFechaP" prefWidth="131.0" text="Fecha de Pago" />
+                                 </columns>
+                              </TableView>
+                           </children>
+                        </Pane>
+                        <Pane layoutX="32.0" layoutY="32.0" prefHeight="74.0" prefWidth="400.0" style="-fx-background-color: #256c26;">
+                           <children>
+                              <Label layoutX="56.0" layoutY="14.0" prefHeight="53.0" prefWidth="330.0" text="LISTA DE RESERVAS" textFill="#f4f4f4">
+                                 <font>
+                                    <Font name="Cooper Black BT" size="30.0" />
+                                 </font>
+                              </Label>
+                           </children>
+                        </Pane>
+                        <DatePicker fx:id="DatePickerFecha" layoutX="44.0" layoutY="136.0" prefHeight="63.0" prefWidth="231.0" promptText="FECHA RESERVA" />
+                     </children>
+                  </Pane>
+               </left>
             </BorderPane>
          </children>
-      </Pane>
+      </StackPane>
    </children>
-</StackPane>
+</AnchorPane>
