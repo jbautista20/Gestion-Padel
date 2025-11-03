@@ -15,6 +15,7 @@ public class Partido {
     private String set1;
     private String set2;
     private String set3;
+    private boolean jugado = false; //en la bd 0=false no jugador y 1=true jugado
 
     public Partido(int Id, LocalTime hora, int instancia, int puntos, Cancha cancha, Equipo equipo1, Equipo equipo2, Equipo ganador, Torneo torneo,  String set1, String set2, String set3) {
         Hora = hora;
@@ -96,7 +97,7 @@ public class Partido {
     }
 
     public void setGanador(Equipo ganador) {
-        this.ganador = ganador;
+        this.ganador = ganador;  this.jugado = true;
     }
 
     public Torneo getTorneo() {
@@ -130,4 +131,8 @@ public class Partido {
     public void setSet3(String set3) {
         this.set3 = set3;
     }
+
+    public boolean isJugado() { return jugado; }
+
+    public void setJugado(boolean jugado) { this.jugado = jugado; }
 }

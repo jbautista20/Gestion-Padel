@@ -3,6 +3,7 @@ package utilities;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
 
 public class NavigationHelper {
@@ -87,5 +88,39 @@ public class NavigationHelper {
     public static void clearDatos() {
         datos = null;
     }
+
+    public static void abrirPopupConDatos(String fxml, String titulo, Object datos, double ancho, double alto) {
+        try {
+            NavigationHelper.datos = datos;
+
+            FXMLLoader loader = new FXMLLoader(NavigationHelper.class.getResource(fxml));
+            Parent root = loader.load();
+
+            Stage popupStage = new Stage();
+            popupStage.setTitle(titulo);
+            popupStage.setScene(new Scene(root, ancho, alto));
+
+            popupStage.initModality(Modality.WINDOW_MODAL);
+            popupStage.initOwner(getVentanaPrincipal());
+            popupStage.centerOnScreen();
+            popupStage.show();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            System.out.println("Error al abrir popup: " + fxml);
+        }
+    }
+
+    // Método auxiliar para obtener la ventana principal actual
+    private static Stage getVentanaPrincipal() {
+        for (Stage stage : Stage.getWindows().stream()
+                .filter(w -> w instanceof Stage)
+                .map(w -> (Stage) w)
+                .toList()) {
+            if (stage.isFocused()) return stage;
+        }
+        return null;
+    }
+
 
 }

@@ -19,57 +19,53 @@ public class PartidoDAOImpl implements GenericDAO<Partido> {
 
     @Override
     public void create(Partido partido) {
-        String sql = "INSERT INTO Partidos (hora, instancia, puntos, set1, num_cancha, id_equipo1, id_equipo2, id_ganador, id_torneo, set2, set3) " +
-                "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO Partidos (hora, instancia, puntos, set1, num_cancha, id_equipo1, id_equipo2, id_ganador, id_torneo, set2, set3, jugado) " +
+                "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
         try (PreparedStatement stmt = conn.prepareStatement(sql)) {
 
-            // Campos simples
             stmt.setString(1, partido.getHora() != null ? partido.getHora().toString() : "00:00");
             stmt.setInt(2, partido.getInstancia());
             stmt.setInt(3, partido.getPuntos());
             stmt.setString(4, partido.getSet1());
 
-            // Cancha (puede ser nulo)
+            // Cancha
             if (partido.getCancha() != null) {
                 stmt.setInt(5, partido.getCancha().getNumero());
             } else {
                 stmt.setNull(5, Types.INTEGER);
             }
 
-            // Equipo 1
-            if (partido.getEquipo1() != null && partido.getEquipo1().getId() != 0) {
+            // Equipos
+            if (partido.getEquipo1() != null && partido.getEquipo1().getId() != 0)
                 stmt.setInt(6, partido.getEquipo1().getId());
-            } else {
+            else
                 stmt.setNull(6, Types.INTEGER);
-            }
 
-            // Equipo 2
-            if (partido.getEquipo2() != null && partido.getEquipo2().getId() != 0) {
+            if (partido.getEquipo2() != null && partido.getEquipo2().getId() != 0)
                 stmt.setInt(7, partido.getEquipo2().getId());
-            } else {
+            else
                 stmt.setNull(7, Types.INTEGER);
-            }
 
             // Ganador
-            if (partido.getGanador() != null && partido.getGanador().getId() != 0) {
+            if (partido.getGanador() != null && partido.getGanador().getId() != 0)
                 stmt.setInt(8, partido.getGanador().getId());
-            } else {
+            else
                 stmt.setNull(8, Types.INTEGER);
-            }
 
             // Torneo
-            if (partido.getTorneo() != null && partido.getTorneo().getId() != 0) {
+            if (partido.getTorneo() != null && partido.getTorneo().getId() != 0)
                 stmt.setInt(9, partido.getTorneo().getId());
-            } else {
+            else
                 stmt.setNull(9, Types.INTEGER);
-            }
 
             stmt.setString(10, partido.getSet2());
             stmt.setString(11, partido.getSet3());
 
+            // Jugado (boolean -> entero)
+            stmt.setInt(12, partido.isJugado() ? 1 : 0);
+
             stmt.executeUpdate();
 
-            // Obtener último ID insertado
             try (Statement stmt2 = conn.createStatement();
                  ResultSet rs = stmt2.executeQuery("SELECT last_insert_rowid()")) {
                 if (rs.next()) {
@@ -82,23 +78,46 @@ public class PartidoDAOImpl implements GenericDAO<Partido> {
         }
     }
 
-
     @Override
     public void update(Partido partido) {
-        String sql = "UPDATE Partidos SET hora = ?, instancia = ?, puntos = ?, set1 = ?, num_cancha = ?, id_equipo1 = ?, id_equipo2 = ?, id_ganador = ?, id_torneo = ?, set2 = ?, set3 = ? WHERE id_partido = ?";
+        String sql = "UPDATE Partidos SET hora = ?, instancia = ?, puntos = ?, set1 = ?, num_cancha = ?, " +
+                "id_equipo1 = ?, id_equipo2 = ?, id_ganador = ?, id_torneo = ?, set2 = ?, set3 = ?, jugado = ? " +
+                "WHERE id_partido = ?";
         try (PreparedStatement stmt = conn.prepareStatement(sql)) {
-            stmt.setString(1, partido.getHora().toString());
+            stmt.setString(1, partido.getHora() != null ? partido.getHora().toString() : "00:00");
             stmt.setInt(2, partido.getInstancia());
             stmt.setInt(3, partido.getPuntos());
             stmt.setString(4, partido.getSet1());
-            stmt.setInt(5, partido.getCancha() != null ? partido.getCancha().getNumero() : null);
-            stmt.setInt(6, partido.getEquipo1() != null ? partido.getEquipo1().getId() : null);
-            stmt.setInt(7, partido.getEquipo2() != null ? partido.getEquipo2().getId() : null);
-            stmt.setInt(8, partido.getGanador() != null ? partido.getGanador().getId() : null);
-            stmt.setInt(9, partido.getTorneo() != null ? partido.getTorneo().getId() : null);
+
+            if (partido.getCancha() != null)
+                stmt.setInt(5, partido.getCancha().getNumero());
+            else
+                stmt.setNull(5, Types.INTEGER);
+
+            if (partido.getEquipo1() != null)
+                stmt.setInt(6, partido.getEquipo1().getId());
+            else
+                stmt.setNull(6, Types.INTEGER);
+
+            if (partido.getEquipo2() != null)
+                stmt.setInt(7, partido.getEquipo2().getId());
+            else
+                stmt.setNull(7, Types.INTEGER);
+
+            if (partido.getGanador() != null)
+                stmt.setInt(8, partido.getGanador().getId());
+            else
+                stmt.setNull(8, Types.INTEGER);
+
+            if (partido.getTorneo() != null)
+                stmt.setInt(9, partido.getTorneo().getId());
+            else
+                stmt.setNull(9, Types.INTEGER);
+
             stmt.setString(10, partido.getSet2());
             stmt.setString(11, partido.getSet3());
-            stmt.setInt(12, partido.getId());
+            stmt.setInt(12, partido.isJugado() ? 1 : 0);
+            stmt.setInt(13, partido.getId());
 
             stmt.executeUpdate();
             System.out.println("Partido actualizado correctamente.");
@@ -134,22 +153,18 @@ public class PartidoDAOImpl implements GenericDAO<Partido> {
                         LocalTime.parse(rs.getString("hora")),
                         rs.getInt("instancia"),
                         rs.getInt("puntos"),
-                        null, // cancha
-                        null, // equipo1
-                        null, // equipo2
-                        null, // ganador
-                        null, // torneo
+                        null, null, null, null, null,
                         rs.getString("set1"),
                         rs.getString("set2"),
                         rs.getString("set3")
                 );
+                partido.setJugado(rs.getInt("jugado") == 1);
             }
         } catch (SQLException e) {
             e.printStackTrace();
         }
         return partido;
     }
-
 
     @Override
     public List<Partido> findAll() {
@@ -165,15 +180,12 @@ public class PartidoDAOImpl implements GenericDAO<Partido> {
                         LocalTime.parse(rs.getString("hora")),
                         rs.getInt("instancia"),
                         rs.getInt("puntos"),
-                        null, // cancha
-                        null, // equipo1
-                        null, // equipo2
-                        null, // ganador
-                        null, // torneo
+                        null, null, null, null, null,
                         rs.getString("set1"),
                         rs.getString("set2"),
                         rs.getString("set3")
                 );
+                partido.setJugado(rs.getInt("jugado") == 1);
                 partidos.add(partido);
             }
         } catch (SQLException e) {
@@ -185,36 +197,70 @@ public class PartidoDAOImpl implements GenericDAO<Partido> {
     public List<Partido> obtenerPartidosPorTorneo(int idTorneo) {
         List<Partido> partidos = new ArrayList<>();
 
-        String sql = "SELECT * FROM Partidos WHERE id_torneo = ?";
-        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+        String sql = """
+        SELECT 
+            p.id_partido,
+            p.hora,
+            p.instancia,
+            p.puntos,
+            p.set1,
+            p.set2,
+            p.set3,
+            p.jugado,
+            p.id_torneo,
+            e1.id_equipo AS id_equipo1, e1.nombre AS nombre_equipo1,
+            e2.id_equipo AS id_equipo2, e2.nombre AS nombre_equipo2,
+            e3.id_equipo AS id_ganador, e3.nombre AS nombre_ganador
+        FROM Partidos p
+        LEFT JOIN Equipos e1 ON p.id_equipo1 = e1.id_equipo
+        LEFT JOIN Equipos e2 ON p.id_equipo2 = e2.id_equipo
+        LEFT JOIN Equipos e3 ON p.id_ganador = e3.id_equipo
+        WHERE p.id_torneo = ?
+        ORDER BY p.instancia, p.id_partido
+    """;
 
+        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setInt(1, idTorneo);
             ResultSet rs = stmt.executeQuery();
 
             while (rs.next()) {
-                Partido p = new Partido();
-                p.setId(rs.getInt("id_partido"));
-                p.setInstancia(rs.getInt("instancia"));
+                Partido partido = new Partido();
+                partido.setId(rs.getInt("id_partido"));
+                partido.setInstancia(rs.getInt("instancia"));
+                partido.setJugado(rs.getInt("jugado") == 1);
+                partido.setPuntos(rs.getInt("puntos"));
+                partido.setSet1(rs.getString("set1"));
+                partido.setSet2(rs.getString("set2"));
+                partido.setSet3(rs.getString("set3"));
 
-                // Si tenés relaciones con Torneo y Equipos:
+                // Torneo
                 Torneo torneo = new Torneo();
                 torneo.setId(rs.getInt("id_torneo"));
-                p.setTorneo(torneo);
+                partido.setTorneo(torneo);
 
+                // Equipos
                 Equipo equipo1 = new Equipo();
                 equipo1.setId(rs.getInt("id_equipo1"));
-                p.setEquipo1(equipo1);
+                equipo1.setNombre(rs.getString("nombre_equipo1"));
+                partido.setEquipo1(equipo1);
 
                 Equipo equipo2 = new Equipo();
                 equipo2.setId(rs.getInt("id_equipo2"));
-                p.setEquipo2(equipo2);
+                equipo2.setNombre(rs.getString("nombre_equipo2"));
+                partido.setEquipo2(equipo2);
 
-                partidos.add(p);
+                Equipo ganador = new Equipo();
+                ganador.setId(rs.getInt("id_ganador"));
+                ganador.setNombre(rs.getString("nombre_ganador"));
+                partido.setGanador(ganador);
+
+                partidos.add(partido);
             }
 
         } catch (SQLException e) {
             e.printStackTrace();
         }
+
         return partidos;
     }
 
@@ -225,6 +271,9 @@ public class PartidoDAOImpl implements GenericDAO<Partido> {
         SELECT 
             p.id_partido,
             p.instancia,
+            p.jugado,
+            p.id_equipo1,
+            p.id_equipo2,
             e1.nombre AS nombre_equipo1,
             e2.nombre AS nombre_equipo2
         FROM Partidos p
@@ -235,7 +284,6 @@ public class PartidoDAOImpl implements GenericDAO<Partido> {
     """;
 
         try (PreparedStatement stmt = conn.prepareStatement(sql)) {
-
             stmt.setInt(1, idTorneo);
             ResultSet rs = stmt.executeQuery();
 
@@ -243,13 +291,21 @@ public class PartidoDAOImpl implements GenericDAO<Partido> {
                 Partido partido = new Partido();
                 partido.setId(rs.getInt("id_partido"));
                 partido.setInstancia(rs.getInt("instancia"));
+                partido.setJugado(rs.getInt("jugado") == 1);
 
-                // Creamos los equipos con sus nombres
-                Equipo equipo1 = new Equipo();
-                equipo1.setNombre(rs.getString("nombre_equipo1"));
+                Equipo equipo1 = null;
+                Equipo equipo2 = null;
 
-                Equipo equipo2 = new Equipo();
-                equipo2.setNombre(rs.getString("nombre_equipo2"));
+                if (rs.getInt("id_equipo1") != 0) {
+                    equipo1 = new Equipo();
+                    equipo1.setId(rs.getInt("id_equipo1"));
+                    equipo1.setNombre(rs.getString("nombre_equipo1"));
+                }
+                if (rs.getInt("id_equipo2") != 0) {
+                    equipo2 = new Equipo();
+                    equipo2.setId(rs.getInt("id_equipo2"));
+                    equipo2.setNombre(rs.getString("nombre_equipo2"));
+                }
 
                 partido.setEquipo1(equipo1);
                 partido.setEquipo2(equipo2);
@@ -263,7 +319,5 @@ public class PartidoDAOImpl implements GenericDAO<Partido> {
 
         return partidos;
     }
-
-
 
 }

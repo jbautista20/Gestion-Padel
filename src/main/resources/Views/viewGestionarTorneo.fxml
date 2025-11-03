@@ -10,272 +10,278 @@
 <?import javafx.scene.text.Text?>
 
 <StackPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="720.0" prefWidth="1280.0" xmlns="http://javafx.com/javafx/24.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.GestionarTorneoController">
-   <children>
-      <ImageView fitHeight="720.0" fitWidth="1280.0" pickOnBounds="true" preserveRatio="true">
-         <image>
-            <Image url="@../Imagenes/ListarTorneos.png" />
-         </image>
-      </ImageView>
-      <BorderPane prefHeight="200.0" prefWidth="200.0">
-         <right>
-            <Pane prefHeight="720.0" prefWidth="353.0" BorderPane.alignment="CENTER">
-               <children>
-                  <Pane layoutX="19.0" layoutY="200.0" prefHeight="56.0" prefWidth="306.0">
-                     <children>
-                        <Pane layoutX="5.0" layoutY="5.0" prefHeight="51.0" prefWidth="296.0" style="-fx-background-color: #2a2a2a; -fx-border-radius: 5; -fx-border-color: #2a2a2a; -fx-border-width: 2; -fx-background-radius: 6;" />
-                        <Pane fx:id="btnArmarCruces" layoutX="2.0" onMouseClicked="#botonArmarCruces" prefHeight="51.0" prefWidth="296.0" style="-fx-background-color: #256c26; -fx-border-radius: 5; -fx-border-color: #2a2a2a; -fx-border-width: 2; -fx-background-radius: 6;">
-                           <children>
-                              <Label alignment="CENTER" layoutY="3.0" prefHeight="45.0" prefWidth="300.0" text="ARMAR CRUCES" textFill="#fcf3f3">
-                                 <font>
-                                    <Font name="Arial Black" size="20.0" />
-                                 </font>
-                              </Label>
-                           </children>
+    <children>
+        <ImageView fitHeight="720.0" fitWidth="1280.0" pickOnBounds="true" preserveRatio="true">
+            <image>
+                <Image url="@../Imagenes/ListarTorneos.png" />
+            </image>
+        </ImageView>
+        <BorderPane prefHeight="200.0" prefWidth="200.0">
+            <right>
+                <Pane prefHeight="720.0" prefWidth="353.0" BorderPane.alignment="CENTER">
+                    <children>
+                        <Pane layoutX="19.0" layoutY="200.0" prefHeight="56.0" prefWidth="306.0">
+                            <children>
+                                <Pane layoutX="5.0" layoutY="5.0" prefHeight="51.0" prefWidth="296.0" style="-fx-background-color: #2a2a2a; -fx-border-radius: 5; -fx-border-color: #2a2a2a; -fx-border-width: 2; -fx-background-radius: 6;" />
+                                <Pane fx:id="btnArmarCruces" layoutX="2.0" onMouseClicked="#botonArmarCruces" prefHeight="51.0" prefWidth="296.0" style="-fx-background-color: #256c26; -fx-border-radius: 5; -fx-border-color: #2a2a2a; -fx-border-width: 2; -fx-background-radius: 6;">
+                                    <children>
+                                        <Label alignment="CENTER" layoutY="3.0" prefHeight="45.0" prefWidth="300.0" text="ARMAR CRUCES" textFill="#fcf3f3">
+                                            <font>
+                                                <Font name="Arial Black" size="20.0" />
+                                            </font>
+                                        </Label>
+                                    </children>
+                                </Pane>
+                                <Pane layoutX="15.0" layoutY="15.0" prefHeight="51.0" prefWidth="296.0" style="-fx-background-color: #2a2a2a; -fx-border-radius: 5; -fx-border-color: #2a2a2a; -fx-border-width: 2; -fx-background-radius: 6;" translateX="-9.0" translateY="-146.0" />
+                                <Pane fx:id="btnComenzarTorneo" layoutX="12.0" layoutY="10.0" onMouseClicked="#botonComenzarTorneo" prefHeight="51.0" prefWidth="296.0" style="-fx-background-color: #256c26; -fx-border-radius: 5; -fx-border-color: #2a2a2a; -fx-border-width: 2; -fx-background-radius: 6;" translateX="-9.0" translateY="-146.0">
+                                    <children>
+                                        <Label alignment="CENTER" layoutY="3.0" prefHeight="45.0" prefWidth="300.0" text="COMENZAR TORNEO" textFill="#fcf3f3">
+                                            <font>
+                                                <Font name="Arial Black" size="20.0" />
+                                            </font>
+                                        </Label>
+                                    </children>
+                                </Pane>
+                            </children>
                         </Pane>
-                        <Pane layoutX="15.0" layoutY="15.0" prefHeight="51.0" prefWidth="296.0" style="-fx-background-color: #2a2a2a; -fx-border-radius: 5; -fx-border-color: #2a2a2a; -fx-border-width: 2; -fx-background-radius: 6;" translateX="-9.0" translateY="-146.0" />
-                        <Pane fx:id="btnComenzarTorneo" layoutX="12.0" layoutY="10.0" onMouseClicked="#botonComenzarTorneo" prefHeight="51.0" prefWidth="296.0" style="-fx-background-color: #256c26; -fx-border-radius: 5; -fx-border-color: #2a2a2a; -fx-border-width: 2; -fx-background-radius: 6;" translateX="-9.0" translateY="-146.0">
-                           <children>
-                              <Label alignment="CENTER" layoutY="3.0" prefHeight="45.0" prefWidth="300.0" text="COMENZAR TORNEO" textFill="#fcf3f3">
-                                 <font>
-                                    <Font name="Arial Black" size="20.0" />
-                                 </font>
-                              </Label>
-                           </children>
+                        <Pane layoutX="21.0" layoutY="386.0" prefHeight="56.0" prefWidth="306.0">
+                            <children>
+                                <Pane layoutX="5.0" layoutY="5.0" prefHeight="51.0" prefWidth="296.0" style="-fx-background-color: #2a2a2a; -fx-border-radius: 5; -fx-border-color: #2a2a2a; -fx-border-width: 2; -fx-background-radius: 6;" />
+                                <Pane layoutX="2.0" onMouseClicked="#botonGestionarEquipos" prefHeight="51.0" prefWidth="296.0" style="-fx-background-color: #256c26; -fx-border-radius: 5; -fx-border-color: #2a2a2a; -fx-border-width: 2; -fx-background-radius: 6;">
+                                    <children>
+                                        <Label alignment="CENTER" layoutY="3.0" prefHeight="45.0" prefWidth="300.0" text="GESTIONAR EQUIPOS" textFill="#fcf3f3">
+                                            <font>
+                                                <Font name="Arial Black" size="20.0" />
+                                            </font>
+                                        </Label>
+                                    </children>
+                                </Pane>
+                            </children>
                         </Pane>
-                     </children>
-                  </Pane>
-                  <Pane layoutX="21.0" layoutY="386.0" prefHeight="56.0" prefWidth="306.0">
-                     <children>
-                        <Pane layoutX="5.0" layoutY="5.0" prefHeight="51.0" prefWidth="296.0" style="-fx-background-color: #2a2a2a; -fx-border-radius: 5; -fx-border-color: #2a2a2a; -fx-border-width: 2; -fx-background-radius: 6;" />
-                        <Pane layoutX="2.0" onMouseClicked="#botonGestionarEquipos" prefHeight="51.0" prefWidth="296.0" style="-fx-background-color: #256c26; -fx-border-radius: 5; -fx-border-color: #2a2a2a; -fx-border-width: 2; -fx-background-radius: 6;">
-                           <children>
-                              <Label alignment="CENTER" layoutY="3.0" prefHeight="45.0" prefWidth="300.0" text="GESTIONAR EQUIPOS" textFill="#fcf3f3">
-                                 <font>
-                                    <Font name="Arial Black" size="20.0" />
-                                 </font>
-                              </Label>
-                           </children>
+                        <Pane layoutX="124.0" layoutY="528.0" prefHeight="120.0" prefWidth="120.0">
+                            <children>
+                                <ImageView fitHeight="100.0" fitWidth="120.0" pickOnBounds="true" preserveRatio="true" x="10.0" y="10.0">
+                                    <image>
+                                        <Image url="@../Imagenes/fondoBotonBack.png" />
+                                    </image>
+                                </ImageView>
+                                <Pane layoutX="10.0" layoutY="13.0" prefHeight="65.0" prefWidth="70.0" style="-fx-background-color: #86a55f;" />
+                                <ImageView fx:id="botonBack" fitHeight="100.0" fitWidth="120.0" onMouseClicked="#handleBackButton" pickOnBounds="true" preserveRatio="true">
+                                    <image>
+                                        <Image url="@../Imagenes/Back.png" />
+                                    </image>
+                                </ImageView>
+                            </children>
                         </Pane>
-                     </children>
-                  </Pane>
-                  <Pane layoutX="124.0" layoutY="528.0" prefHeight="120.0" prefWidth="120.0">
-                     <children>
-                        <ImageView fitHeight="100.0" fitWidth="120.0" pickOnBounds="true" preserveRatio="true" x="10.0" y="10.0">
-                           <image>
-                              <Image url="@../Imagenes/fondoBotonBack.png" />
-                           </image>
-                        </ImageView>
-                        <Pane layoutX="10.0" layoutY="13.0" prefHeight="65.0" prefWidth="70.0" style="-fx-background-color: #86a55f;" />
-                        <ImageView fx:id="botonBack" fitHeight="100.0" fitWidth="120.0" onMouseClicked="#handleBackButton" pickOnBounds="true" preserveRatio="true">
-                           <image>
-                              <Image url="@../Imagenes/Back.png" />
-                           </image>
-                        </ImageView>
-                     </children>
-                  </Pane>
-                  <Label fx:id="txtCantidadInscriptos" alignment="CENTER" layoutX="214.0" layoutY="333.0" prefHeight="29.0" prefWidth="21.0" textFill="#1c5422">
-                     <font>
-                        <Font name="Arial Black" size="14.0" />
-                     </font>
-                  </Label>
-                  <Label alignment="CENTER" layoutX="50.0" layoutY="336.0" prefHeight="22.0" prefWidth="174.0" text="Equipos Inscriptos:" textFill="#1c5422" underline="true">
-                     <font>
-                        <Font name="Arial Black" size="14.0" />
-                     </font>
-                  </Label>
-               </children>
-            </Pane>
-         </right>
-         <center>
-            <Pane prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER">
-               <children>
-                  <Pane layoutX="22.0" layoutY="149.0" prefHeight="486.0" prefWidth="831.0">
-                     <children>
-                        <Pane layoutX="5.0" layoutY="5.0" prefHeight="495.0" prefWidth="838.0" style="-fx-background-color: #2a2a2a; -fx-border-radius: 5; -fx-border-color: #2a2a2a; -fx-border-width: 2; -fx-background-radius: 6;" />
-                        <Pane prefHeight="488.0" prefWidth="834.0" style="-fx-background-color: #a0b9c0; -fx-border-radius: 5; -fx-border-color: #2a2a2a; -fx-border-width: 2; -fx-background-radius: 6;">
-                           <children>
-                              <ImageView fitHeight="549.0" fitWidth="893.0" layoutX="1.0" pickOnBounds="true" preserveRatio="true">
-                                 <image>
-                                    <Image url="@../Imagenes/Cuadro.png" />
-                                 </image>
-                              </ImageView>
-                              <Text fx:id="txtEquipoCuartos1" fontSmoothingType="LCD" layoutX="25.0" layoutY="55.0" strokeType="OUTSIDE" strokeWidth="0.0" wrappingWidth="138.13671875">
-                                 <font>
-                                    <Font name="System Bold Italic" size="13.0" />
-                                 </font>
-                              </Text>
-                              <Text fx:id="txtMarcadorCuartos1" fill="WHITE" layoutX="170.0" layoutY="54.0" strokeType="OUTSIDE" strokeWidth="0.0" textAlignment="JUSTIFY" wrappingWidth="11.13671875">
-                                 <font>
-                                    <Font name="System Bold" size="12.0" />
-                                 </font>
-                              </Text>
-                              <Text fx:id="txtEquipoCuartos2" fontSmoothingType="LCD" layoutX="25.0" layoutY="114.0" strokeType="OUTSIDE" strokeWidth="0.0" wrappingWidth="138.13671875">
-                                 <font>
-                                    <Font name="System Bold Italic" size="13.0" />
-                                 </font>
-                              </Text>
-                              <Text fx:id="txtMarcadorCuartos2" fill="WHITE" layoutX="170.0" layoutY="113.0" strokeType="OUTSIDE" strokeWidth="0.0" textAlignment="JUSTIFY" wrappingWidth="11.13671875">
-                                 <font>
-                                    <Font name="System Bold" size="12.0" />
-                                 </font>
-                              </Text>
-                              <Text fx:id="txtEquipoCuartos3" fontSmoothingType="LCD" layoutX="25.0" layoutY="160.0" strokeType="OUTSIDE" strokeWidth="0.0" wrappingWidth="138.13671875">
-                                 <font>
-                                    <Font name="System Bold Italic" size="13.0" />
-                                 </font>
-                              </Text>
-                              <Text fx:id="txtMarcadorCuartos3" fill="WHITE" layoutX="170.0" layoutY="159.0" strokeType="OUTSIDE" strokeWidth="0.0" textAlignment="JUSTIFY" wrappingWidth="11.13671875">
-                                 <font>
-                                    <Font name="System Bold" size="12.0" />
-                                 </font>
-                              </Text>
-                              <Text fx:id="txtEquipoCuartos4" fontSmoothingType="LCD" layoutX="25.0" layoutY="221.0" strokeType="OUTSIDE" strokeWidth="0.0" wrappingWidth="138.13671875">
-                                 <font>
-                                    <Font name="System Bold Italic" size="13.0" />
-                                 </font>
-                              </Text>
-                              <Text fx:id="txtMarcadorCuartos4" fill="WHITE" layoutX="170.0" layoutY="220.0" strokeType="OUTSIDE" strokeWidth="0.0" textAlignment="JUSTIFY" wrappingWidth="11.13671875">
-                                 <font>
-                                    <Font name="System Bold" size="12.0" />
-                                 </font>
-                              </Text>
-                              <Text fx:id="txtEquipoCuartos5" fontSmoothingType="LCD" layoutX="25.0" layoutY="268.0" strokeType="OUTSIDE" strokeWidth="0.0" wrappingWidth="138.13671875">
-                                 <font>
-                                    <Font name="System Bold Italic" size="13.0" />
-                                 </font>
-                              </Text>
-                              <Text fx:id="txtMarcadorCuartos5" fill="WHITE" layoutX="170.0" layoutY="267.0" strokeType="OUTSIDE" strokeWidth="0.0" textAlignment="JUSTIFY" wrappingWidth="11.13671875">
-                                 <font>
-                                    <Font name="System Bold" size="12.0" />
-                                 </font>
-                              </Text>
-                              <Text fx:id="txtEquipoCuartos6" fontSmoothingType="LCD" layoutX="25.0" layoutY="326.0" strokeType="OUTSIDE" strokeWidth="0.0" wrappingWidth="138.13671875">
-                                 <font>
-                                    <Font name="System Bold Italic" size="13.0" />
-                                 </font>
-                              </Text>
-                              <Text fx:id="txtMarcadorCuartos6" fill="WHITE" layoutX="170.0" layoutY="325.0" strokeType="OUTSIDE" strokeWidth="0.0" textAlignment="JUSTIFY" wrappingWidth="11.13671875">
-                                 <font>
-                                    <Font name="System Bold" size="12.0" />
-                                 </font>
-                              </Text>
-                              <Text fx:id="txtEquipoCuartos8" fontSmoothingType="LCD" layoutX="25.0" layoutY="428.0" strokeType="OUTSIDE" strokeWidth="0.0" wrappingWidth="138.13671875">
-                                 <font>
-                                    <Font name="System Bold Italic" size="13.0" />
-                                 </font>
-                              </Text>
-                              <Text fx:id="txtMarcadorCuartos8" fill="WHITE" layoutX="170.0" layoutY="427.0" strokeType="OUTSIDE" strokeWidth="0.0" textAlignment="JUSTIFY" wrappingWidth="11.13671875">
-                                 <font>
-                                    <Font name="System Bold" size="12.0" />
-                                 </font>
-                              </Text>
-                              <Text fx:id="txtEquipoCuartos7" fontSmoothingType="LCD" layoutX="25.0" layoutY="371.0" strokeType="OUTSIDE" strokeWidth="0.0" wrappingWidth="138.13671875">
-                                 <font>
-                                    <Font name="System Bold Italic" size="13.0" />
-                                 </font>
-                              </Text>
-                              <Text fx:id="txtMarcadorCuartos7" fill="WHITE" layoutX="170.0" layoutY="370.0" strokeType="OUTSIDE" strokeWidth="0.0" textAlignment="JUSTIFY" wrappingWidth="11.13671875">
-                                 <font>
-                                    <Font name="System Bold" size="12.0" />
-                                 </font>
-                              </Text>
-                              <Text fx:id="txtEquipoSemi1" fontSmoothingType="LCD" layoutX="230.0" layoutY="84.0" strokeType="OUTSIDE" strokeWidth="0.0" wrappingWidth="138.13671875">
-                                 <font>
-                                    <Font name="System Bold Italic" size="13.0" />
-                                 </font>
-                              </Text>
-                              <Text fx:id="txtMarcadorSemi1" fill="WHITE" layoutX="375.0" layoutY="83.0" strokeType="OUTSIDE" strokeWidth="0.0" textAlignment="JUSTIFY" wrappingWidth="11.13671875">
-                                 <font>
-                                    <Font name="System Bold" size="12.0" />
-                                 </font>
-                              </Text>
-                              <Text fx:id="txtEquipoSemi2" fontSmoothingType="LCD" layoutX="230.0" layoutY="190.0" strokeType="OUTSIDE" strokeWidth="0.0" wrappingWidth="138.13671875">
-                                 <font>
-                                    <Font name="System Bold Italic" size="13.0" />
-                                 </font>
-                              </Text>
-                              <Text fx:id="txtMarcadorSemi2" fill="WHITE" layoutX="375.0" layoutY="189.0" strokeType="OUTSIDE" strokeWidth="0.0" textAlignment="JUSTIFY" wrappingWidth="11.13671875">
-                                 <font>
-                                    <Font name="System Bold" size="12.0" />
-                                 </font>
-                              </Text>
-                              <Text fx:id="txtEquipoSemi3" fontSmoothingType="LCD" layoutX="230.0" layoutY="298.0" strokeType="OUTSIDE" strokeWidth="0.0" wrappingWidth="138.13671875">
-                                 <font>
-                                    <Font name="System Bold Italic" size="13.0" />
-                                 </font>
-                              </Text>
-                              <Text fx:id="txtMarcadorSemi3" fill="WHITE" layoutX="375.0" layoutY="297.0" strokeType="OUTSIDE" strokeWidth="0.0" textAlignment="JUSTIFY" wrappingWidth="11.13671875">
-                                 <font>
-                                    <Font name="System Bold" size="12.0" />
-                                 </font>
-                              </Text>
-                              <Text fx:id="txtEquipoSemi4" fontSmoothingType="LCD" layoutX="230.0" layoutY="401.0" strokeType="OUTSIDE" strokeWidth="0.0" wrappingWidth="138.13671875">
-                                 <font>
-                                    <Font name="System Bold Italic" size="13.0" />
-                                 </font>
-                              </Text>
-                              <Text fx:id="txtMarcadorSemi4" fill="WHITE" layoutX="375.0" layoutY="400.0" strokeType="OUTSIDE" strokeWidth="0.0" textAlignment="JUSTIFY" wrappingWidth="11.13671875">
-                                 <font>
-                                    <Font name="System Bold" size="12.0" />
-                                 </font>
-                              </Text>
-                              <Text fx:id="txtEquipoFinal1" fontSmoothingType="LCD" layoutX="426.0" layoutY="141.0" strokeType="OUTSIDE" strokeWidth="0.0" translateY="-6.0" wrappingWidth="138.13671875">
-                                 <font>
-                                    <Font name="System Bold Italic" size="13.0" />
-                                 </font>
-                              </Text>
-                              <Text fx:id="txtMarcadorFinal1" fill="WHITE" layoutX="571.0" layoutY="140.0" strokeType="OUTSIDE" strokeWidth="0.0" textAlignment="JUSTIFY" translateY="-6.0" wrappingWidth="11.13671875">
-                                 <font>
-                                    <Font name="System Bold" size="12.0" />
-                                 </font>
-                              </Text>
-                              <Text fx:id="txtEquipoFinal2" fontSmoothingType="LCD" layoutX="426.0" layoutY="352.0" strokeType="OUTSIDE" strokeWidth="0.0" translateY="-3.0" wrappingWidth="138.13671875">
-                                 <font>
-                                    <Font name="System Bold Italic" size="13.0" />
-                                 </font>
-                              </Text>
-                              <Text fx:id="txtMarcadorFinal2" fill="WHITE" layoutX="571.0" layoutY="351.0" strokeType="OUTSIDE" strokeWidth="0.0" textAlignment="JUSTIFY" translateY="-3.0" wrappingWidth="11.13671875">
-                                 <font>
-                                    <Font name="System Bold" size="12.0" />
-                                 </font>
-                              </Text>
-                              <Text fx:id="txtEquipoCampeon" fontSmoothingType="LCD" layoutX="625.0" layoutY="240.0" strokeType="OUTSIDE" strokeWidth="0.0" wrappingWidth="138.13671875">
-                                 <font>
-                                    <Font name="System Bold Italic" size="13.0" />
-                                 </font>
-                              </Text>
-                              <Pane fx:id="partidoC1" onMouseClicked="#handlepartidoC1" layoutX="20.0" layoutY="34.0" prefHeight="89.0" prefWidth="162.0" />
-                           </children>
-                        </Pane>
-                     </children>
-                  </Pane>
-                  <Pane layoutX="22.0" layoutY="22.0" prefHeight="80.0" prefWidth="403.0" style="-fx-background-color: #256c26;">
-                     <children>
-                        <Label layoutX="5.0" layoutY="-3.0" prefHeight="82.0" prefWidth="404.0" text=" GESTIONAR TORNEO" textFill="#f4f4f4">
-                           <font>
-                              <Font name="Cooper Black BT" size="30.0" />
-                           </font>
+                        <Label fx:id="txtCantidadInscriptos" alignment="CENTER" layoutX="214.0" layoutY="333.0" prefHeight="29.0" prefWidth="21.0" textFill="#1c5422">
+                            <font>
+                                <Font name="Arial Black" size="14.0" />
+                            </font>
                         </Label>
-                     </children>
-                  </Pane>
-                  <Label fx:id="txtFechaInicio" alignment="CENTER" layoutX="559.0" layoutY="22.0" prefHeight="22.0" prefWidth="293.0" textFill="#1c5422">
-                     <font>
-                        <Font name="Arial Black" size="14.0" />
-                     </font>
-                  </Label>
-                  <Label fx:id="txtCategoria" alignment="CENTER" layoutX="559.0" layoutY="44.0" prefHeight="22.0" prefWidth="293.0" textFill="#1c5422">
-                     <font>
-                        <Font name="Arial Black" size="14.0" />
-                     </font>
-                  </Label>
-                  <Label fx:id="txtGenero" alignment="CENTER" layoutX="559.0" layoutY="66.0" prefHeight="22.0" prefWidth="293.0" textFill="#1c5422">
-                     <font>
-                        <Font name="Arial Black" size="14.0" />
-                     </font>
-                  </Label>
-               </children>
-            </Pane>
-         </center>
-      </BorderPane>
-   </children>
+                        <Label alignment="CENTER" layoutX="50.0" layoutY="336.0" prefHeight="22.0" prefWidth="174.0" text="Equipos Inscriptos:" textFill="#1c5422" underline="true">
+                            <font>
+                                <Font name="Arial Black" size="14.0" />
+                            </font>
+                        </Label>
+                    </children>
+                </Pane>
+            </right>
+            <center>
+                <Pane prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER">
+                    <children>
+                        <Pane layoutX="22.0" layoutY="149.0" prefHeight="486.0" prefWidth="831.0">
+                            <children>
+                                <Pane layoutX="5.0" layoutY="5.0" prefHeight="495.0" prefWidth="838.0" style="-fx-background-color: #2a2a2a; -fx-border-radius: 5; -fx-border-color: #2a2a2a; -fx-border-width: 2; -fx-background-radius: 6;" />
+                                <Pane prefHeight="488.0" prefWidth="834.0" style="-fx-background-color: #a0b9c0; -fx-border-radius: 5; -fx-border-color: #2a2a2a; -fx-border-width: 2; -fx-background-radius: 6;">
+                                    <children>
+                                        <ImageView fitHeight="549.0" fitWidth="893.0" layoutX="1.0" pickOnBounds="true" preserveRatio="true">
+                                            <image>
+                                                <Image url="@../Imagenes/Cuadro.png" />
+                                            </image>
+                                        </ImageView>
+                                        <Text fx:id="txtEquipoCuartos1" fontSmoothingType="LCD" layoutX="25.0" layoutY="55.0" strokeType="OUTSIDE" strokeWidth="0.0" wrappingWidth="138.13671875">
+                                            <font>
+                                                <Font name="System Bold Italic" size="13.0" />
+                                            </font>
+                                        </Text>
+                                        <Text fx:id="txtMarcadorCuartos1" fill="WHITE" layoutX="170.0" layoutY="54.0" strokeType="OUTSIDE" strokeWidth="0.0" textAlignment="JUSTIFY" wrappingWidth="11.13671875">
+                                            <font>
+                                                <Font name="System Bold" size="12.0" />
+                                            </font>
+                                        </Text>
+                                        <Text fx:id="txtEquipoCuartos2" fontSmoothingType="LCD" layoutX="25.0" layoutY="114.0" strokeType="OUTSIDE" strokeWidth="0.0" wrappingWidth="138.13671875">
+                                            <font>
+                                                <Font name="System Bold Italic" size="13.0" />
+                                            </font>
+                                        </Text>
+                                        <Text fx:id="txtMarcadorCuartos2" fill="WHITE" layoutX="170.0" layoutY="113.0" strokeType="OUTSIDE" strokeWidth="0.0" textAlignment="JUSTIFY" wrappingWidth="11.13671875">
+                                            <font>
+                                                <Font name="System Bold" size="12.0" />
+                                            </font>
+                                        </Text>
+                                        <Text fx:id="txtEquipoCuartos3" fontSmoothingType="LCD" layoutX="25.0" layoutY="160.0" strokeType="OUTSIDE" strokeWidth="0.0" wrappingWidth="138.13671875">
+                                            <font>
+                                                <Font name="System Bold Italic" size="13.0" />
+                                            </font>
+                                        </Text>
+                                        <Text fx:id="txtMarcadorCuartos3" fill="WHITE" layoutX="170.0" layoutY="159.0" strokeType="OUTSIDE" strokeWidth="0.0" textAlignment="JUSTIFY" wrappingWidth="11.13671875">
+                                            <font>
+                                                <Font name="System Bold" size="12.0" />
+                                            </font>
+                                        </Text>
+                                        <Text fx:id="txtEquipoCuartos4" fontSmoothingType="LCD" layoutX="25.0" layoutY="221.0" strokeType="OUTSIDE" strokeWidth="0.0" wrappingWidth="138.13671875">
+                                            <font>
+                                                <Font name="System Bold Italic" size="13.0" />
+                                            </font>
+                                        </Text>
+                                        <Text fx:id="txtMarcadorCuartos4" fill="WHITE" layoutX="170.0" layoutY="220.0" strokeType="OUTSIDE" strokeWidth="0.0" textAlignment="JUSTIFY" wrappingWidth="11.13671875">
+                                            <font>
+                                                <Font name="System Bold" size="12.0" />
+                                            </font>
+                                        </Text>
+                                        <Text fx:id="txtEquipoCuartos5" fontSmoothingType="LCD" layoutX="25.0" layoutY="268.0" strokeType="OUTSIDE" strokeWidth="0.0" wrappingWidth="138.13671875">
+                                            <font>
+                                                <Font name="System Bold Italic" size="13.0" />
+                                            </font>
+                                        </Text>
+                                        <Text fx:id="txtMarcadorCuartos5" fill="WHITE" layoutX="170.0" layoutY="267.0" strokeType="OUTSIDE" strokeWidth="0.0" textAlignment="JUSTIFY" wrappingWidth="11.13671875">
+                                            <font>
+                                                <Font name="System Bold" size="12.0" />
+                                            </font>
+                                        </Text>
+                                        <Text fx:id="txtEquipoCuartos6" fontSmoothingType="LCD" layoutX="25.0" layoutY="326.0" strokeType="OUTSIDE" strokeWidth="0.0" wrappingWidth="138.13671875">
+                                            <font>
+                                                <Font name="System Bold Italic" size="13.0" />
+                                            </font>
+                                        </Text>
+                                        <Text fx:id="txtMarcadorCuartos6" fill="WHITE" layoutX="170.0" layoutY="325.0" strokeType="OUTSIDE" strokeWidth="0.0" textAlignment="JUSTIFY" wrappingWidth="11.13671875">
+                                            <font>
+                                                <Font name="System Bold" size="12.0" />
+                                            </font>
+                                        </Text>
+                                        <Text fx:id="txtEquipoCuartos8" fontSmoothingType="LCD" layoutX="25.0" layoutY="428.0" strokeType="OUTSIDE" strokeWidth="0.0" wrappingWidth="138.13671875">
+                                            <font>
+                                                <Font name="System Bold Italic" size="13.0" />
+                                            </font>
+                                        </Text>
+                                        <Text fx:id="txtMarcadorCuartos8" fill="WHITE" layoutX="170.0" layoutY="427.0" strokeType="OUTSIDE" strokeWidth="0.0" textAlignment="JUSTIFY" wrappingWidth="11.13671875">
+                                            <font>
+                                                <Font name="System Bold" size="12.0" />
+                                            </font>
+                                        </Text>
+                                        <Text fx:id="txtEquipoCuartos7" fontSmoothingType="LCD" layoutX="25.0" layoutY="371.0" strokeType="OUTSIDE" strokeWidth="0.0" wrappingWidth="138.13671875">
+                                            <font>
+                                                <Font name="System Bold Italic" size="13.0" />
+                                            </font>
+                                        </Text>
+                                        <Text fx:id="txtMarcadorCuartos7" fill="WHITE" layoutX="170.0" layoutY="370.0" strokeType="OUTSIDE" strokeWidth="0.0" textAlignment="JUSTIFY" wrappingWidth="11.13671875">
+                                            <font>
+                                                <Font name="System Bold" size="12.0" />
+                                            </font>
+                                        </Text>
+                                        <Text fx:id="txtEquipoSemi1" fontSmoothingType="LCD" layoutX="230.0" layoutY="84.0" strokeType="OUTSIDE" strokeWidth="0.0" wrappingWidth="138.13671875">
+                                            <font>
+                                                <Font name="System Bold Italic" size="13.0" />
+                                            </font>
+                                        </Text>
+                                        <Text fx:id="txtMarcadorSemi1" fill="WHITE" layoutX="375.0" layoutY="83.0" strokeType="OUTSIDE" strokeWidth="0.0" textAlignment="JUSTIFY" wrappingWidth="11.13671875">
+                                            <font>
+                                                <Font name="System Bold" size="12.0" />
+                                            </font>
+                                        </Text>
+                                        <Text fx:id="txtEquipoSemi2" fontSmoothingType="LCD" layoutX="230.0" layoutY="190.0" strokeType="OUTSIDE" strokeWidth="0.0" wrappingWidth="138.13671875">
+                                            <font>
+                                                <Font name="System Bold Italic" size="13.0" />
+                                            </font>
+                                        </Text>
+                                        <Text fx:id="txtMarcadorSemi2" fill="WHITE" layoutX="375.0" layoutY="189.0" strokeType="OUTSIDE" strokeWidth="0.0" textAlignment="JUSTIFY" wrappingWidth="11.13671875">
+                                            <font>
+                                                <Font name="System Bold" size="12.0" />
+                                            </font>
+                                        </Text>
+                                        <Text fx:id="txtEquipoSemi3" fontSmoothingType="LCD" layoutX="230.0" layoutY="298.0" strokeType="OUTSIDE" strokeWidth="0.0" wrappingWidth="138.13671875">
+                                            <font>
+                                                <Font name="System Bold Italic" size="13.0" />
+                                            </font>
+                                        </Text>
+                                        <Text fx:id="txtMarcadorSemi3" fill="WHITE" layoutX="375.0" layoutY="297.0" strokeType="OUTSIDE" strokeWidth="0.0" textAlignment="JUSTIFY" wrappingWidth="11.13671875">
+                                            <font>
+                                                <Font name="System Bold" size="12.0" />
+                                            </font>
+                                        </Text>
+                                        <Text fx:id="txtEquipoSemi4" fontSmoothingType="LCD" layoutX="230.0" layoutY="401.0" strokeType="OUTSIDE" strokeWidth="0.0" wrappingWidth="138.13671875">
+                                            <font>
+                                                <Font name="System Bold Italic" size="13.0" />
+                                            </font>
+                                        </Text>
+                                        <Text fx:id="txtMarcadorSemi4" fill="WHITE" layoutX="375.0" layoutY="400.0" strokeType="OUTSIDE" strokeWidth="0.0" textAlignment="JUSTIFY" wrappingWidth="11.13671875">
+                                            <font>
+                                                <Font name="System Bold" size="12.0" />
+                                            </font>
+                                        </Text>
+                                        <Text fx:id="txtEquipoFinal1" fontSmoothingType="LCD" layoutX="426.0" layoutY="141.0" strokeType="OUTSIDE" strokeWidth="0.0" translateY="-6.0" wrappingWidth="138.13671875">
+                                            <font>
+                                                <Font name="System Bold Italic" size="13.0" />
+                                            </font>
+                                        </Text>
+                                        <Text fx:id="txtMarcadorFinal1" fill="WHITE" layoutX="571.0" layoutY="140.0" strokeType="OUTSIDE" strokeWidth="0.0" textAlignment="JUSTIFY" translateY="-6.0" wrappingWidth="11.13671875">
+                                            <font>
+                                                <Font name="System Bold" size="12.0" />
+                                            </font>
+                                        </Text>
+                                        <Text fx:id="txtEquipoFinal2" fontSmoothingType="LCD" layoutX="426.0" layoutY="352.0" strokeType="OUTSIDE" strokeWidth="0.0" translateY="-3.0" wrappingWidth="138.13671875">
+                                            <font>
+                                                <Font name="System Bold Italic" size="13.0" />
+                                            </font>
+                                        </Text>
+                                        <Text fx:id="txtMarcadorFinal2" fill="WHITE" layoutX="571.0" layoutY="351.0" strokeType="OUTSIDE" strokeWidth="0.0" textAlignment="JUSTIFY" translateY="-3.0" wrappingWidth="11.13671875">
+                                            <font>
+                                                <Font name="System Bold" size="12.0" />
+                                            </font>
+                                        </Text>
+                                        <Text fx:id="txtEquipoCampeon" fontSmoothingType="LCD" layoutX="625.0" layoutY="240.0" strokeType="OUTSIDE" strokeWidth="0.0" wrappingWidth="138.13671875">
+                                            <font>
+                                                <Font name="System Bold Italic" size="13.0" />
+                                            </font>
+                                        </Text>
+                                        <Pane fx:id="partidoC1" layoutX="20.0" layoutY="34.0" onMouseClicked="#handlepartidoC1" prefHeight="89.0" prefWidth="162.0" />
+                                        <Pane fx:id="partidoC2" layoutX="20.0" layoutY="140.0" onMouseClicked="#handlepartidoC2" prefHeight="89.0" prefWidth="162.0" />
+                                        <Pane fx:id="partidoC3" layoutX="20.0" layoutY="248.0" onMouseClicked="#handlepartidoC3" prefHeight="89.0" prefWidth="162.0" />
+                                        <Pane fx:id="partidoC4" layoutX="20.0" layoutY="351.0" onMouseClicked="#handlepartidoC4" prefHeight="89.0" prefWidth="162.0" />
+                                        <Pane fx:id="partidoS1" layoutX="230.0" layoutY="64.0" onMouseClicked="#handlepartidoS1" prefHeight="136.0" prefWidth="162.0" />
+                                        <Pane fx:id="partidoS2" layoutX="230.0" layoutY="276.0" onMouseClicked="#handlepartidoS2" prefHeight="136.0" prefWidth="162.0" />
+                                        <Pane fx:id="partidoF" layoutX="426.0" layoutY="117.0" onMouseClicked="#handlepartidoF" prefHeight="243.0" prefWidth="162.0" />
+                                    </children>
+                                </Pane>
+                            </children>
+                        </Pane>
+                        <Pane layoutX="22.0" layoutY="22.0" prefHeight="80.0" prefWidth="403.0" style="-fx-background-color: #256c26;">
+                            <children>
+                                <Label layoutX="5.0" layoutY="-3.0" prefHeight="82.0" prefWidth="404.0" text=" GESTIONAR TORNEO" textFill="#f4f4f4">
+                                    <font>
+                                        <Font name="Cooper Black BT" size="30.0" />
+                                    </font>
+                                </Label>
+                            </children>
+                        </Pane>
+                        <Label fx:id="txtFechaInicio" alignment="CENTER" layoutX="559.0" layoutY="22.0" prefHeight="22.0" prefWidth="293.0" textFill="#1c5422">
+                            <font>
+                                <Font name="Arial Black" size="14.0" />
+                            </font>
+                        </Label>
+                        <Label fx:id="txtCategoria" alignment="CENTER" layoutX="559.0" layoutY="44.0" prefHeight="22.0" prefWidth="293.0" textFill="#1c5422">
+                            <font>
+                                <Font name="Arial Black" size="14.0" />
+                            </font>
+                        </Label>
+                        <Label fx:id="txtGenero" alignment="CENTER" layoutX="559.0" layoutY="66.0" prefHeight="22.0" prefWidth="293.0" textFill="#1c5422">
+                            <font>
+                                <Font name="Arial Black" size="14.0" />
+                            </font>
+                        </Label>
+                    </children>
+                </Pane>
+            </center>
+        </BorderPane>
+    </children>
 </StackPane>

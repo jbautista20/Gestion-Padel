@@ -4,16 +4,12 @@ import DAO.impl.EquipoDAOImpl;
 import DAO.impl.PartidoDAOImpl;
 import DAO.impl.TorneoDAOImpl;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Label;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
 import javafx.scene.text.Text;
-import javafx.stage.Modality;
 import javafx.stage.Stage;
 import models.Equipo;
 import models.Es;
@@ -23,13 +19,12 @@ import utilities.NavigationHelper;
 import utilities.Paths;
 import javafx.scene.control.ButtonType;
 
-import java.io.IOException;
 import java.time.LocalTime;
 import java.util.*;
-import java.util.stream.Collectors;
 
 public class GestionarTorneoController {
 
+    // --- Vistas FXML ---
     @FXML private ImageView botonBack;
     @FXML private Text txtEquipoCampeon;
     @FXML private Text txtEquipoCuartos1, txtEquipoCuartos2, txtEquipoCuartos3, txtEquipoCuartos4,
@@ -37,20 +32,19 @@ public class GestionarTorneoController {
     @FXML private Text txtEquipoSemi1, txtEquipoSemi2, txtEquipoSemi3, txtEquipoSemi4;
     @FXML private Text txtEquipoFinal1, txtEquipoFinal2;
     @FXML private Label txtFechaInicio, txtGenero, txtCantidadInscriptos, txtCategoria;
-    @FXML private Pane btnArmarCruces, btnComenzarTorneo;
+    @FXML private Pane btnArmarCruces, btnComenzarTorneo, partidoC1, partidoC2, partidoC3, partidoC4, partidoF, partidoS1, partidoS2;
 
+    // --- Variables ---
     private int totalInscriptos;
     private boolean crucesArmados = false;
     private Torneo torneoActual;
 
-    // DAOs
+    // --- DAOs ---
     private final TorneoDAOImpl torneoDAO = new TorneoDAOImpl();
     private final EquipoDAOImpl equipoDAO = new EquipoDAOImpl();
     private final PartidoDAOImpl partidoDAO = new PartidoDAOImpl();
 
-    //PARA PARTIDOS
-    @FXML private Pane partidoC1;
-
+    // =================== INICIALIZACIÓN =================== //
     @FXML
     private void initialize() {
         Object datos = NavigationHelper.getDatos();
@@ -58,197 +52,177 @@ public class GestionarTorneoController {
             torneoActual = (Torneo) datos;
             NavigationHelper.clearDatos();
         } else {
-            System.err.println("No se recibieron datos válidos del torneo en NavigationHelper.");
+            System.err.println("No se recibieron datos válidos del torneo.");
             return;
         }
 
-        // Cargar datos del torneo
         cargarDatosTorneo();
 
-        // Ver si ya existen partidos (cruces armados previamente)
+        // Verificar si ya existen cruces
         List<Partido> partidos = partidoDAO.obtenerCrucesPorTorneo(torneoActual.getId());
         if (partidos != null && !partidos.isEmpty()) {
             crucesArmados = true;
-            // Ahora llamar a la versión que acepta el id del torneo (que internamente
-            // obtendrá los partidos desde el DAO y los mostrará)
-            mostrarCrucesDesdeBD(torneoActual.getId());
-        } else {
-            // No hay partidos: la vista queda en estado "sin cruces"
-            mostrarCrucesDesdeBD(torneoActual.getId());
         }
 
-        // Eventos
-        btnArmarCruces.setOnMouseClicked(event -> botonArmarCruces());
-        btnComenzarTorneo.setOnMouseClicked(event -> botonComenzarTorneo());
+
+        btnArmarCruces.setOnMouseClicked(e -> botonArmarCruces(e));
+        btnComenzarTorneo.setOnMouseClicked(e -> botonComenzarTorneo(e));
     }
 
-
-    /** Cargar la información general del torneo en pantalla */
+    // =================== DATOS DEL TORNEO =================== //
     private void cargarDatosTorneo() {
         txtFechaInicio.setText(torneoActual.getFecha().toString());
-        txtCategoria.setText("Cat: "+String.valueOf(torneoActual.getCategoria()) + "°");
+        txtCategoria.setText("Cat: " + torneoActual.getCategoria() + "°");
         txtGenero.setText(torneoActual.getTipo().toString());
-
         totalInscriptos = equipoDAO.contarEquiposPorTorneo(torneoActual.getId());
         txtCantidadInscriptos.setText(String.valueOf(totalInscriptos));
     }
 
-
-    /** Manejo de botón Comenzar Torneo */
+    // =================== BOTÓN: ARMAR CRUCES =================== //
     @FXML
-    private void botonComenzarTorneo() {
-        if (!crucesArmados) {
-            mostrarAlerta("No se puede comenzar el torneo",
-                    "Primero debes armar los cruces antes de comenzar el torneo.");
-            return;
-        }
-
-        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
-        alert.setTitle("Confirmar inicio de torneo");
-        alert.setHeaderText("Comenzar Torneo");
-        alert.setContentText("Una vez comenzado el torneo quedará inhabilitado el armado de cruces. ¿Desea continuar?");
-
-        Optional<ButtonType> result = alert.showAndWait();
-        if (result.isPresent() && result.get() == ButtonType.OK) {
-            torneoActual.setEstados(Es.En_Curso);
-            torneoDAO.update(torneoActual);
-            mostrarInfo("Torneo iniciado", "El torneo ha comenzado correctamente.");
-        }
-        // Mostrar estructura base
-        txtEquipoSemi1.setText("Ganador C1");
-        txtEquipoSemi2.setText("Ganador C2");
-        txtEquipoSemi3.setText("Ganador C3");
-        txtEquipoSemi4.setText("Ganador C4");
-        txtEquipoFinal1.setText("Ganador S1");
-        txtEquipoFinal2.setText("Ganador S2");
-    }
-
-    /** Manejo de botón Armar Cruces */
-    @FXML
-    private void botonArmarCruces() {
+    void botonArmarCruces(MouseEvent event) {
         List<Equipo> equipos = equipoDAO.findByTorneoId(torneoActual.getId());
-
         totalInscriptos = equipos.size();
 
         if (totalInscriptos < 8) {
-            mostrarAlerta("No se pueden armar los cruces",
-                    "Se necesitan 8 equipos inscriptos para armar los cruces.");
+            mostrarAlerta("No se pueden armar los cruces", "Se necesitan 8 equipos inscriptos.");
             return;
         }
-
         if (crucesArmados) {
-            mostrarAlerta("Cruces armados",
-                    "Ya se armaron los cruces .");
+            mostrarAlerta("Armar cruces", "Los cruces ya fueron generados.");
             return;
         }
 
         crucesArmados = true;
-
-        // Mezclar aleatoriamente los equipos
         Collections.shuffle(equipos);
 
-        // Crear los 4 partidos de cuartos de final y guardarlos
+        Partido[] partidos = new Partido[7];
+
+        // --- Cuartos de final (4 partidos con equipos) ---
         for (int i = 0; i < 8; i += 2) {
-            Equipo eq1 = equipos.get(i);
-            Equipo eq2 = equipos.get(i + 1);
-
-            Partido partido = new Partido();
-            partido.setHora(LocalTime.of(0, 0));
-            partido.setInstancia(1); // 1 = Cuartos
-            partido.setPuntos(0);
-            partido.setEquipo1(eq1);
-            partido.setEquipo2(eq2);
-            partido.setTorneo(torneoActual);
-
-            partidoDAO.create(partido);
+            Partido p = new Partido();
+            p.setHora(LocalTime.of(0, 0));
+            p.setInstancia(1); // 1 = Cuartos
+            p.setEquipo1(equipos.get(i));
+            p.setEquipo2(equipos.get(i + 1));
+            p.setTorneo(torneoActual);
+            partidoDAO.create(p);
+            partidos[i / 2] = p;
         }
 
-        // Refrescar visualmente
-        mostrarCrucesDesdeBD(torneoActual.getId());
-
-        mostrarInfo("Cruces armados", "Los cruces fueron generados y guardados correctamente.");
-    }
-
-    /** Muestra los cruces (nombres) obtenidos desde la BD */
-    private void mostrarCrucesDesdeBD(int idTorneo) {
-        List<Partido> partidos = partidoDAO.obtenerCrucesPorTorneo(idTorneo);
-
-        List<Text> textosCuartos = Arrays.asList(
-                txtEquipoCuartos1, txtEquipoCuartos2, txtEquipoCuartos3, txtEquipoCuartos4,
-                txtEquipoCuartos5, txtEquipoCuartos6, txtEquipoCuartos7, txtEquipoCuartos8
-        );
-
-        int index = 0;
-        for (Partido p : partidos.stream().filter(x -> x.getInstancia() == 1).toList()) {
-            if (index + 1 < textosCuartos.size()) {
-                textosCuartos.get(index).setText(
-                        p.getEquipo1() != null && p.getEquipo1().getNombre() != null
-                                ? p.getEquipo1().getNombre() : "-"
-                );
-                textosCuartos.get(index + 1).setText(
-                        p.getEquipo2() != null && p.getEquipo2().getNombre() != null
-                                ? p.getEquipo2().getNombre() : "-"
-                );
-            }
-            index += 2;
+        // --- Semifinales (2 partidos vacíos) ---
+        for (int i = 4; i < 6; i++) {
+            Partido s = new Partido();
+            s.setHora(LocalTime.of(0, 0));
+            s.setInstancia(2); // 2 = Semis
+            s.setEquipo1(null);
+            s.setEquipo2(null);
+            s.setTorneo(torneoActual);
+            partidoDAO.create(s);
+            partidos[i] = s;
         }
 
+        // --- Final (vacío) ---
+        Partido f = new Partido();
+        f.setHora(LocalTime.of(0, 0));
+        f.setInstancia(3); // 3 = Final
+        f.setEquipo1(null);
+        f.setEquipo2(null);
+        f.setTorneo(torneoActual);
+        partidoDAO.create(f);
+        partidos[6] = f;
+
+        torneoActual.setPartidos(partidos);
+
+        mostrarInfo("Cruces armados", "Los cruces fueron generados correctamente.");
     }
 
-
-    /** Devuelve los partidos asociados al torneo */
-    private List<Partido> obtenerPartidosDelTorneo(int idTorneo) {
-        return partidoDAO.obtenerPartidosPorTorneo(idTorneo);
-    }
-
-
-    @FXML
-    private void handleBackButton(MouseEvent event) {
-        Stage stage = (Stage) botonBack.getScene().getWindow();
-        NavigationHelper.cambiarVista(stage, Paths.pantallaTorneos, "ListarTorneos");
-        System.out.println("Volviendo al menú principal");
-    }
-
-    // ==== Métodos de ayuda ====
-
-    private void mostrarAlerta(String titulo, String mensaje) {
-        Alert alert = new Alert(Alert.AlertType.WARNING);
-        alert.setTitle(titulo);
-        alert.setHeaderText(null);
-        alert.setContentText(mensaje);
-        alert.showAndWait();
-    }
-
-    private void mostrarInfo(String titulo, String mensaje) {
-        Alert alert = new Alert(Alert.AlertType.INFORMATION);
-        alert.setTitle(titulo);
-        alert.setHeaderText(null);
-        alert.setContentText(mensaje);
-        alert.showAndWait();
-    }
-
-    @FXML
-    private void botonGestionarEquipos() {
+    // =================== BOTÓN: GESTIONAR EQUIPOS =================== //
+    @FXML private void botonGestionarEquipos() {
         Stage stage = (Stage) btnComenzarTorneo.getScene().getWindow();
         NavigationHelper.cambiarVistaConDatos(stage, Paths.pantallaGestionarEquipos, "Gestionar Equipos", torneoActual);
         System.out.println("cambiando la ventana");
     }
 
-    //PARA PARTIDOS
+    // =================== BOTÓN: COMENZAR TORNEO =================== //
     @FXML
-    private void handlepartidoC1(MouseEvent event) throws IOException {
-        FXMLLoader loader = new FXMLLoader(getClass().getResource(Paths.pantallaCargarPartido));
-        //todo esto es para que se vea mas chiquita la pantalla arriba de la otra
-        Parent root = loader.load();
-        Stage popupStage = new Stage();
-        popupStage.setTitle("Cargar Partido");
-        Scene scene = new Scene(root, 453, 407);
-        popupStage.setScene(scene);
-        popupStage.initModality(Modality.WINDOW_MODAL);
-        Stage parentStage = (Stage) partidoC1.getScene().getWindow();
-        popupStage.initOwner(parentStage);
-        popupStage.centerOnScreen();
-        popupStage.show();
+    void botonComenzarTorneo(MouseEvent event) {
+        if (!crucesArmados) {
+            mostrarAlerta("No se puede comenzar", "Primero debes armar los cruces.");
+            return;
+        }
 
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+        alert.setTitle("Confirmar inicio");
+        alert.setHeaderText("Comenzar torneo");
+        alert.setContentText("Una vez iniciado, no podrá eliminarlo. ¿Desea continuar?");
+        Optional<ButtonType> result = alert.showAndWait();
+
+        if (result.isPresent() && result.get() == ButtonType.OK) {
+            torneoActual.setEstados(Es.En_Curso);
+            torneoDAO.update(torneoActual);
+            mostrarInfo("Torneo iniciado", "El torneo ha comenzado correctamente.");
+        }
+
+    }
+
+
+
+    // =================== ABRIR PARTIDO =================== //
+    @FXML void handlepartidoC1(MouseEvent event) {abrirVentanaCargarPartido(0);
+    }
+    @FXML void handlepartidoC2(MouseEvent event) { abrirVentanaCargarPartido(1); }
+    @FXML void handlepartidoC3(MouseEvent event) { abrirVentanaCargarPartido(2); }
+    @FXML void handlepartidoC4(MouseEvent event) { abrirVentanaCargarPartido(3); }
+    @FXML void handlepartidoS1(MouseEvent event) { abrirVentanaCargarPartido(4); }
+    @FXML void handlepartidoS2(MouseEvent event) {abrirVentanaCargarPartido(5);
+    }
+    @FXML void handlepartidoF(MouseEvent event)  { abrirVentanaCargarPartido(6); }
+
+    private void abrirVentanaCargarPartido(int indicePartido) {
+        Partido[] partidos = torneoActual.getPartidos();
+        System.out.println("Partidos cargados: " + Arrays.toString(partidos));
+
+        if (partidos == null || indicePartido < 0 || indicePartido >= partidos.length) {
+            System.out.println("️ No hay array de partidos válido");
+            return;
+        }
+
+        Partido partido = partidos[indicePartido];
+        if (partido == null) {
+            System.out.println("️ Partido en índice " + indicePartido + " es null");
+            return;
+        }
+
+        System.out.println(" Abriendo popup de partido: " + partido);
+        NavigationHelper.abrirPopupConDatos(
+                Paths.pantallaCargarPartido,
+                "Cargar Partido",
+                partido,
+                453, 407
+        );
+    }
+
+    // =================== UTILIDADES =================== //
+    private void mostrarAlerta(String titulo, String mensaje) {
+        Alert a = new Alert(Alert.AlertType.WARNING);
+        a.setTitle(titulo);
+        a.setHeaderText(null);
+        a.setContentText(mensaje);
+        a.showAndWait();
+    }
+
+    private void mostrarInfo(String titulo, String mensaje) {
+        Alert a = new Alert(Alert.AlertType.INFORMATION);
+        a.setTitle(titulo);
+        a.setHeaderText(null);
+        a.setContentText(mensaje);
+        a.showAndWait();
+    }
+
+    @FXML
+    void handleBackButton(MouseEvent e) {
+        Stage stage = (Stage) botonBack.getScene().getWindow();
+        NavigationHelper.cambiarVista(stage, Paths.pantallaTorneos, "Listar Torneos");
     }
 }
