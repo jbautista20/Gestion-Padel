@@ -77,8 +77,9 @@ public class InscribirEquipoController {
         colAnioNacimiento.setCellValueFactory(new PropertyValueFactory<>("anioNac"));
         colPuntos.setCellValueFactory(new PropertyValueFactory<>("puntos"));
 
-        // Cargar jugadores según categoría del torneo
-        listaJugadores.addAll(jugadorDAO.findByCategoria(torneoActual.getCategoria()));
+        // Cargar jugadores disponibles según categoría, tipo y torneo
+        listaJugadores.addAll(jugadorDAO.findDisponiblesPorTorneo(torneoActual));
+
         tableJugadores.setItems(listaJugadores);
 
         // Manejar selección de jugadores

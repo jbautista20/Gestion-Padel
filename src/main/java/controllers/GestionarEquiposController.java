@@ -107,10 +107,25 @@ public class GestionarEquiposController {
     @FXML
     private void botonInscribirEquipo(MouseEvent event) {
         event.consume();
+
+        cargarEquiposDesdeBD();
+
+        if (listaEquipos.size() >= 8) {
+            // Mostrar alerta si ya hay 8 equipos
+            javafx.scene.control.Alert alerta = new javafx.scene.control.Alert(javafx.scene.control.Alert.AlertType.INFORMATION);
+            alerta.setTitle("Límite alcanzado");
+            alerta.setHeaderText(null);
+            alerta.setContentText("Ya están los 8 equipos inscriptos en el torneo.");
+            alerta.showAndWait();
+            return;
+        }
+
+        // Si hay menos de 8 equipos, permitir inscripción
         Stage stage = (Stage) btnDescalificarEquipo.getScene().getWindow();
         NavigationHelper.cambiarVistaConDatos(stage, Paths.pantallaInscribirEquipo, "Inscribir Equipo", torneoActual);
         System.out.println("Cambiando la ventana a inscripción de equipo");
     }
+
 
     @FXML
     private void handleBackButton(MouseEvent event) {
