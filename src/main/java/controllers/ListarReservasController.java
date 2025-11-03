@@ -165,8 +165,19 @@ public class ListarReservasController {
                         "\nPara: " + turnoSeleccionado.getPersona().getNombre() + " " + turnoSeleccionado.getPersona().getApellido() );
 
         if (confirmacion) {
+            LocalDate fechaTurno = turnoSeleccionado.getFecha();
             cancelarTurno(turnoSeleccionado);
-            mostrarAlerta("Éxito", "Reserva cancelada correctamente.");
+
+            LocalDate fechaHoy = LocalDate.now();
+            long diasAntes = java.time.temporal.ChronoUnit.DAYS.between(fechaHoy, fechaTurno);
+
+            String mensajeExito;
+            if (diasAntes >= 2) {
+                mensajeExito = "Reserva cancelada correctamente. Se realizará el reintegro correspondiente.";
+            } else {
+                mensajeExito = "Reserva cancelada correctamente. Recordarle al cliente que no se realizará devolución del pago del turno.";
+            }
+            mostrarAlerta("Éxito", mensajeExito);
             DatePickerFecha.setValue(null);
             cargarTurnosOcupados();// p-actualizar la tabla después de cancelar
         }

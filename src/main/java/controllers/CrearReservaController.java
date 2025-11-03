@@ -93,8 +93,9 @@ public class CrearReservaController {
             }
         });
 
-        // Restringir selección de fecha de pago (no permitir fechas futuras)
         LocalDate hoy = LocalDate.now();
+        datePickerFechaPago.setValue(hoy);
+        // no permitir fechas futuras en pago
         datePickerFechaPago.setDayCellFactory(picker -> new DateCell() {
             @Override
             public void updateItem(LocalDate item, boolean empty) {
@@ -125,6 +126,14 @@ public class CrearReservaController {
     private void cargarPersonas() {
         try {
             List<Persona> personas = personaDAO.findAll();
+            //ordenar alfabéticamente por apellido
+            personas.sort((p1, p2) -> {
+                int comp = p1.getApellido().compareToIgnoreCase(p2.getApellido());
+                if (comp == 0) {
+                    return p1.getNombre().compareToIgnoreCase(p2.getNombre());
+                }
+                return comp;
+            });
             tablaPersonas.getItems().setAll(personas);
         } catch (Exception e) {
             e.printStackTrace();

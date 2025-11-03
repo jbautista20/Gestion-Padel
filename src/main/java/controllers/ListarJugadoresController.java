@@ -15,6 +15,9 @@ import javafx.stage.Stage;
 import models.Jugador;
 import utilities.NavigationHelper;
 import utilities.Paths;
+import javafx.scene.control.TableCell;
+import javafx.scene.control.TableColumn;
+import javafx.util.Callback;
 
 public class ListarJugadoresController {
 
@@ -50,6 +53,17 @@ public class ListarJugadoresController {
         colTelefono.setCellValueFactory(new PropertyValueFactory<>("telefono"));
         colDireccion.setCellValueFactory(new PropertyValueFactory<>("direccion"));
         colSexo.setCellValueFactory(new PropertyValueFactory<>("sexo"));
+        colSexo.setCellFactory(column -> new TableCell<Jugador, Integer>() {
+            @Override
+            protected void updateItem(Integer item, boolean empty) {
+                super.updateItem(item, empty);
+                if (empty || item == null) {
+                    setText(null);
+                } else {
+                    setText(item == 1 ? "Hombre" : "Mujer");
+                }
+            }
+        });
         colAnioNacimiento.setCellValueFactory(new PropertyValueFactory<>("anioNac")); // getter getAnioNac()
         colPuntos.setCellValueFactory(new PropertyValueFactory<>("puntos"));
 
