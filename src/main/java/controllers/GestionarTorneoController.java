@@ -4,12 +4,16 @@ import DAO.impl.EquipoDAOImpl;
 import DAO.impl.PartidoDAOImpl;
 import DAO.impl.TorneoDAOImpl;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Label;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
 import javafx.scene.text.Text;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
 import models.Equipo;
 import models.Es;
@@ -19,6 +23,7 @@ import utilities.NavigationHelper;
 import utilities.Paths;
 import javafx.scene.control.ButtonType;
 
+import java.io.IOException;
 import java.time.LocalTime;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -42,6 +47,9 @@ public class GestionarTorneoController {
     private final TorneoDAOImpl torneoDAO = new TorneoDAOImpl();
     private final EquipoDAOImpl equipoDAO = new EquipoDAOImpl();
     private final PartidoDAOImpl partidoDAO = new PartidoDAOImpl();
+
+    //PARA PARTIDOS
+    @FXML private Pane partidoC1;
 
     @FXML
     private void initialize() {
@@ -226,4 +234,21 @@ public class GestionarTorneoController {
         System.out.println("cambiando la ventana");
     }
 
+    //PARA PARTIDOS
+    @FXML
+    private void handlepartidoC1(MouseEvent event) throws IOException {
+        FXMLLoader loader = new FXMLLoader(getClass().getResource(Paths.pantallaCargarPartido));
+        //todo esto es para que se vea mas chiquita la pantalla arriba de la otra
+        Parent root = loader.load();
+        Stage popupStage = new Stage();
+        popupStage.setTitle("Cargar Partido");
+        Scene scene = new Scene(root, 453, 407);
+        popupStage.setScene(scene);
+        popupStage.initModality(Modality.WINDOW_MODAL);
+        Stage parentStage = (Stage) partidoC1.getScene().getWindow();
+        popupStage.initOwner(parentStage);
+        popupStage.centerOnScreen();
+        popupStage.show();
+
+    }
 }

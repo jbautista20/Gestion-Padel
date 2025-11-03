@@ -16,8 +16,6 @@ import models.Jugador;
 import utilities.NavigationHelper;
 import utilities.Paths;
 import javafx.scene.control.TableCell;
-import javafx.scene.control.TableColumn;
-import javafx.util.Callback;
 
 public class ListarJugadoresController {
 

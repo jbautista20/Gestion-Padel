@@ -244,6 +244,7 @@
                                     <Font name="System Bold Italic" size="13.0" />
                                  </font>
                               </Text>
+                              <Pane fx:id="partidoC1" onMouseClicked="#handlepartidoC1" layoutX="20.0" layoutY="34.0" prefHeight="89.0" prefWidth="162.0" />
                            </children>
                         </Pane>
                      </children>
