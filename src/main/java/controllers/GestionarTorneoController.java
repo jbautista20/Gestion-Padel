@@ -52,6 +52,7 @@ public class GestionarTorneoController {
 
     @FXML
     private void initialize() {
+        NavigationHelper.registrarControlador(this);
         Object datos = NavigationHelper.getDatos();
         if (datos instanceof Torneo) {
             torneoActual = (Torneo) datos;
@@ -359,11 +360,7 @@ public class GestionarTorneoController {
     }
 
     // =================== ABRIR PARTIDO =================== //
-    @FXML void handlepartidoC1(MouseEvent event) {
-        System.out.println("partido en c1 equipo 1 = " + (torneoActual.getPartidos())[0].getEquipo1().getNombre()
-        + " VS equipo 2 =" +(torneoActual.getPartidos())[0].getEquipo2().getNombre());
-
-        abrirVentanaCargarPartido(0);  }
+    @FXML void handlepartidoC1(MouseEvent event) { abrirVentanaCargarPartido(0);  }
     @FXML void handlepartidoC2(MouseEvent event) { abrirVentanaCargarPartido(1); }
     @FXML void handlepartidoC3(MouseEvent event) { abrirVentanaCargarPartido(2); }
     @FXML void handlepartidoC4(MouseEvent event) { abrirVentanaCargarPartido(3); }
@@ -416,5 +413,50 @@ public class GestionarTorneoController {
     void handleBackButton(MouseEvent e) {
         Stage stage = (Stage) botonBack.getScene().getWindow();
         NavigationHelper.cambiarVista(stage, Paths.pantallaTorneos, "Listar Torneos");
+    }
+
+    /**
+     * Reemplaza/actualiza un partido en la lista observable para que la vista se refresque.
+     * Publico para ser invocado desde CargarPartidoController via NavigationHelper.getController(...)
+     */
+    public void actualizarPartido(Partido partidoActualizado) {
+        if (partidoActualizado == null) return;
+
+        // 1) Actualizar BD/localmente el arreglo de torneoActual.partidos si corresponde
+        // Intentamos ubicar el partido por instancia (si la instancia es confiable)
+        try {
+            Partido[] arr = torneoActual.getPartidos();
+            if (arr != null) {
+                int idx = partidoActualizado.getInstancia();
+                if (idx >= 0 && idx < arr.length) {
+                    arr[idx] = partidoActualizado;
+                    torneoActual.setPartidos(arr);
+                } else {
+                    // Si no tenemos instancia confiable, intentamos por id
+                    for (int i = 0; i < arr.length; i++) {
+                        Partido p = arr[i];
+                        if (p != null && p.getId() == partidoActualizado.getId()) {
+                            arr[i] = partidoActualizado;
+                            break;
+                        }
+                    }
+                }
+            }
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+
+        // 2) Actualizar ObservableList para disparar el listener y refrescar la UI
+        Platform.runLater(() -> {
+            // si partido ya está en la lista, hacemos set para disparar evento; si no, lo añadimos
+            for (int i = 0; i < partidosObservable.size(); i++) {
+                Partido p = partidosObservable.get(i);
+                if (p != null && p.getId() == partidoActualizado.getId()) {
+                    partidosObservable.set(i, partidoActualizado);
+                    return;
+                }
+            }
+            partidosObservable.add(partidoActualizado);
+        });
     }
 }

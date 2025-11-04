@@ -6,6 +6,9 @@ import javafx.scene.Scene;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public class NavigationHelper {
     private  static  Object datos;
     private static NavigationHelper instance;
@@ -118,6 +121,24 @@ public class NavigationHelper {
                 .map(w -> (Stage) w)
                 .toList()) {
             if (stage.isFocused()) return stage;
+        }
+        return null;
+    }
+
+    private static final Map<Class<?>, Object> controladores = new HashMap<>();
+
+    /** Registra un controlador para que otros puedan accederlo más tarde. */
+    public static void registrarControlador(Object controller) {
+        if (controller != null)
+            controladores.put(controller.getClass(), controller);
+    }
+
+    /** Devuelve una instancia registrada del controlador pedido (o null si no está). */
+    @SuppressWarnings("unchecked")
+    public static <T> T getController(Class<T> tipo) {
+        Object controlador = controladores.get(tipo);
+        if (tipo.isInstance(controlador)) {
+            return (T) controlador;
         }
         return null;
     }
