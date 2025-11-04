@@ -66,34 +66,92 @@ public class GestionarTorneoController {
         txtFechaInicio.setText(torneoActual.getFecha() != null ? torneoActual.getFecha().toString() : "Sin fecha");
         txtGenero.setText(torneoActual.getTipo() != null ? torneoActual.getTipo().toString() : "N/A");
 
-        // Añadimos el listener inmediatamente (antes de cualquier setAll)
+        // Añadir listener antes de poblar
         partidosObservable.addListener((ListChangeListener<Partido>) change -> {
-            // reaccionamos a cualquier cambio de la lista
             Platform.runLater(this::actualizarVistaCruces);
         });
 
-        // =================== EQUIPOS =================== //
-        List<Equipo> equiposBD = equipoDAO.findByTorneoId(torneoActual.getId());
-        if (equiposBD == null || equiposBD.isEmpty()) {
-            System.out.println("El torneo no tiene equipos inscriptos todavía.");
-            txtCantidadInscriptos.setText("0");
-        } else {
-            txtCantidadInscriptos.setText(String.valueOf(equiposBD.size()));
-            Equipo[] arrayEquipos = new Equipo[8];
-            for (int i = 0; i < equiposBD.size() && i < 8; i++) {
-                arrayEquipos[i] = equiposBD.get(i);
-            }
-            torneoActual.setEquipos(arrayEquipos);
-        }
+        // Reconstruir el torneo (esta llamada carga equipos y partidos desde BD)
+        reconstruirTorneoDesdeBD();
 
-        // =================== PARTIDOS: cargamos desde BD =================== //
-        List<Partido> partidos = partidoDAO.findByTorneo(torneoActual.getId());
-        if (partidos != null && !partidos.isEmpty()) {
-            // cargamos en la ObservableList -> listener actualizará la vista
-            partidosObservable.setAll(partidos);
+        // Si no hay partidos, limpiar la UI (actualizarVistaCruces ya maneja limpieza)
+        if (partidosObservable.isEmpty()) {
+            limpiarVistaCruces();
+        } else {
+            // actualizarVistaCruces se ejecutará vía listener, pero forzamos una vez
+            Platform.runLater(this::actualizarVistaCruces);
             crucesArmados = true;
         }
     }
+
+
+    private void reconstruirTorneoDesdeBD() {
+        if (torneoActual == null) return;
+
+        // 1) Cargar equipos desde BD y setear en torneoActual
+        List<Equipo> equiposBD = equipoDAO.findByTorneoId(torneoActual.getId());
+        Equipo[] arrayEquipos = new Equipo[8];
+        if (equiposBD != null) {
+            for (int i = 0; i < equiposBD.size() && i < 8; i++) {
+                arrayEquipos[i] = equiposBD.get(i);
+            }
+        }
+        torneoActual.setEquipos(arrayEquipos);
+
+        // 2) Cargar partidos desde BD (ordenados por instancia)
+        List<Partido> partidosDesdeBD = partidoDAO.findByTorneo(torneoActual.getId());
+        if (partidosDesdeBD == null) partidosDesdeBD = new ArrayList<>();
+
+        // 3) Para cada partido, resolver equipos completos y ganador desde BD
+        for (Partido p : partidosDesdeBD) {
+            if (p.getEquipo1() != null && p.getEquipo1().getId() != 0) {
+                Equipo e1 = equipoDAO.findById(p.getEquipo1().getId());
+                p.setEquipo1(e1);
+            }
+            if (p.getEquipo2() != null && p.getEquipo2().getId() != 0) {
+                Equipo e2 = equipoDAO.findById(p.getEquipo2().getId());
+                p.setEquipo2(e2);
+            }
+            if (p.getGanador() != null && p.getGanador().getId() != 0) {
+                Equipo g = equipoDAO.findById(p.getGanador().getId());
+                p.setGanador(g);
+            }
+            // relacionar el torneo (opcional)
+            p.setTorneo(torneoActual);
+        }
+
+        // 4) Guardar en torneoActual.partidos como arreglo (tamaño 7)
+        Partido[] arrayPartidos = new Partido[7];
+        for (Partido p : partidosDesdeBD) {
+            int idx = p.getInstancia(); // asumimos instancia: 0..6
+            if (idx >= 0 && idx < arrayPartidos.length) {
+                arrayPartidos[idx] = p;
+            }
+        }
+        torneoActual.setPartidos(arrayPartidos);
+
+        // 5) Actualizar la ObservableList para que la UI reaccione
+        partidosObservable.setAll(partidosDesdeBD);
+    }
+
+    private void limpiarVistaCruces() {
+        txtEquipoCuartos1.setText("");
+        txtEquipoCuartos2.setText("");
+        txtEquipoCuartos3.setText("");
+        txtEquipoCuartos4.setText("");
+        txtEquipoCuartos5.setText("");
+        txtEquipoCuartos6.setText("");
+        txtEquipoCuartos7.setText("");
+        txtEquipoCuartos8.setText("");
+        txtEquipoSemi1.setText("");
+        txtEquipoSemi2.setText("");
+        txtEquipoSemi3.setText("");
+        txtEquipoSemi4.setText("");
+        txtEquipoFinal1.setText("");
+        txtEquipoFinal2.setText("");
+        txtEquipoCampeon.setText("");
+    }
+
 
     private void actualizarVistaCruces() {
         List<Partido> partidos = new ArrayList<>(partidosObservable);
@@ -183,8 +241,6 @@ public class GestionarTorneoController {
         }
     }
 
-
-
     // =================== BOTÓN: ARMAR CRUCES =================== //
     @FXML
     void botonArmarCruces(MouseEvent event) {
@@ -250,24 +306,19 @@ public class GestionarTorneoController {
             partidoDAO.create(finalPartido);
             partidos[6] = finalPartido;
 
-            // Guardamos los partidos en el torneo actual
+            // después de insertar los partidos (partidos[] ya creado y guardado)
             torneoActual.setPartidos(partidos);
             torneoDAO.update(torneoActual);
 
-            // **Lectura desde BD para obtener objetos consistentes**
-            List<Partido> partidosDesdeBD = partidoDAO.findByTorneo(torneoActual.getId());
-            // actualizamos la observable con los partidos recién leídos
-            if (partidosDesdeBD != null) {
-                partidosObservable.setAll(partidosDesdeBD);
-            } else {
-                partidosObservable.clear();
-            }
+            // reconstruimos desde BD para tener objetos consistentes
+            reconstruirTorneoDesdeBD();
 
-            // Deshabilitar botón para evitar rearmar
+            // deshabilitar botón y marcar cruces armados
             btnArmarCruces.setDisable(true);
-
             crucesArmados = true;
-            mostrarAlerta("Éxito", "Los cruces del torneo se armaron correctamente (aleatorios en cuartos).", Alert.AlertType.INFORMATION);
+
+            mostrarAlerta("Éxito", "... cruces armados", Alert.AlertType.INFORMATION);
+
 
 
         } catch (Exception e) {

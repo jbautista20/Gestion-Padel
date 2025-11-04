@@ -6,6 +6,7 @@ import models.*;
 
 import java.sql.*;
 import java.time.LocalTime;
+import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -197,61 +198,39 @@ public class PartidoDAOImpl implements GenericDAO<Partido> {
     public List<Partido> findByTorneo(int idTorneo) {
         String sql = "SELECT * FROM Partidos WHERE id_torneo = ? ORDER BY instancia ASC";
         List<Partido> partidos = new ArrayList<>();
-
         try (PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setInt(1, idTorneo);
             ResultSet rs = stmt.executeQuery();
-
             while (rs.next()) {
                 Partido p = new Partido();
                 p.setId(rs.getInt("id_partido"));
-                p.setHora(rs.getString("hora") != null ? LocalTime.parse(rs.getString("hora")) : null);
+                String horaStr = rs.getString("hora");
+                if (horaStr != null && !horaStr.isEmpty()) {
+                    try { p.setHora(LocalTime.parse(horaStr)); } catch (DateTimeParseException ex) { p.setHora(null); }
+                }
                 p.setInstancia(rs.getInt("instancia"));
                 p.setPuntos(rs.getInt("puntos"));
+                // equipo1/equipo2/ganador sólo setear IDs (objetos parciales)
+                int idEq1 = rs.getInt("id_equipo1");
+                if (!rs.wasNull()) { Equipo e = new Equipo(); e.setId(idEq1); p.setEquipo1(e); }
+                int idEq2 = rs.getInt("id_equipo2");
+                if (!rs.wasNull()) { Equipo e2 = new Equipo(); e2.setId(idEq2); p.setEquipo2(e2); }
+                int idGan = rs.getInt("id_ganador");
+                if (!rs.wasNull()) { Equipo g = new Equipo(); g.setId(idGan); p.setGanador(g); }
+
                 p.setSet1(rs.getString("set1"));
                 p.setSet2(rs.getString("set2"));
                 p.setSet3(rs.getString("set3"));
                 p.setJugado(rs.getInt("jugado") == 1);
 
-                // --- Relacionar objetos ---
-                p.setTorneo(new Torneo());
-                p.getTorneo().setId(idTorneo);
-
-                // Equipos
-                if (rs.getInt("id_equipo1") != 0) {
-                    Equipo eq1 = new Equipo();
-                    eq1.setId(rs.getInt("id_equipo1"));
-                    p.setEquipo1(eq1);
-                }
-
-                if (rs.getInt("id_equipo2") != 0) {
-                    Equipo eq2 = new Equipo();
-                    eq2.setId(rs.getInt("id_equipo2"));
-                    p.setEquipo2(eq2);
-                }
-
-                if (rs.getInt("id_ganador") != 0) {
-                    Equipo ganador = new Equipo();
-                    ganador.setId(rs.getInt("id_ganador"));
-                    p.setGanador(ganador);
-                }
-
-                // Cancha (opcional)
-                if (rs.getInt("num_cancha") != 0) {
-                    Cancha cancha = new Cancha();
-                    cancha.setNumero(rs.getInt("num_cancha"));
-                    p.setCancha(cancha);
-                }
-
                 partidos.add(p);
             }
-
         } catch (SQLException e) {
             e.printStackTrace();
         }
-
         return partidos;
     }
+
 
 
 }
