@@ -3,6 +3,10 @@ package controllers;
 import DAO.impl.EquipoDAOImpl;
 import DAO.impl.PartidoDAOImpl;
 import DAO.impl.TorneoDAOImpl;
+import javafx.application.Platform;
+import javafx.collections.FXCollections;
+import javafx.collections.ListChangeListener;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Label;
@@ -33,6 +37,8 @@ public class GestionarTorneoController {
     @FXML private Text txtEquipoFinal1, txtEquipoFinal2;
     @FXML private Label txtFechaInicio, txtGenero, txtCantidadInscriptos, txtCategoria;
     @FXML private Pane btnArmarCruces, btnComenzarTorneo, partidoC1, partidoC2, partidoC3, partidoC4, partidoF, partidoS1, partidoS2;
+    private ObservableList<Partido> partidosObservable = FXCollections.observableArrayList();
+
 
     // --- Variables ---
     private int totalInscriptos;
@@ -43,6 +49,7 @@ public class GestionarTorneoController {
     private final TorneoDAOImpl torneoDAO = new TorneoDAOImpl();
     private final EquipoDAOImpl equipoDAO = new EquipoDAOImpl();
     private final PartidoDAOImpl partidoDAO = new PartidoDAOImpl();
+
     @FXML
     private void initialize() {
         Object datos = NavigationHelper.getDatos();
@@ -59,6 +66,12 @@ public class GestionarTorneoController {
         txtFechaInicio.setText(torneoActual.getFecha() != null ? torneoActual.getFecha().toString() : "Sin fecha");
         txtGenero.setText(torneoActual.getTipo() != null ? torneoActual.getTipo().toString() : "N/A");
 
+        // Añadimos el listener inmediatamente (antes de cualquier setAll)
+        partidosObservable.addListener((ListChangeListener<Partido>) change -> {
+            // reaccionamos a cualquier cambio de la lista
+            Platform.runLater(this::actualizarVistaCruces);
+        });
+
         // =================== EQUIPOS =================== //
         List<Equipo> equiposBD = equipoDAO.findByTorneoId(torneoActual.getId());
         if (equiposBD == null || equiposBD.isEmpty()) {
@@ -73,72 +86,85 @@ public class GestionarTorneoController {
             torneoActual.setEquipos(arrayEquipos);
         }
 
-        // =================== PARTIDOS =================== //
+        // =================== PARTIDOS: cargamos desde BD =================== //
         List<Partido> partidos = partidoDAO.findByTorneo(torneoActual.getId());
-        if (partidos == null || partidos.isEmpty()) {
-            System.out.println("No hay partidos cargados para este torneo (aún no se generaron los cruces).");
-
-            // Limpiar todos los cuadros de texto de cruces
-            txtEquipoCuartos1.setText("");
-            txtEquipoCuartos2.setText("");
-            txtEquipoCuartos3.setText("");
-            txtEquipoCuartos4.setText("");
-            txtEquipoCuartos5.setText("");
-            txtEquipoCuartos6.setText("");
-            txtEquipoCuartos7.setText("");
-            txtEquipoCuartos8.setText("");
-            txtEquipoSemi1.setText("");
-            txtEquipoSemi2.setText("");
-            txtEquipoSemi3.setText("");
-            txtEquipoSemi4.setText("");
-            txtEquipoFinal1.setText("");
-            txtEquipoFinal2.setText("");
-            txtEquipoCampeon.setText("");
-            return;
+        if (partidos != null && !partidos.isEmpty()) {
+            // cargamos en la ObservableList -> listener actualizará la vista
+            partidosObservable.setAll(partidos);
+            crucesArmados = true;
         }
-        crucesArmados = true;
+    }
 
-        // =================== MOSTRAR CRUCES (CUARTOS) =================== //
+    private void actualizarVistaCruces() {
+        List<Partido> partidos = new ArrayList<>(partidosObservable);
+
+        // --- Limpiamos todo primero ---
+        txtEquipoCuartos1.setText("");
+        txtEquipoCuartos2.setText("");
+        txtEquipoCuartos3.setText("");
+        txtEquipoCuartos4.setText("");
+        txtEquipoCuartos5.setText("");
+        txtEquipoCuartos6.setText("");
+        txtEquipoCuartos7.setText("");
+        txtEquipoCuartos8.setText("");
+        txtEquipoSemi1.setText("");
+        txtEquipoSemi2.setText("");
+        txtEquipoSemi3.setText("");
+        txtEquipoSemi4.setText("");
+        txtEquipoFinal1.setText("");
+        txtEquipoFinal2.setText("");
+        txtEquipoCampeon.setText("");
+
+        // --- Mostrar cuartos (partidos 0..3) ---
         for (int i = 0; i < partidos.size() && i < 4; i++) {
             Partido p = partidos.get(i);
-            if (p.getEquipo1() != null)
-                p.setEquipo1(equipoDAO.findById(p.getEquipo1().getId()));
-            if (p.getEquipo2() != null)
-                p.setEquipo2(equipoDAO.findById(p.getEquipo2().getId()));
+
+            // asegurar que equipo1/equipo2 estén completos (leer desde BD por id si es necesario)
+            Equipo e1 = null, e2 = null;
+            if (p.getEquipo1() != null && p.getEquipo1().getId() != 0) {
+                e1 = equipoDAO.findById(p.getEquipo1().getId());
+            }
+            if (p.getEquipo2() != null && p.getEquipo2().getId() != 0) {
+                e2 = equipoDAO.findById(p.getEquipo2().getId());
+            }
 
             switch (i) {
                 case 0:
-                    txtEquipoCuartos1.setText(p.getEquipo1() != null ? p.getEquipo1().getNombre() : "");
-                    txtEquipoCuartos2.setText(p.getEquipo2() != null ? p.getEquipo2().getNombre() : "");
+                    txtEquipoCuartos1.setText(e1 != null ? e1.getNombre() : "");
+                    txtEquipoCuartos2.setText(e2 != null ? e2.getNombre() : "");
                     break;
                 case 1:
-                    txtEquipoCuartos3.setText(p.getEquipo1() != null ? p.getEquipo1().getNombre() : "");
-                    txtEquipoCuartos4.setText(p.getEquipo2() != null ? p.getEquipo2().getNombre() : "");
+                    txtEquipoCuartos3.setText(e1 != null ? e1.getNombre() : "");
+                    txtEquipoCuartos4.setText(e2 != null ? e2.getNombre() : "");
                     break;
                 case 2:
-                    txtEquipoCuartos5.setText(p.getEquipo1() != null ? p.getEquipo1().getNombre() : "");
-                    txtEquipoCuartos6.setText(p.getEquipo2() != null ? p.getEquipo2().getNombre() : "");
+                    txtEquipoCuartos5.setText(e1 != null ? e1.getNombre() : "");
+                    txtEquipoCuartos6.setText(e2 != null ? e2.getNombre() : "");
                     break;
                 case 3:
-                    txtEquipoCuartos7.setText(p.getEquipo1() != null ? p.getEquipo1().getNombre() : "");
-                    txtEquipoCuartos8.setText(p.getEquipo2() != null ? p.getEquipo2().getNombre() : "");
+                    txtEquipoCuartos7.setText(e1 != null ? e1.getNombre() : "");
+                    txtEquipoCuartos8.setText(e2 != null ? e2.getNombre() : "");
                     break;
             }
         }
 
-        // =================== GANADORES SEMIS =================== //
+        // --- Semifinalistas: ganadores de cuartos (partidos 0..3 -> ganadores) ---
         if (partidos.size() >= 4) {
-            if (partidos.get(0).getGanador() != null)
-                txtEquipoSemi1.setText(equipoDAO.findById(partidos.get(0).getGanador().getId()).getNombre());
-            if (partidos.get(1).getGanador() != null)
-                txtEquipoSemi2.setText(equipoDAO.findById(partidos.get(1).getGanador().getId()).getNombre());
-            if (partidos.get(2).getGanador() != null)
-                txtEquipoSemi3.setText(equipoDAO.findById(partidos.get(2).getGanador().getId()).getNombre());
-            if (partidos.get(3).getGanador() != null)
-                txtEquipoSemi4.setText(equipoDAO.findById(partidos.get(3).getGanador().getId()).getNombre());
+            for (int i = 0; i < 4; i++) {
+                Partido p = partidos.get(i);
+                if (p.getGanador() != null && p.getGanador().getId() != 0) {
+                    Equipo ganador = equipoDAO.findById(p.getGanador().getId());
+                    switch (i) {
+                        case 0: txtEquipoSemi1.setText(ganador != null ? ganador.getNombre() : ""); break;
+                        case 1: txtEquipoSemi2.setText(ganador != null ? ganador.getNombre() : ""); break;
+                        case 2: txtEquipoSemi3.setText(ganador != null ? ganador.getNombre() : ""); break;
+                        case 3: txtEquipoSemi4.setText(ganador != null ? ganador.getNombre() : ""); break;
+                    }
+                }
+            }
         }
 
-        // =================== GANADORES FINAL =================== //
+        // --- Finalistas: ganadores de semis (partidos 4,5) ---
         if (partidos.size() >= 6) {
             if (partidos.get(4).getGanador() != null)
                 txtEquipoFinal1.setText(equipoDAO.findById(partidos.get(4).getGanador().getId()).getNombre());
@@ -146,7 +172,7 @@ public class GestionarTorneoController {
                 txtEquipoFinal2.setText(equipoDAO.findById(partidos.get(5).getGanador().getId()).getNombre());
         }
 
-        // =================== CAMPEÓN =================== //
+        // --- Campeón: ganador del partido 6 ---
         if (partidos.size() >= 7) {
             Partido finalPartido = partidos.get(6);
             if (finalPartido.getGanador() != null) {
@@ -157,14 +183,7 @@ public class GestionarTorneoController {
         }
     }
 
-    // =================== DATOS DEL TORNEO =================== //
-    private void cargarDatosTorneo() {
-        txtFechaInicio.setText(torneoActual.getFecha().toString());
-        txtCategoria.setText("Cat: " + torneoActual.getCategoria() + "°");
-        txtGenero.setText(torneoActual.getTipo().toString());
-        totalInscriptos = equipoDAO.contarEquiposPorTorneo(torneoActual.getId());
-        txtCantidadInscriptos.setText(String.valueOf(totalInscriptos));
-    }
+
 
     // =================== BOTÓN: ARMAR CRUCES =================== //
     @FXML
@@ -181,17 +200,20 @@ public class GestionarTorneoController {
         }
 
         try {
+            // --- Copiamos y mezclamos los equipos para generar cruces aleatorios ---
+            List<Equipo> listaEquipos = new ArrayList<>(Arrays.asList(torneoActual.getEquipos()));
+            Collections.shuffle(listaEquipos); // mezcla aleatoria
+
             // Creamos los 7 partidos (4 cuartos, 2 semis, 1 final)
             Partido[] partidos = new Partido[7];
-            Equipo[] equipos = torneoActual.getEquipos();
 
-            // --- CUARTOS DE FINAL ---
+            // --- CUARTOS DE FINAL (aleatorios) ---
             for (int i = 0; i < 4; i++) {
                 Partido p = new Partido();
-                p.setInstancia(i);                // 0,1,2,3 = Cuartos
+                p.setInstancia(i); // 0,1,2,3 = Cuartos
                 p.setTorneo(torneoActual);
-                p.setEquipo1(equipos[i * 2]);     // (0,2,4,6)
-                p.setEquipo2(equipos[i * 2 + 1]); // (1,3,5,7)
+                p.setEquipo1(listaEquipos.get(i * 2));     // (0,2,4,6)
+                p.setEquipo2(listaEquipos.get(i * 2 + 1)); // (1,3,5,7)
                 p.setJugado(false);
                 p.setPuntos(0);
                 p.setHora(LocalTime.of(0, 0));
@@ -230,17 +252,30 @@ public class GestionarTorneoController {
 
             // Guardamos los partidos en el torneo actual
             torneoActual.setPartidos(partidos);
+            torneoDAO.update(torneoActual);
 
-            // Marcamos que los cruces ya se armaron
+            // **Lectura desde BD para obtener objetos consistentes**
+            List<Partido> partidosDesdeBD = partidoDAO.findByTorneo(torneoActual.getId());
+            // actualizamos la observable con los partidos recién leídos
+            if (partidosDesdeBD != null) {
+                partidosObservable.setAll(partidosDesdeBD);
+            } else {
+                partidosObservable.clear();
+            }
+
+            // Deshabilitar botón para evitar rearmar
+            btnArmarCruces.setDisable(true);
+
             crucesArmados = true;
+            mostrarAlerta("Éxito", "Los cruces del torneo se armaron correctamente (aleatorios en cuartos).", Alert.AlertType.INFORMATION);
 
-            mostrarAlerta("Éxito", "Los cruces del torneo se armaron correctamente.", Alert.AlertType.INFORMATION);
 
         } catch (Exception e) {
             e.printStackTrace();
             mostrarAlerta("Error", "Ocurrió un error al armar los cruces.", Alert.AlertType.ERROR);
         }
     }
+
 
 
     // =================== BOTÓN: GESTIONAR EQUIPOS =================== //
@@ -273,7 +308,11 @@ public class GestionarTorneoController {
     }
 
     // =================== ABRIR PARTIDO =================== //
-    @FXML void handlepartidoC1(MouseEvent event) {abrirVentanaCargarPartido(0);  }
+    @FXML void handlepartidoC1(MouseEvent event) {
+        System.out.println("partido en c1 equipo 1 = " + (torneoActual.getPartidos())[0].getEquipo1().getNombre()
+        + " VS equipo 2 =" +(torneoActual.getPartidos())[0].getEquipo2().getNombre());
+
+        abrirVentanaCargarPartido(0);  }
     @FXML void handlepartidoC2(MouseEvent event) { abrirVentanaCargarPartido(1); }
     @FXML void handlepartidoC3(MouseEvent event) { abrirVentanaCargarPartido(2); }
     @FXML void handlepartidoC4(MouseEvent event) { abrirVentanaCargarPartido(3); }
