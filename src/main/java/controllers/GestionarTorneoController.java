@@ -25,6 +25,7 @@ import javafx.scene.control.ButtonType;
 
 import java.time.LocalTime;
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class GestionarTorneoController {
 
@@ -41,7 +42,6 @@ public class GestionarTorneoController {
 
 
     // --- Variables ---
-    private int totalInscriptos;
     private boolean crucesArmados = false;
     private Torneo torneoActual;
 
@@ -66,6 +66,7 @@ public class GestionarTorneoController {
         txtCategoria.setText(String.valueOf(torneoActual.getCategoria()));
         txtFechaInicio.setText(torneoActual.getFecha() != null ? torneoActual.getFecha().toString() : "Sin fecha");
         txtGenero.setText(torneoActual.getTipo() != null ? torneoActual.getTipo().toString() : "N/A");
+        txtCantidadInscriptos.setText(String.valueOf(equipoDAO.contarEquiposPorTorneo(torneoActual.getId())));
 
         // Añadir listener antes de poblar
         partidosObservable.addListener((ListChangeListener<Partido>) change -> {
@@ -245,9 +246,25 @@ public class GestionarTorneoController {
     // =================== BOTÓN: ARMAR CRUCES =================== //
     @FXML
     void botonArmarCruces(MouseEvent event) {
-        // Verificamos que el torneo y los equipos existan
-        if (torneoActual == null || torneoActual.getEquipos() == null || torneoActual.getEquipos().length < 8) {
-            mostrarAlerta("Error", "El torneo no tiene 8 equipos cargados.", Alert.AlertType.ERROR);
+        // Verificar que haya un torneo activo
+        if (torneoActual == null) {
+            mostrarAlerta("Error", "No hay un torneo seleccionado.", Alert.AlertType.ERROR);
+            return;
+        }
+
+        // Verificar que haya al menos 8 equipos válidos (no nulos)
+        Equipo[] equipos = torneoActual.getEquipos();
+        if (equipos == null) {
+            mostrarAlerta("Error", "No hay equipos cargados en el torneo.", Alert.AlertType.ERROR);
+            return;
+        }
+
+        long equiposValidos = Arrays.stream(equipos)
+                .filter(Objects::nonNull)
+                .count();
+
+        if (equiposValidos < 8) {
+            mostrarAlerta("Error", "El torneo debe tener al menos 8 equipos cargados para armar los cruces.", Alert.AlertType.ERROR);
             return;
         }
 
@@ -257,34 +274,38 @@ public class GestionarTorneoController {
         }
 
         try {
-            // --- Copiamos y mezclamos los equipos para generar cruces aleatorios ---
-            List<Equipo> listaEquipos = new ArrayList<>(Arrays.asList(torneoActual.getEquipos()));
+            // --- Copiamos solo los equipos válidos ---
+            List<Equipo> listaEquipos = Arrays.stream(equipos)
+                    .filter(Objects::nonNull)
+                    .limit(8) // tomar solo los primeros 8
+                    .collect(Collectors.toList());
+
             Collections.shuffle(listaEquipos); // mezcla aleatoria
 
-            // Creamos los 7 partidos (4 cuartos, 2 semis, 1 final)
+            // --- Resto del código igual ---
             Partido[] partidos = new Partido[7];
 
-            // --- CUARTOS DE FINAL (aleatorios) ---
+            // --- CUARTOS DE FINAL ---
             for (int i = 0; i < 4; i++) {
                 Partido p = new Partido();
-                p.setInstancia(i); // 0,1,2,3 = Cuartos
+                p.setInstancia(i);
                 p.setTorneo(torneoActual);
-                p.setEquipo1(listaEquipos.get(i * 2));     // (0,2,4,6)
-                p.setEquipo2(listaEquipos.get(i * 2 + 1)); // (1,3,5,7)
+                p.setEquipo1(listaEquipos.get(i * 2));
+                p.setEquipo2(listaEquipos.get(i * 2 + 1));
                 p.setJugado(false);
                 p.setPuntos(0);
                 p.setHora(LocalTime.of(0, 0));
 
-                partidoDAO.create(p); // Guarda en la BD
+                partidoDAO.create(p);
                 partidos[i] = p;
             }
 
-            // --- SEMIFINALES ---
+            // --- SEMIS ---
             for (int i = 0; i < 2; i++) {
                 Partido p = new Partido();
-                p.setInstancia(4 + i); // 4,5 = Semis
+                p.setInstancia(4 + i);
                 p.setTorneo(torneoActual);
-                p.setEquipo1(null); // se llenará con ganadores de cuartos
+                p.setEquipo1(null);
                 p.setEquipo2(null);
                 p.setJugado(false);
                 p.setPuntos(0);
@@ -296,7 +317,7 @@ public class GestionarTorneoController {
 
             // --- FINAL ---
             Partido finalPartido = new Partido();
-            finalPartido.setInstancia(6); // 6 = Final
+            finalPartido.setInstancia(6);
             finalPartido.setTorneo(torneoActual);
             finalPartido.setEquipo1(null);
             finalPartido.setEquipo2(null);
@@ -307,28 +328,20 @@ public class GestionarTorneoController {
             partidoDAO.create(finalPartido);
             partidos[6] = finalPartido;
 
-            // después de insertar los partidos (partidos[] ya creado y guardado)
             torneoActual.setPartidos(partidos);
             torneoDAO.update(torneoActual);
-
-            // reconstruimos desde BD para tener objetos consistentes
             reconstruirTorneoDesdeBD();
 
-            // deshabilitar botón y marcar cruces armados
             btnArmarCruces.setDisable(true);
             crucesArmados = true;
 
-            mostrarAlerta("Éxito", "... cruces armados", Alert.AlertType.INFORMATION);
-
-
+            mostrarAlerta("Éxito", "Cruces armados correctamente.", Alert.AlertType.INFORMATION);
 
         } catch (Exception e) {
             e.printStackTrace();
             mostrarAlerta("Error", "Ocurrió un error al armar los cruces.", Alert.AlertType.ERROR);
         }
     }
-
-
 
     // =================== BOTÓN: GESTIONAR EQUIPOS =================== //
     @FXML private void botonGestionarEquipos() {
@@ -372,6 +385,16 @@ public class GestionarTorneoController {
         Partido[] partidos = torneoActual.getPartidos();
         System.out.println("Partidos cargados: " + Arrays.toString(partidos));
 
+        //  Verificar si el torneo está en curso
+        if (torneoActual.getEstados() != Es.En_Curso) {
+            Alert alert = new Alert(Alert.AlertType.WARNING);
+            alert.setTitle("Torneo no disponible");
+            alert.setHeaderText("El torneo no está en curso");
+            alert.setContentText("Solo puedes cargar resultados cuando el torneo está en curso.");
+            alert.showAndWait();
+            return;
+        }
+
         if (partidos == null || indicePartido < 0 || indicePartido >= partidos.length) {
             System.out.println("️ No hay array de partidos válido");
             return;
@@ -391,6 +414,7 @@ public class GestionarTorneoController {
                 453, 407
         );
     }
+
 
     // =================== UTILIDADES =================== //
     private void mostrarAlerta(String titulo, String mensaje, Alert.AlertType tipo) {

@@ -1,6 +1,7 @@
 package controllers;
 
 import DAO.impl.PartidoDAOImpl;
+import DAO.impl.TorneoDAOImpl;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
@@ -11,11 +12,20 @@ import javafx.scene.Node;
 import models.Partido;
 import models.Equipo;
 import models.Torneo;
+import models.Es;
+import models.Cancha;
 import utilities.NavigationHelper;
+import javafx.scene.control.ComboBox;
 
-import java.sql.SQLException;
+import java.time.LocalTime;
 
 public class CargarPartidoController {
+
+    @FXML
+    private ComboBox<Integer> comboCancha;
+
+    @FXML
+    private ComboBox<Integer> comboHora;
 
     @FXML
     private Label lblEquipo1;
@@ -29,15 +39,30 @@ public class CargarPartidoController {
     @FXML
     private javafx.scene.layout.Pane botonCrear;
 
-    private Partido partidoActual;
     private PartidoDAOImpl partidoDAO = new PartidoDAOImpl();
+    private TorneoDAOImpl torneoDAO = new TorneoDAOImpl();
 
     @FXML
     public void initialize() {
         Partido partido = (Partido) NavigationHelper.getDatos();
+
         if (partido != null) {
             lblEquipo1.setText(partido.getEquipo1().getNombre());
             lblEquipo2.setText(partido.getEquipo2().getNombre());
+        }
+
+        // --- Inicializar combos ---
+        comboCancha.getItems().addAll(1, 2);
+        comboHora.getItems().addAll(12, 14, 16, 18, 20, 22);
+
+        // Si el partido ya tenía cancha u hora cargadas, mostrarlas
+        if (partido != null) {
+            if (partido.getCancha() != null && partido.getCancha().getNumero() != 0) {
+                comboCancha.setValue(partido.getCancha().getNumero());
+            }
+            if (partido.getHora() != null) {
+                comboHora.setValue(partido.getHora().getHour());
+            }
         }
     }
 
@@ -47,118 +72,166 @@ public class CargarPartidoController {
         Partido partido = (Partido) NavigationHelper.getDatos();
 
         if (partido == null) {
-            System.out.println("⚠️ No se recibió partido.");
+            mostrarAlerta("Error", "No se recibió partido válido.", Alert.AlertType.ERROR);
+            return;
+        }
+
+        Torneo torneo = partido.getTorneo();
+        if (torneo == null) {
+            mostrarAlerta("Error", "El partido no está asociado a un torneo.", Alert.AlertType.ERROR);
+            return;
+        }
+
+        // Control: solo se pueden cargar partidos si el torneo está en curso
+        if (torneo.getEstados() != Es.En_Curso) {
+            mostrarAlerta("Torneo finalizado",
+                    "No se pueden cargar resultados. El torneo ya finalizó o no está en curso.",
+                    Alert.AlertType.INFORMATION);
+            return;
+        }
+
+        // --- Validar cancha y hora ---
+        Integer canchaSeleccionada = comboCancha.getValue();
+        Integer horaSeleccionada = comboHora.getValue();
+
+        if (canchaSeleccionada == null || horaSeleccionada == null) {
+            mostrarAlerta("Datos incompletos", "Debes seleccionar la cancha y la hora.", Alert.AlertType.WARNING);
             return;
         }
 
         try {
+            // --- Lectura de sets ---
             int set1a = Integer.parseInt(txtSet1.getText());
             int set1b = Integer.parseInt(txtSet1b.getText());
             int set2a = Integer.parseInt(txtSet2.getText());
             int set2b = Integer.parseInt(txtSet2b.getText());
-            int set3a = txtSet3.getText().isEmpty() ? 0 : Integer.parseInt(txtSet3.getText());
-            int set3b = txtSet3b.getText().isEmpty() ? 0 : Integer.parseInt(txtSet3b.getText());
 
-            // Calcular ganador por sets
+            boolean hayTercerSet = !txtSet3.getText().isEmpty() && !txtSet3b.getText().isEmpty();
+            int set3a = hayTercerSet ? Integer.parseInt(txtSet3.getText()) : 0;
+            int set3b = hayTercerSet ? Integer.parseInt(txtSet3b.getText()) : 0;
+
+            // --- Calcular sets ganados ---
             int setsGanados1 = 0, setsGanados2 = 0;
             if (set1a > set1b) setsGanados1++;
-            else setsGanados2++;
+            else if (set1b > set1a) setsGanados2++;
+            else {
+                mostrarAlerta("Error", "No puede haber empate en un set.", Alert.AlertType.ERROR);
+                return;
+            }
+
             if (set2a > set2b) setsGanados1++;
-            else setsGanados2++;
-            if (set3a != 0 || set3b != 0) {
+            else if (set2b > set2a) setsGanados2++;
+            else {
+                mostrarAlerta("Error", "No puede haber empate en un set.", Alert.AlertType.ERROR);
+                return;
+            }
+
+            // --- Validación tercer set ---
+            if (setsGanados1 == 1 && setsGanados2 == 1) {
+                if (!hayTercerSet) {
+                    mostrarAlerta("Resultado incompleto",
+                            "Empate en los dos primeros sets. Debes ingresar el tercer set.",
+                            Alert.AlertType.WARNING);
+                    return;
+                }
+            } else if ((setsGanados1 == 2 || setsGanados2 == 2) && hayTercerSet) {
+                mostrarAlerta("Datos inconsistentes",
+                        "Un equipo ya ganó 2 sets. No debe ingresarse un tercer set.",
+                        Alert.AlertType.WARNING);
+                return;
+            }
+
+            // --- Contar tercer set si corresponde ---
+            if (hayTercerSet) {
                 if (set3a > set3b) setsGanados1++;
-                else setsGanados2++;
+                else if (set3b > set3a) setsGanados2++;
+                else {
+                    mostrarAlerta("Error", "No puede haber empate en un set.", Alert.AlertType.ERROR);
+                    return;
+                }
             }
 
             Equipo ganador = (setsGanados1 > setsGanados2) ? partido.getEquipo1() : partido.getEquipo2();
 
-            // Actualizar el objeto partido con sets y ganador
-            partido.setSet1(txtSet1.getText() + "-" + txtSet1b.getText());
-            partido.setSet2(txtSet2.getText() + "-" + txtSet2b.getText());
-            partido.setSet3(txtSet3.getText() + "-" + txtSet3b.getText());
+            // --- Actualizar objeto partido ---
+            partido.setSet1(set1a + "-" + set1b);
+            partido.setSet2(set2a + "-" + set2b);
+            partido.setSet3((hayTercerSet ? set3a + "-" + set3b : ""));
             partido.setGanador(ganador);
             partido.setJugado(true);
 
-            // Persistir en BD (asegurate de tener el DAO con update)
-            PartidoDAOImpl dao = new PartidoDAOImpl();
-            dao.update(partido);
+            // ✅ Crear y asignar objeto Cancha
+            Cancha canchaObj = new Cancha();
+            canchaObj.setNumero(canchaSeleccionada);
+            partido.setCancha(canchaObj);
 
-            // Actualizar siguiente instancia en memoria (para que la UI y el torneoActual lo tengan)
-            Torneo torneo = partido.getTorneo();
-            if (torneo != null) {
-                int instancia = partido.getInstancia();
-                Partido[] partidos = torneo.getPartidos();
-                if (partidos == null) {
-                    partidos = new Partido[7];
-                    torneo.setPartidos(partidos);
-                }
-                // si fue un cuarto (0..3) -> semis: 4 + (instancia/2)
-                if (instancia >= 0 && instancia <= 3) {
-                    int semiIndex = 4 + (instancia / 2);
-                    if (partidos[semiIndex] == null) {
-                        Partido semi = new Partido();
-                        semi.setInstancia(semiIndex);
-                        semi.setTorneo(torneo);
-                        partidos[semiIndex] = semi;
-                    }
-                    if (instancia % 2 == 0) partidos[semiIndex].setEquipo1(ganador);
-                    else partidos[semiIndex].setEquipo2(ganador);
-                }
-                // si fue una semi (4,5) -> final (6)
-                if (instancia == 4 || instancia == 5) {
-                    if (partidos[6] == null) {
-                        Partido fin = new Partido();
-                        fin.setInstancia(6);
-                        fin.setTorneo(torneo);
-                        partidos[6] = fin;
-                    }
-                    if (instancia == 4) partidos[6].setEquipo1(ganador);
-                    else partidos[6].setEquipo2(ganador);
-                }
+            partido.setHora(LocalTime.of(horaSeleccionada, 0));
 
-                // opcional: persistir cambio de la instancia siguiente en BD
-                // si creaste/actualizaste un partido sem/final debes usar partidoDAO.update(...) para el partido afectado
-                // ejemplo:
-                if (instancia >= 0 && instancia <= 3) {
-                    Partido semi = partidos[4 + (instancia / 2)];
-                    if (semi != null) {
-                        dao.update(semi); // actualiza id_equipo1/id_equipo2 si corresponde
-                    }
-                } else if (instancia == 4 || instancia == 5) {
-                    if (partidos[6] != null) dao.update(partidos[6]);
-                }
+            partidoDAO.update(partido);
+
+            // --- Actualizar siguientes instancias ---
+            int instancia = partido.getInstancia();
+            Partido[] partidos = torneo.getPartidos();
+            if (partidos == null) {
+                partidos = new Partido[7];
+                torneo.setPartidos(partidos);
             }
 
-            // Notificar al controlador principal (si está registrado)
+            if (instancia >= 0 && instancia <= 3) {
+                int semiIndex = 4 + (instancia / 2);
+                if (partidos[semiIndex] == null) {
+                    Partido semi = new Partido();
+                    semi.setInstancia(semiIndex);
+                    semi.setTorneo(torneo);
+                    partidos[semiIndex] = semi;
+                }
+                if (instancia % 2 == 0)
+                    partidos[semiIndex].setEquipo1(ganador);
+                else
+                    partidos[semiIndex].setEquipo2(ganador);
+                partidoDAO.update(partidos[semiIndex]);
+            }
+
+            if (instancia == 4 || instancia == 5) {
+                if (partidos[6] == null) {
+                    Partido fin = new Partido();
+                    fin.setInstancia(6);
+                    fin.setTorneo(torneo);
+                    partidos[6] = fin;
+                }
+                if (instancia == 4)
+                    partidos[6].setEquipo1(ganador);
+                else
+                    partidos[6].setEquipo2(ganador);
+                partidoDAO.update(partidos[6]);
+            }
+
+            // Si fue la final (instancia == 6), marcar torneo como finalizado
+            if (instancia == 6) {
+                torneo.setEstados(Es.Finalizado);
+                torneoDAO.update(torneo);
+                mostrarAlerta("Torneo finalizado",
+                        "¡" + ganador.getNombre() + " es el campeón del torneo!",
+                        Alert.AlertType.INFORMATION);
+            }
+
+            // --- Notificar controlador principal ---
             GestionarTorneoController controladorPrincipal =
                     NavigationHelper.getController(GestionarTorneoController.class);
-
             if (controladorPrincipal != null) {
-                // mandamos el partido que acabamos de actualizar (el mismo que se guardó en BD)
                 controladorPrincipal.actualizarPartido(partido);
             }
 
-            // limpiar datos y cerrar popup
+            // --- Cerrar popup ---
             NavigationHelper.clearDatos();
             ((Stage) ((Node) event.getSource()).getScene().getWindow()).close();
 
         } catch (NumberFormatException ex) {
-            System.out.println("⚠️ Error en formato de número.");
+            mostrarAlerta("Error de formato", "Debes ingresar números válidos en todos los sets.", Alert.AlertType.ERROR);
         }
     }
 
-
-
     // =================== MÉTODOS AUXILIARES =================== //
-    private int ganadorDeSet(String s1, String s2) {
-        try {
-            int p1 = Integer.parseInt(s1.trim());
-            int p2 = Integer.parseInt(s2.trim());
-            if (p1 > p2) return 1;
-        } catch (Exception ignored) {}
-        return 0;
-    }
-
     private void mostrarAlerta(String titulo, String mensaje, Alert.AlertType tipo) {
         Alert alerta = new Alert(tipo);
         alerta.setTitle(titulo);
