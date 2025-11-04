@@ -194,123 +194,56 @@ public class PartidoDAOImpl implements GenericDAO<Partido> {
         return partidos;
     }
 
-    public List<Partido> obtenerPartidosPorTorneo(int idTorneo) {
+    public List<Partido> findByTorneo(int idTorneo) {
+        String sql = "SELECT * FROM Partidos WHERE id_torneo = ? ORDER BY instancia ASC";
         List<Partido> partidos = new ArrayList<>();
-
-        String sql = """
-        SELECT 
-            p.id_partido,
-            p.hora,
-            p.instancia,
-            p.puntos,
-            p.set1,
-            p.set2,
-            p.set3,
-            p.jugado,
-            p.id_torneo,
-            e1.id_equipo AS id_equipo1, e1.nombre AS nombre_equipo1,
-            e2.id_equipo AS id_equipo2, e2.nombre AS nombre_equipo2,
-            e3.id_equipo AS id_ganador, e3.nombre AS nombre_ganador
-        FROM Partidos p
-        LEFT JOIN Equipos e1 ON p.id_equipo1 = e1.id_equipo
-        LEFT JOIN Equipos e2 ON p.id_equipo2 = e2.id_equipo
-        LEFT JOIN Equipos e3 ON p.id_ganador = e3.id_equipo
-        WHERE p.id_torneo = ?
-        ORDER BY p.instancia, p.id_partido
-    """;
 
         try (PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setInt(1, idTorneo);
             ResultSet rs = stmt.executeQuery();
 
             while (rs.next()) {
-                Partido partido = new Partido();
-                partido.setId(rs.getInt("id_partido"));
-                partido.setInstancia(rs.getInt("instancia"));
-                partido.setJugado(rs.getInt("jugado") == 1);
-                partido.setPuntos(rs.getInt("puntos"));
-                partido.setSet1(rs.getString("set1"));
-                partido.setSet2(rs.getString("set2"));
-                partido.setSet3(rs.getString("set3"));
+                Partido p = new Partido();
+                p.setId(rs.getInt("id_partido"));
+                p.setHora(rs.getString("hora") != null ? LocalTime.parse(rs.getString("hora")) : null);
+                p.setInstancia(rs.getInt("instancia"));
+                p.setPuntos(rs.getInt("puntos"));
+                p.setSet1(rs.getString("set1"));
+                p.setSet2(rs.getString("set2"));
+                p.setSet3(rs.getString("set3"));
+                p.setJugado(rs.getInt("jugado") == 1);
 
-                // Torneo
-                Torneo torneo = new Torneo();
-                torneo.setId(rs.getInt("id_torneo"));
-                partido.setTorneo(torneo);
+                // --- Relacionar objetos ---
+                p.setTorneo(new Torneo());
+                p.getTorneo().setId(idTorneo);
 
                 // Equipos
-                Equipo equipo1 = new Equipo();
-                equipo1.setId(rs.getInt("id_equipo1"));
-                equipo1.setNombre(rs.getString("nombre_equipo1"));
-                partido.setEquipo1(equipo1);
-
-                Equipo equipo2 = new Equipo();
-                equipo2.setId(rs.getInt("id_equipo2"));
-                equipo2.setNombre(rs.getString("nombre_equipo2"));
-                partido.setEquipo2(equipo2);
-
-                Equipo ganador = new Equipo();
-                ganador.setId(rs.getInt("id_ganador"));
-                ganador.setNombre(rs.getString("nombre_ganador"));
-                partido.setGanador(ganador);
-
-                partidos.add(partido);
-            }
-
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-
-        return partidos;
-    }
-
-    public List<Partido> obtenerCrucesPorTorneo(int idTorneo) {
-        List<Partido> partidos = new ArrayList<>();
-
-        String sql = """
-        SELECT 
-            p.id_partido,
-            p.instancia,
-            p.jugado,
-            p.id_equipo1,
-            p.id_equipo2,
-            e1.nombre AS nombre_equipo1,
-            e2.nombre AS nombre_equipo2
-        FROM Partidos p
-        LEFT JOIN Equipos e1 ON p.id_equipo1 = e1.id_equipo
-        LEFT JOIN Equipos e2 ON p.id_equipo2 = e2.id_equipo
-        WHERE p.id_torneo = ?
-        ORDER BY p.id_partido
-    """;
-
-        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
-            stmt.setInt(1, idTorneo);
-            ResultSet rs = stmt.executeQuery();
-
-            while (rs.next()) {
-                Partido partido = new Partido();
-                partido.setId(rs.getInt("id_partido"));
-                partido.setInstancia(rs.getInt("instancia"));
-                partido.setJugado(rs.getInt("jugado") == 1);
-
-                Equipo equipo1 = null;
-                Equipo equipo2 = null;
-
                 if (rs.getInt("id_equipo1") != 0) {
-                    equipo1 = new Equipo();
-                    equipo1.setId(rs.getInt("id_equipo1"));
-                    equipo1.setNombre(rs.getString("nombre_equipo1"));
+                    Equipo eq1 = new Equipo();
+                    eq1.setId(rs.getInt("id_equipo1"));
+                    p.setEquipo1(eq1);
                 }
+
                 if (rs.getInt("id_equipo2") != 0) {
-                    equipo2 = new Equipo();
-                    equipo2.setId(rs.getInt("id_equipo2"));
-                    equipo2.setNombre(rs.getString("nombre_equipo2"));
+                    Equipo eq2 = new Equipo();
+                    eq2.setId(rs.getInt("id_equipo2"));
+                    p.setEquipo2(eq2);
                 }
 
-                partido.setEquipo1(equipo1);
-                partido.setEquipo2(equipo2);
+                if (rs.getInt("id_ganador") != 0) {
+                    Equipo ganador = new Equipo();
+                    ganador.setId(rs.getInt("id_ganador"));
+                    p.setGanador(ganador);
+                }
 
-                partidos.add(partido);
+                // Cancha (opcional)
+                if (rs.getInt("num_cancha") != 0) {
+                    Cancha cancha = new Cancha();
+                    cancha.setNumero(rs.getInt("num_cancha"));
+                    p.setCancha(cancha);
+                }
+
+                partidos.add(p);
             }
 
         } catch (SQLException e) {
@@ -319,5 +252,6 @@ public class PartidoDAOImpl implements GenericDAO<Partido> {
 
         return partidos;
     }
+
 
 }
